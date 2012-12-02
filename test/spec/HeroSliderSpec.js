@@ -34,8 +34,11 @@ describe("Hero Slider", function(){
 
     hero.init();
 
-    hero.newAnimatedElement({
+    hero.newAnimatedElement("test", {
       el: hero.el,
+      animateProperties: {
+        left: "+=200"
+      },
       animateDuration: 3000+topOffset*10,
       animateCallback: function() {
         //removeAnimatedObject();
@@ -73,12 +76,12 @@ describe("Hero Slider", function(){
 
       //switch to "detail"
       hero.layoutModeToggle();
-      var a = hero.layoutMode;
+      var a = hero.story.get("layoutMode");
       expect(a).toBe("detail");
 
       //switch back to "default"
       hero.layoutModeToggle();
-      var b = hero.layoutMode;
+      var b = hero.story.get("layoutMode");
       expect(b).toBe("default");
     });
 
@@ -125,47 +128,48 @@ describe("Hero Slider", function(){
 
     it("should always be able to go to a next story", function(){
       //3 stories,
-      hero.storyCount = 3;
+      hero.story.set("storyCount", 3);
 
       //starting at story 1 (zero-indexed):
-      hero.storyIndex = 0;
+      hero.story.set("storyIndex", 0);
 
       //A: go to story 2
       hero.nextStory();
-      var a = hero.storyIndex+1;
+      var a = hero.story.get("storyIndex") + 1;
       expect(a).toBe(2);
 
       //B: go to story 3
       hero.nextStory();
-      var b = hero.storyIndex+1;
+      var b = hero.story.get("storyIndex") + 1;
       expect(b).toBe(3);
 
       //C: wrap around to story 1
       hero.nextStory();
-      var c = hero.storyIndex+1;
+      var c = hero.story.get("storyIndex") + 1;
       expect(c).toBe(1);
     });
 
     it("should always be able to go to a previous story", function(){
       //3 stories,
-      hero.storyCount = 3;
+      hero.story.set("storyCount", 3);
 
       //starting at story 1 (zero-indexed):
-      hero.storyIndex = 0;
+      hero.story.set("storyIndex", 0);
 
       //A. wrap around to story 3
       hero.previousStory()
-      var a = hero.storyIndex+1;
-      expect(a).toBe(hero.storyCount);
+      var a = hero.story.get("storyIndex") + 1;
+      var ab = hero.story.get("storyCount");
+      expect(a).toBe(ab);
 
       //B. go to story 2
       hero.previousStory()
-      var b = hero.storyIndex+1;
+      var b = hero.story.get("storyIndex") + 1;
       expect(b).toBe(2);
 
       //C. go to story 1
       hero.previousStory()
-      var c = hero.storyIndex+1;
+      var c = hero.story.get("storyIndex") + 1;
       expect(c).toBe(1);
     });
 
@@ -179,7 +183,7 @@ describe("Hero Slider", function(){
       incrementTopPosition($el);
       $el.show()
 
-      hero.stopAnimation();
+      hero.stopAnimations();
       var a = hero.isPlaying();
       expect(a).toBe(false);
     });
@@ -188,7 +192,7 @@ describe("Hero Slider", function(){
       //animation test will show the related DOM element created in the setup beforeEach
       markDebugEl($el, "should allow for animations to be started");
 
-      hero.startAnimation();
+      hero.startAnimations();
       var a = hero.isPlaying();
       expect(a).toBe(true);
     });
@@ -197,8 +201,8 @@ describe("Hero Slider", function(){
       //animation test will show the related DOM element created in the setup beforeEach
       markDebugEl($el, "should be possible to restart animations");
 
-      hero.stopAnimation();
-      hero.startAnimation();
+      hero.stopAnimations();
+      hero.startAnimations();
       var a = hero.isPlaying();
       expect(a).toBe(true);
     });
@@ -214,7 +218,7 @@ describe("Hero Slider", function(){
       incrementTopPosition($el);
       $el.show()
 
-      hero.startAnimation();
+      hero.startAnimations();
       var a = hero.isPlaying();
       expect(a).toBe(true);
     });
@@ -226,8 +230,8 @@ describe("Hero Slider", function(){
       incrementTopPosition($el);
       $el.show()
 
-      hero.startAnimation();
-      hero.stopAnimation();
+      hero.startAnimations();
+      hero.stopAnimations();
       var a = hero.isPlaying();
       expect(a).toBe(false);
     });
@@ -236,9 +240,9 @@ describe("Hero Slider", function(){
       //animation test will show the related DOM element created in the setup beforeEach
       markDebugEl($el, "should be possible to restart animations");
 
-      hero.startAnimation();
-      hero.stopAnimation();
-      hero.startAnimation();
+      hero.startAnimations();
+      hero.stopAnimations();
+      hero.startAnimations();
       var a = hero.isPlaying();
       expect(a).toBe(true);
     });
@@ -255,8 +259,8 @@ describe("Hero Slider", function(){
       markDebugEl($el, "should run only the current animation");
 
       // Start asynchronous animations one after another
-      hero.startAnimation();
-      hero.startAnimation();
+      hero.startAnimations();
+      hero.startAnimations();
 
       // The second animation call would normally stack
       // animations into the queue but it should
@@ -264,6 +268,7 @@ describe("Hero Slider", function(){
       // let's get the collection of animation queues and
       // check that each queue has one animation in it
       var anims = hero.getAnimationQueues();
+      console.log("anims %o", anims);
       for (var i=0, j=anims.length; i<j; i++) {
         var a = anims[i].length;
         expect(a).toBe(1);
