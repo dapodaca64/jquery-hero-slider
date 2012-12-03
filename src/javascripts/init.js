@@ -8,7 +8,7 @@ $.fn.heroSlider = function(){
 
   return $(this).each(function(){
 
-    var slider = new HeroSlider({ el: this });
+    var slider = new HeroSliderExampleA({ el: this });
 
     //expose the base object as an "API"
     $(this).data("heroSlider", slider);

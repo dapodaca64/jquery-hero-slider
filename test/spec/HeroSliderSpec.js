@@ -32,7 +32,11 @@ describe("Hero Slider", function(){
       el: $el
     });
 
-    hero.init();
+    hero.story = new BasicModel({
+      storyIndex: 0,
+      storyCount: 0,
+      layoutMode: "default"
+    });
 
     hero.newAnimatedElement("test", {
       el: hero.el,
@@ -277,7 +281,7 @@ describe("Hero Slider", function(){
 
   });
 
-  xdescribe("when in detail layout mode", function(){
+  describe("when in detail layout mode", function(){
 
   });
 

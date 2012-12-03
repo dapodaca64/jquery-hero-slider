@@ -1,5 +1,15 @@
 $ = jQuery;
 
+// Shim
+// Inheritance that is more like other OOP, proposed by Crockford
+if (typeof Object.create !== "function") {
+  Object.create = function (o) {
+    function F() {}
+    F.prototype = o;
+    return new F();
+  };
+}
+
 // Basic model for managing data with attributes
 // Built-in event pub/sub
 var BasicModel = function(attributes){
@@ -134,14 +144,350 @@ var AnimatedElement = function(options){
 
 };
 
+
+// HeroSlider. A Controller for managing a set of slides
+//
+// The Controller sets up the Presenters
+//
+// The Presenters contain presentational and animation logic
+//
+// The Controller sets up single Model, representing
+//   the slideIndex, and the layoutMode
+//   of "default" and "detail" (coupled) states
+//   of each slide/story
+//
+// The Controller allows the Presenter to Access the Model
+
+var HeroSlider = function(options){
+  var defaults = {
+    el: false,
+    autoRotate: true,
+    circular: true //continuous loop through the stories
+  };
+  this.options = $.extend({}, defaults, options);
+
+  // Our DOM scope
+  this.el = this.options.el;
+  //console.log("HeroSlider.init: this.el %o", this.el);
+
+  // Initial behaviors
+  // Let's be very deliberate about this configuration
+  this.autoRotate = this.options.autoRotate;
+  this.circular = this.options.circular;
+
+  // Initial collection of animated objects
+  // Used as a key/value store
+  this.animatedEls = { };
+
+};
+
+HeroSlider.prototype.run = function(){
+  if (this.autoRotate) {
+    this.startAnimations();
+  };
+};
+
+HeroSlider.prototype.goToStory = function(storyIndex){
+  console.log("HeroSlider.goToStory: %o", storyIndex);
+  this.story.set("storyIndex", +(storyIndex));
+};
+
+HeroSlider.prototype.nextStory = function(){
+  console.log("HeroSlider.nextStory: storyIndex %o storyCount %o", this.story.get("storyIndex"), this.story.get("storyCount"));
+  var storyIndex = this.story.get("storyIndex");
+  if (storyIndex + 1 == this.story.get("storyCount")) {
+    this.story.set("storyIndex", 0);
+  } else {
+    this.story.set("storyIndex", storyIndex + 1);
+  }
+};
+
+HeroSlider.prototype.previousStory = function(){
+  //console.log("HeroSlider.previousStory: storyIndex %o storyCount %o", this.story.get("storyIndex"), this.story.get("storyCount"));
+  var storyIndex = this.story.get("storyIndex");
+  if (storyIndex == 0) {
+    //update the model
+    this.story.set("storyIndex", this.story.get("storyCount") - 1);
+  } else {
+    //update the model
+    this.story.set("storyIndex", storyIndex - 1);
+  }
+};
+
+HeroSlider.prototype.layoutModeToggle = function(){
+  console.log("HeroSlider.layoutModeToggle");
+  var layoutMode = (this.story.get("layoutMode") === "default") ? "detail" : "default";
+  //update the model
+  this.story.set("layoutMode", layoutMode);
+};
+
+HeroSlider.prototype.isPlaying = function(){
+  for (var i in this.animatedEls) {
+    if (this.animatedEls[i].isPlaying) {
+      return true;
+    }
+  }
+  return false;
+};
+
+HeroSlider.prototype.newAnimatedElement = function(name, options) {
+  var ae = new AnimatedElement(options);
+  this.animatedEls[name] = ae;
+  return this.animatedEls[name];
+};
+
+HeroSlider.prototype.getAnimatedElement = function(name) {
+  return this.animatedEls[name] || false;
+};
+
+HeroSlider.prototype.stopAnimations = function(){
+  //console.log("HeroSlider.stopAnimations...");
+  for (var i in this.animatedEls) {
+    this.animatedEls[i].stopAnimation();
+  }
+};
+
+HeroSlider.prototype.startAnimations = function(){
+  //console.log("HeroSlider.startAnimations...");
+  this.deQueueAnimations();
+  for (var i in this.animatedEls) {
+    this.animatedEls[i].startAnimation();
+  }
+};
+
+HeroSlider.prototype.deQueueAnimations = function(){
+  //console.log("HeroSlider.deQueueAnimation...");
+  for (var i in this.animatedEls) {
+    this.animatedEls[i].deQueueAnimation();
+  }
+};
+
+HeroSlider.prototype.getAnimationQueues = function(){
+  //console.log("HeroSlider.getAnimationQueues...");
+  var queues = [ ];
+  for (var i in this.animatedEls) {
+    queues.push(this.animatedEls[i].getAnimationQueue());
+  }
+  return queues;
+};
+
+// SlidePresenter: A Presenter for slides, an interface to the View
+//
+// Each Presenter manages a single set of slides,
+//  within the context of a DOM element representing the View
+//
+// The Presenter contains the presentational logic by
+//   defining what the animations are, and running them
+//   as an animation controller.
+//
+// Event Configuration:
+// The Presenter also specifies the events by relating the
+//   event to the DOM and its associated handler
+//
+// Event Delegation:
+// The Presenter binds each event type to the View's DOM scope
+// And delegates to the handler.
+// TODO: Currently it requires an exact match between the event
+//   target and the DOM selector in the Event Configuration.
+//
+// The Presenter also defines its own DOM and data event handlers.
+//
+// The Model is accessed via Application Controller HeroSlider
+
 var SlidePresenter = function(options) {
   this.$el = $(options.controller.el);
   this.controller = options.controller;
-  this.init();
 };
 
 SlidePresenter.prototype.init = function(){
-  console.log("SlidePresenter.init...");
+  //console.log("SlidePresenter.init...");
+  this.bindDOMEvents();
+  this.bindDataEvents();
+};
+
+SlidePresenter.prototype.events = {
+  //"click a.next": "nextClickHandler",
+};
+
+SlidePresenter.prototype.parseEvents = function(){
+  //access the events and categorize by event type
+  var eventTypes = { };
+  for (var entry in this.events) {
+    var eType = false, eHandler = false, eSelector;
+
+    try {
+
+      var eventPairing = entry.split(" ");
+      eType = eventPairing.shift();
+      eSelector = eventPairing.join(" ");
+      eHandler = this.events[entry];
+
+    } catch (e) {
+
+      console.log("SlidePresenter Parse Error: Expected value for event type or handler.");
+    }
+
+    if (eType && eHandler && eSelector) {
+
+      //categorizing events by event type
+      //into collections
+
+      //create collection if first entry
+      if (!eventTypes[eType]) {
+        eventTypes[eType] = [ ];
+      }
+
+      //add event selector/handler pair
+      //into category collection
+      eventTypes[eType].push({
+        selector: eSelector,
+        handler: eHandler
+      });
+
+    }
+  }
+  return eventTypes;
+};
+
+SlidePresenter.prototype.bindDataEvents = function(){
+  //Subscribe to the change event on the model via the controller
+  //this.controller.story.on("change:storyIndex", this.storyIndexChangeHandler.bind(this));
+};
+
+SlidePresenter.prototype.bindDOMEvents = function(){
+  // Get events categorized by event type
+  var eventsByType = this.parseEvents();
+
+  var self = this;
+  for (var eventType in eventsByType) {
+    this.$el.on(eventType, function(ev){
+      self.delegateEvent(ev, eventsByType[eventType]);
+    });
+  }
+
+};
+
+SlidePresenter.prototype.isElementInCollection = function(el, selector) {
+  var isInCollection = false;
+  $(selector).each(function(){
+    var test = (el == this);
+    //console.log("isElement el %o same as %o? %o", el, this, test);
+    if (el == this) {
+      isInCollection = true;
+    }
+  });
+  return isInCollection;
+};
+
+SlidePresenter.prototype.delegateEvent = function(ev, delegates) {
+  console.log("ev.currentTarget %o, ev.target %o", ev.currentTarget, ev.target);
+  for (delegate in delegates) {
+    // Is the event target in the elements that match the selector?
+    //console.log("SlidePresenter.delegateEvent ev %o", ev);
+    var inCollection = this.isElementInCollection(ev.target, delegates[delegate].selector);
+    //console.log("inCollection? %o", inCollection);
+    if (inCollection) {
+      // Fire the event handler
+      try {
+        this[delegates[delegate].handler].call(this, ev);
+      } catch(e) {
+        console.log("SlidePresenter Error in event delegation: Cannot call function %o", this[delegates[delegate].handler]);
+      }
+    }
+  }
+};
+
+
+// Example Usage: HeroSlider Controller
+//
+// Example A: One Controller manages a single set of slides.
+//            Each slide has a coupled detail state.
+//
+// The Controller sets up the Presenters
+//   The Presenters contain presentational and animation logic
+//
+// The Controller sets up single Model, representing
+//   the slideIndex, and the layoutMode
+//   of "default" and "detail" (coupled) states
+//   of each slide/story
+//
+// The Controller allows the Presenter to Access the Model
+
+var HeroSliderExampleA = function(options){
+  HeroSlider.call(this, options); //call super constructor
+};
+
+HeroSliderExampleA.prototype = Object.create(HeroSlider.prototype);
+
+HeroSliderExampleA.prototype.init = function(){
+  //console.log("HeroSlider init runs with this %o", this);
+  //TODO: A Model. Is there better to place for this?
+  // It supports get/set of attributes
+  // And binding to data events
+  this.story = new BasicModel({
+    storyIndex: 0,
+    storyCount: 0,
+    layoutMode: "default" // "default" or "detail"
+  });
+
+  // When DOM
+  if (this.el) {
+
+    this.slidePresenter = new SlidePresenterExampleA({
+
+      // Reference the controller/creator, HeroSlider
+      controller: this,
+
+      //pass on the presentational behavior configurations
+      autoRotate: this.options.autoRotate,
+      circular: this.options.circular
+
+    });
+
+  // When testing
+  // TODO: Might be possible to do everything in test setup and teardown
+  } else {
+
+    //static default
+    this.story.set("storyCount", 5);
+
+  }
+};
+
+// Example Usage: SlidePresenter
+//
+// Example A: One Presenter manages a single set of slides.
+//            Each slide has a coupled detail state.
+//
+// The Presenter contains the presentational logic by
+//   defining what the animations are, and running them
+//   as an animation controller.
+//
+// The Presenter also specifies the events by relating the
+//   event to the DOM and its associated handler
+//
+// The Presenter also defines its own DOM and data event handlers.
+//
+// The Presenter Example A interacts with a single model representing
+//   the slideIndex, and the layoutMode
+//   of "default" and "detail" (coupled) states
+//   of each slide/story
+//
+// The Model is accessed via Application Controller HeroSlider
+
+var SlidePresenterExampleA = function(options){
+  SlidePresenter.call(this, options); //call super constructor
+  //this.parent = SlidePresenter.prototype;
+  this.init();
+};
+
+SlidePresenterExampleA.prototype = Object.create(SlidePresenter.prototype);
+
+SlidePresenterExampleA.prototype.parent = SlidePresenter.prototype;
+
+SlidePresenterExampleA.prototype.init = function(){
+
+  //console.log("SlidePresenterExampleA.init.. with controller", this.controller);
   var storyCount;
   if (this.$el) {
     storyCount = this.$el.find(".story").length;
@@ -190,13 +536,13 @@ SlidePresenter.prototype.init = function(){
         animateDuration: 800
       });
 
-      this.bindDOMEvents();
-      this.bindDataEvents();
     }
+    //call the parent init method
+    this.parent.init.call(this);
   }
 };
 
-SlidePresenter.prototype.events = {
+SlidePresenterExampleA.prototype.events = {
   "click a.story-detail": "layoutModeToggleClickHandler",
   "click a.story-toggle-mode": "layoutModeToggleClickHandler",
   "click a.story-detail-nav .nav-icon": "goToClickHandler",
@@ -206,53 +552,13 @@ SlidePresenter.prototype.events = {
   "click .detail-navigation a.go-next": "nextStoryClickHandler"
 };
 
-SlidePresenter.prototype.parseEvents = function(){
-  //access the events and categorize by event type
-  var eventTypes = { };
-  for (var entry in this.events) {
-    var eType = false, eHandler = false, eSelector;
-
-    try {
-
-      var eventPairing = entry.split(" ");
-      eType = eventPairing.shift();
-      eSelector = eventPairing.join(" ");
-      eHandler = this.events[entry];
-
-    } catch (e) {
-
-      console.log("SlidePresenter Parse Error: Expected value for event type or handler.");
-    }
-
-    if (eType && eHandler && eSelector) {
-
-      //categorizing events by event type
-      //into collections
-
-      //create collection if first entry
-      if (!eventTypes[eType]) {
-        eventTypes[eType] = [ ];
-      }
-
-      //add event selector/handler pair
-      //into category collection
-      eventTypes[eType].push({
-        selector: eSelector,
-        handler: eHandler
-      });
-
-    }
-  }
-  return eventTypes;
-};
-
 // DOM event handlers
-SlidePresenter.prototype.layoutModeToggleClickHandler = function(ev){
+SlidePresenterExampleA.prototype.layoutModeToggleClickHandler = function(ev){
   ev.preventDefault();
   this.controller.layoutModeToggle();
 };
 
-SlidePresenter.prototype.goToClickHandler = function(ev){
+SlidePresenterExampleA.prototype.goToClickHandler = function(ev){
   ev.preventDefault();
   console.log("inspecting %o", $(ev.target).parent() );
   var storyIndex = $(ev.target).parent().attr("data-storyindex");
@@ -260,78 +566,35 @@ SlidePresenter.prototype.goToClickHandler = function(ev){
   this.controller.goToStory(storyIndex);
 };
 
-SlidePresenter.prototype.nextStoryClickHandler = function(ev){
+SlidePresenterExampleA.prototype.nextStoryClickHandler = function(ev){
   ev.preventDefault();
   this.controller.nextStory();
 };
 
-SlidePresenter.prototype.previousStoryClickHandler = function(ev){
+SlidePresenterExampleA.prototype.previousStoryClickHandler = function(ev){
   ev.preventDefault();
   this.controller.previousStory();
 };
 
 
 // Data event handlers
-SlidePresenter.prototype.storyIndexChangeHandler = function(story) {
+SlidePresenterExampleA.prototype.storyIndexChangeHandler = function(story) {
   console.log("SlidePresenter.storyIndexChangeHandler for model %o", story);
   this.goToSlide(story.get("storyIndex"));
 };
 
-SlidePresenter.prototype.storyLayoutChangeHandler = function(story) {
+SlidePresenterExampleA.prototype.storyLayoutChangeHandler = function(story) {
   console.log("SlidePresenter.storyLayoutChangeHandler for model %o", story);
   this.switchLayoutMode(story.get("layoutMode"));
 };
 
-SlidePresenter.prototype.bindDataEvents = function(){
+SlidePresenterExampleA.prototype.bindDataEvents = function(){
   //Subscribe to the change event on the model via the controller
   this.controller.story.on("change:storyIndex", this.storyIndexChangeHandler.bind(this));
   this.controller.story.on("change:layoutMode", this.storyLayoutChangeHandler.bind(this));
 };
 
-SlidePresenter.prototype.bindDOMEvents = function(){
-  // Get events categorized by event type
-  var eventsByType = this.parseEvents();
-
-  var self = this;
-  for (var eventType in eventsByType) {
-    this.$el.on(eventType, function(ev){
-      self.delegateEvent(ev, eventsByType[eventType]);
-    });
-  }
-
-};
-
-SlidePresenter.prototype.isElementInCollection = function(el, selector) {
-  var isInCollection = false;
-  $(selector).each(function(){
-    var test = (el == this);
-    //console.log("isElement el %o same as %o? %o", el, this, test);
-    if (el == this) {
-      isInCollection = true;
-    }
-  });
-  return isInCollection;
-};
-
-SlidePresenter.prototype.delegateEvent = function(ev, delegates) {
-  console.log("ev.currentTarget %o, ev.target %o", ev.currentTarget, ev.target);
-  for (delegate in delegates) {
-    // Is the event target in the elements that match the selector?
-    //console.log("SlidePresenter.delegateEvent ev %o", ev);
-    var inCollection = this.isElementInCollection(ev.target, delegates[delegate].selector);
-    //console.log("inCollection? %o", inCollection);
-    if (inCollection) {
-      // Fire the event handler
-      try {
-        this[delegates[delegate].handler].call(this, ev);
-      } catch(e) {
-        console.log("SlidePresenter Error in event delegation: Cannot call function %o", this[delegates[delegate].handler]);
-      }
-    }
-  }
-};
-
-SlidePresenter.prototype.goToSlide = function(slideIndex){
+SlidePresenterExampleA.prototype.goToSlide = function(slideIndex){
   console.log("SlidePresenter.goToSlide slideIndex %o", slideIndex);
   var slideOffsetFromZero = 0;
   var sliderOffset = this.$el.find(".slider-fullsize").css("left");
@@ -368,7 +631,7 @@ SlidePresenter.prototype.goToSlide = function(slideIndex){
   //this.controller.startAnimations();
 };
 
-SlidePresenter.prototype.switchLayoutMode = function(mode){
+SlidePresenterExampleA.prototype.switchLayoutMode = function(mode){
   var detailAnimation = this.controller.getAnimatedElement("detailPanes");
   var detailNavItemAnimation = this.controller.getAnimatedElement("detailItemNav");
   var detailNavAnimation = this.controller.getAnimatedElement("detailNav");
@@ -453,149 +716,3 @@ SlidePresenter.prototype.switchLayoutMode = function(mode){
   }
 };
 
-var HeroSlider = function(options){
-  console.log("HeroSlider with options %o", options);
-  var defaults = {
-    el: false,
-    autoRotate: true,
-    circular: true //continuous loop through the stories
-  };
-  this.options = $.extend({}, defaults, options);
-};
-
-HeroSlider.prototype.init = function(){
-  // Our DOM scope
-  this.el = this.options.el;
-  //console.log("HeroSlider.init: this.el %o", this.el);
-
-  // Initial behaviors
-  // Let's be very deliberate about this configuration
-  this.autoRotate = this.options.autoRotate;
-  this.circular = this.options.circular;
-
-  // Initial collection of animated objects
-  // Used as a key/value store
-  this.animatedEls = { };
-
-  //TODO: A Model. Is there better to place for this?
-  // It supports get/set of attributes
-  // And binding to data events
-  this.story = new BasicModel({
-    storyIndex: 0,
-    storyCount: 0,
-    layoutMode: "default" // "default" or "detail"
-  });
-
-  // When DOM
-  if (this.el) {
-
-    this.slidePresenter = new SlidePresenter({
-
-      // Reference the controller/creator, HeroSlider
-      controller: this,
-
-      //pass on the presentational behavior configurations
-      autoRotate: this.options.autoRotate,
-      circular: this.options.circular
-
-    });
-
-  // When testing
-  // TODO: Might be possible to do everything in test setup and teardown
-  } else {
-
-    //static default
-    this.story.set("storyCount", 5);
-
-  }
-
-};
-
-HeroSlider.prototype.run = function(){
-  if (this.autoRotate) {
-    this.startAnimations();
-  };
-};
-
-HeroSlider.prototype.goToStory = function(storyIndex){
-  console.log("HeroSlider.goToStory: %o", storyIndex);
-  this.story.set("storyIndex", +(storyIndex));
-};
-
-HeroSlider.prototype.nextStory = function(){
-  console.log("HeroSlider.nextStory: storyIndex %o storyCount %o", this.story.get("storyIndex"), this.story.get("storyCount"));
-  var storyIndex = this.story.get("storyIndex");
-  if (storyIndex + 1 == this.story.get("storyCount")) {
-    this.story.set("storyIndex", 0);
-  } else {
-    this.story.set("storyIndex", storyIndex + 1);
-  }
-};
-
-HeroSlider.prototype.previousStory = function(){
-  //console.log("HeroSlider.previousStory: storyIndex %o storyCount %o", this.story.get("storyIndex"), this.story.get("storyCount"));
-  var storyIndex = this.story.get("storyIndex");
-  if (storyIndex == 0) {
-    //update the model
-    this.story.set("storyIndex", this.story.get("storyCount") - 1);
-  } else {
-    //update the model
-    this.story.set("storyIndex", storyIndex - 1);
-  }
-};
-
-HeroSlider.prototype.layoutModeToggle = function(){
-  var layoutMode = (this.story.get("layoutMode") === "default") ? "detail" : "default";
-  //update the model
-  this.story.set("layoutMode", layoutMode);
-};
-
-HeroSlider.prototype.isPlaying = function(){
-  for (var i in this.animatedEls) {
-    if (this.animatedEls[i].isPlaying) {
-      return true;
-    }
-  }
-  return false;
-};
-
-HeroSlider.prototype.newAnimatedElement = function(name, options) {
-  var ae = new AnimatedElement(options);
-  this.animatedEls[name] = ae;
-  return this.animatedEls[name];
-};
-
-HeroSlider.prototype.getAnimatedElement = function(name) {
-  return this.animatedEls[name] || false;
-};
-
-HeroSlider.prototype.stopAnimations = function(){
-  //console.log("HeroSlider.stopAnimations...");
-  for (var i in this.animatedEls) {
-    this.animatedEls[i].stopAnimation();
-  }
-};
-
-HeroSlider.prototype.startAnimations = function(){
-  //console.log("HeroSlider.startAnimations...");
-  this.deQueueAnimations();
-  for (var i in this.animatedEls) {
-    this.animatedEls[i].startAnimation();
-  }
-};
-
-HeroSlider.prototype.deQueueAnimations = function(){
-  //console.log("HeroSlider.deQueueAnimation...");
-  for (var i in this.animatedEls) {
-    this.animatedEls[i].deQueueAnimation();
-  }
-};
-
-HeroSlider.prototype.getAnimationQueues = function(){
-  //console.log("HeroSlider.getAnimationQueues...");
-  var queues = [ ];
-  for (var i in this.animatedEls) {
-    queues.push(this.animatedEls[i].getAnimationQueue());
-  }
-  return queues;
-};
