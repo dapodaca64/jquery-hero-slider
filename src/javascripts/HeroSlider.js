@@ -914,6 +914,7 @@ SlidePresenterExampleBSummary.prototype.goToSlide = function(slideIndex){
 };
 
 SlidePresenterExampleBSummary.prototype.goToDetail = function(slideIndex){
+  this.controller.stopAutoRotation();
   console.log("SlidePresenterExampleBSummary.goToDetail %o", slideIndex);
   //set the detail story state
   if (typeof slideIndex === "number") {
