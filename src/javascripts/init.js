@@ -20,11 +20,28 @@ $.fn.heroSlider = function(){
 //DOM ready
 $(function(){
 
-  var hero = $("#hero-slider").heroSlider();
+
+  // Utilize Example A as a jQuery plug-in
+
+  var heroA = $("#hero-slider-a").heroSlider();
 
   //enable JS console debugging of this "API" of the Hero instance
-  window.heroSlider = $("#hero-slider").data("heroSlider");
-  heroSlider.init();
+  window.heroSliderExampleA = $("#hero-slider-a").data("heroSlider");
+  heroSliderExampleA.init();
+
+
+  // Use Example A directly
+
+  //var $aElement = $("#hero-slider-a");
+  //window.heroSliderExampleA = new HeroSliderExampleA({ el: $aElement });
+  //heroSliderExampleA.init();
+
+
+  // Use Example B directly
+
+  var $bElement = $("#hero-slider-b");
+  window.heroSliderExampleB = new HeroSliderExampleB({ el: $bElement });
+  heroSliderExampleB.init();
 
 
 });

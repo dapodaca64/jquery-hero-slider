@@ -138,17 +138,17 @@ describe("Hero Slider", function(){
       hero.story.set("storyIndex", 0);
 
       //A: go to story 2
-      hero.nextStory();
+      hero.nextStory(hero.story);
       var a = hero.story.get("storyIndex") + 1;
       expect(a).toBe(2);
 
       //B: go to story 3
-      hero.nextStory();
+      hero.nextStory(hero.story);
       var b = hero.story.get("storyIndex") + 1;
       expect(b).toBe(3);
 
       //C: wrap around to story 1
-      hero.nextStory();
+      hero.nextStory(hero.story);
       var c = hero.story.get("storyIndex") + 1;
       expect(c).toBe(1);
     });
@@ -161,18 +161,18 @@ describe("Hero Slider", function(){
       hero.story.set("storyIndex", 0);
 
       //A. wrap around to story 3
-      hero.previousStory()
+      hero.previousStory(hero.story)
       var a = hero.story.get("storyIndex") + 1;
       var ab = hero.story.get("storyCount");
       expect(a).toBe(ab);
 
       //B. go to story 2
-      hero.previousStory()
+      hero.previousStory(hero.story)
       var b = hero.story.get("storyIndex") + 1;
       expect(b).toBe(2);
 
       //C. go to story 1
-      hero.previousStory()
+      hero.previousStory(hero.story)
       var c = hero.story.get("storyIndex") + 1;
       expect(c).toBe(1);
     });
