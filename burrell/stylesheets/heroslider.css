@@ -70,10 +70,8 @@
       color: rgb(175, 173, 158);
     }
     .story .teaser .teaser-text-left {
-      left: 390px;
     }
     .story .teaser .teaser-text-right {
-      left: 475px;
     }
   .story .detail {
     display: none;
