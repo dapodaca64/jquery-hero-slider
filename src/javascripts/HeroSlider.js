@@ -559,6 +559,7 @@ SlidePresenterExampleA.prototype.layoutModeToggleClickHandler = function(ev){
 
 SlidePresenterExampleA.prototype.goToClickHandler = function(ev){
   ev.preventDefault();
+  this.controller.stopAutoRotation();
   console.log("inspecting %o", $(ev.target).parent() );
   var storyIndex = $(ev.target).parent().attr("data-storyindex");
   console.log("Let's go storyIndex %o", storyIndex);
@@ -567,11 +568,13 @@ SlidePresenterExampleA.prototype.goToClickHandler = function(ev){
 
 SlidePresenterExampleA.prototype.nextStoryClickHandler = function(ev){
   ev.preventDefault();
+  this.controller.stopAutoRotation();
   this.controller.nextStory(this.controller.story);
 };
 
 SlidePresenterExampleA.prototype.previousStoryClickHandler = function(ev){
   ev.preventDefault();
+  this.controller.stopAutoRotation();
   this.controller.previousStory(this.controller.story);
 };
 
@@ -856,6 +859,7 @@ SlidePresenterExampleBSummary.prototype.events = {
 // DOM event handlers
 SlidePresenterExampleBSummary.prototype.nextStoryClickHandler = function(ev){
   ev.preventDefault();
+  this.controller.stopAutoRotation();
   console.log("SlidePresenterExampleBSummary.nextStoryClickHandler: this %o", this);
   console.log("SlidePresenterExampleBSummary.nextStoryClickHandler: this.controller %o", this.controller);
 
@@ -864,11 +868,13 @@ SlidePresenterExampleBSummary.prototype.nextStoryClickHandler = function(ev){
 
 SlidePresenterExampleBSummary.prototype.previousStoryClickHandler = function(ev){
   ev.preventDefault();
+  this.controller.stopAutoRotation();
   this.controller.previousStory(this.controller.storySummary);
 };
 
 SlidePresenterExampleBSummary.prototype.detailClickHandler = function(ev){
   ev.preventDefault();
+  this.controller.stopAutoRotation();
   var detailIndex = parseInt($(ev.target).attr("data-storyindex"));
   this.goToDetail(detailIndex)
 };
@@ -914,7 +920,6 @@ SlidePresenterExampleBSummary.prototype.goToSlide = function(slideIndex){
 };
 
 SlidePresenterExampleBSummary.prototype.goToDetail = function(slideIndex){
-  this.controller.stopAutoRotation();
   console.log("SlidePresenterExampleBSummary.goToDetail %o", slideIndex);
   //set the detail story state
   if (typeof slideIndex === "number") {
