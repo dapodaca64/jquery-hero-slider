@@ -1,0 +1,10 @@
+@font-face {
+  font-family: 'silverfakeregular';
+  src: url('../fonts/silverfake/silverfake-webfont.eot');
+  src: url('../fonts/silverfake/silverfake-webfont.eot?#iefix') format('embedded-opentype'),
+  url('../fonts/silverfake/silverfake-webfont.woff') format('woff'),
+  url('../fonts/silverfake/silverfake-webfont.ttf') format('truetype'),
+  url('../fonts/silverfake/silverfake-webfont.svg#silverfakeregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}

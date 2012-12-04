@@ -1,0 +1,279 @@
+/* Hero Slider Demo CSS */
+
+/* Page Layout */
+.everything {
+}
+
+/* Hero Slider */
+.hero-slider {
+  width: 1500px;
+  height: 721px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+}
+.slider-fullsize {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 9999px;
+  height: 360px;
+}
+.hero-slider ul {
+  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Story Slide */
+.story {
+  float: left;
+  width: 1500px;
+  height: 721px;
+  margin: 0;
+  padding: 0;
+}
+  .story .relative-frame {
+    position: relative;
+    width: 1500px;
+    height: 721px;
+  }
+  .story .background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
+  .story .teaser {
+    position: absolute;
+    top: 257px;
+    left: 0;
+    width: 1500px;
+    height: 237px;
+    z-index: 3;
+  }
+    .story .teaser .story-detail {
+      display: block;
+      height: 237px;
+      width: 1500px;
+      padding: 0;
+      margin: 0;
+      position: relative;
+      z-index: 2;
+    }
+    .story .teaser .teaser-text {
+      margin-top: 92px;
+      font-family: "silverfakeregular", Times, serif;
+      font-size: 22px;
+      line-height: 26px;
+      color: rgb(175, 173, 158);
+    }
+    .story .teaser .teaser-text-left {
+      left: 390px;
+    }
+    .story .teaser .teaser-text-right {
+      left: 475px;
+    }
+  .story .detail {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1500px;
+    height: 360px;
+    z-index: 2;
+    background-color: rgba(130, 130, 130, 0.6);
+  }
+    .detail .banner {
+      position: absolute;
+      top: 82px;
+      left: 0;
+    }
+    .detail .main-text {
+      position: absolute;
+      top: 210px;
+      left: 0;
+      z-index: 1;
+      width: 1500px;
+      padding: 60px 20px 20px 70px;
+      background-color: rgba(0, 0, 0, 0.9);
+    }
+    .main-text .title {
+      color: #fff;
+      font-size: 18px;
+      line-height: 22px;
+      margin: 5px 0;
+    }
+    .main-text .description {
+      color: #f1f1f1;
+      font-size: 14px;
+      line-height: 18px;
+      margin: 5px 0;
+    }
+    .detail .quote {
+      position: absolute;
+      top: 220px;
+      left: 65px;
+      width: 615px;
+      color: #ccc;
+      font-size: 20px;
+      z-index: 3;
+      margin: 0;
+      padding: 0;
+    }
+    .detail .quote:before {
+      content: "\201C";
+      font-size: 28px;
+      color: "#fff";
+      position: relative;
+      top: 2px;
+      left: -2px;
+    }
+    .detail .quote:after {
+      content: "\201D";
+      font-size: 28px;
+      color: "#fff";
+      position: relative;
+      top: 2px;
+      left: 2px;
+    }
+
+.actionable-box {
+  display: block;
+  cursor: pointer;
+}
+.actionable-box:hover {
+}
+.actionable-text {
+  color: #333;
+}
+.actionable-text:hover {
+  color: #000;
+}
+.nav-col {
+    float: left;
+}
+  .nav-col-left {
+    margin-left: 35px;
+  }
+  .nav-col-right {
+    float: right;
+    margin-right: 60px;
+  }
+/* Hero/Story Navigation */
+.navigation {
+  width: 1500px !important;
+  position: absolute;;
+  top: 359px;
+  left: 0;
+  z-index: 3;
+}
+  .navigation .nav-col {
+    width: 84px;
+    text-align: center;
+  }
+  .navigation .nav-col .actionable-box {
+    padding: 10px;
+  }
+  .navigation .action {
+    padding: 6px;
+  }
+.detail-navigation {
+  display: none;
+}
+.item-navigation {
+  display: none;
+  top: 210px;
+  width: 50px !important;
+}
+  .item-navigation .story-detail-nav {
+    display: block;
+    width: 50px;
+    height: 50px;
+  }
+.mode-navigation {
+  position: absolute;
+  top: 210px;
+  left: 710px;
+  display: none;
+}
+  .mode-navigation .story-toggle-mode {
+    color: #ccc;
+    text-decoration: none;
+  }
+
+.slider-detail {
+  display: none;
+}
+  .slider-detail .story .detail {
+    display: block;
+  }
+
+.detail-navigation {
+  display: none;
+}
+
+.summary-navigation-left-right {
+  display: block;
+}
+  .summary-navigation-left-right .go-previous,
+  .summary-navigation-left-right .go-next {
+    display: block;
+    width: 105px;
+    height: 25px;
+    overflow: hidden;
+    text-align: left;
+    text-indent: -9000px;
+    background: url(images/sprite_background.png) 4px 4px no-repeat;
+  }
+  .summary-navigation-left-right .go-previous:hover {
+    background-position: 4px -26px;
+  }
+  /* TODO: Get a 3rd state from Blaise */
+  .summary-navigation-left-right .go-previous:active {
+    background-position: 4px -56px;
+  }
+  .summary-navigation-left-right .go-next {
+    background-position: 4px -86px;
+  }
+  .summary-navigation-left-right .go-next:hover {
+    background-position: 4px -116px;
+  }
+  .summary-navigation-left-right .go-next:active {
+    background-position: 4px -146px;
+  }
+#hero-slider .story .detail {
+  background: rgba(130, 130, 130, 0.8);
+}
+#hero-slider .item-navigation {
+  width: 260px !important;
+  padding: 0 245px;
+}
+#hero-slider .item-navigation .nav-item {
+  float: left;
+  width: 50px;
+  height: 50px;
+  margin-left: 2px;
+}
+#hero-slider .item-navigation .nav-item a {
+  opacity: 0.5;
+}
+#hero-slider .item-navigation .nav-item a.active,
+#hero-slider .item-navigation .nav-item a:hover {
+  opacity: 1;
+}
+#hero-slider .item-navigation .nav-item a:active,
+#hero-slider .item-navigation .nav-item a:focus {
+  box-shadow: 0 0 22px #FFF;
+}
+#hero-slider .detail .quote {
+  top: -2px;
+  left: 10px;
+  font-size: 18px;
+}
+#hero-slider .detail .main-text {
+  width: 1460px;
+  height: 90px;
+  padding-left: 20px;
+}

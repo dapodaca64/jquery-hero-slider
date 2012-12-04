@@ -1,0 +1,386 @@
+$ = jQuery;
+
+// Example Usage: HeroSlider Controller
+//
+// Example B: One Controller manages a two sets of slides.
+//
+// The Controller sets up the Presenters
+// Two Presenters are created to associate each set of slides to the View
+//   The Presenters contain presentational and animation logic
+//
+// One set of slides is used as a landing/default slide show
+//
+// Another set of slides is used as a detail slide show,
+//   having additional slides.
+
+// The Controller sets up two Models, one for each set of slides.
+//
+// The Controller allows the Presenter to Access the Model
+//
+// The Model contains basic data attributes and event binding
+//   the slideIndex, and the layoutMode
+//   of "default" and "detail" (coupled) states
+//   of each slide/story
+
+var HeroSliderBurrell = function(options){
+  HeroSlider.call(this, options); //call super constructor
+};
+
+HeroSliderBurrell.prototype = Object.create(HeroSlider.prototype);
+
+HeroSliderBurrell.prototype.init = function(){
+  // Model for the landing state slides
+  this.storySummary = new BasicModel({
+    storyIndex: 0,
+    storyCount: 0
+  });
+
+  // Model for the detail state slides
+  this.storyDetail = new BasicModel({
+    storyIndex: 0,
+    storyCount: 0
+  });
+
+  // Assure we have DOM before creating Presenters
+  if (this.el) {
+
+    this.summaryPresenter = new SlidePresenterBurrellSummary({
+
+      // Reference the controller/creator
+      controller: this,
+
+      //pass on the presentational behavior configurations
+      autoRotate: this.options.autoRotate,
+      circular: this.options.circular
+
+    });
+
+    this.detailPresenter = new SlidePresenterBurrellDetail({
+
+      // Reference the controller/creator
+      controller: this,
+
+      //pass on the presentational behavior configurations
+      autoRotate: this.options.autoRotate,
+      circular: this.options.circular
+
+    });
+
+    if (this.autoRotate) {
+      console.log("HeroSliderBurrell going to auto-rotate!");
+      this.startAutoRotation();
+    }
+  }
+
+};
+
+HeroSliderBurrell.prototype.startAutoRotation = function(){
+  this.setRotateTimeout();
+};
+
+HeroSliderBurrell.prototype.stopAutoRotation = function(){
+  this.stopRotateTimeout();
+};
+
+HeroSliderBurrell.prototype.setRotateTimeout = function(){
+  this.rotateTimeout = setTimeout(function(){
+    this.nextStory(this.storySummary);
+    this.setRotateTimeout();
+  }.bind(this), this.options.autoRotateWait);
+};
+
+HeroSliderBurrell.prototype.stopRotateTimeout = function(){
+  if (this.rotateTimeout) {
+    clearTimeout(this.rotateTimeout);
+  }
+};
+
+var SlidePresenterBurrellSummary = function(options){
+  SlidePresenter.call(this, options); //call super constructor
+  this.init();
+};
+SlidePresenterBurrellSummary.prototype = Object.create(SlidePresenter.prototype);
+SlidePresenterBurrellSummary.prototype.parent = SlidePresenter.prototype;
+SlidePresenterBurrellSummary.prototype.init = function() {
+  // Call the parent init function
+  this.parent.init.call(this);
+
+  var storyCount;
+  if (this.$el) {
+    storyCount = this.$el.find(".slider-summary .story").length;
+    if (storyCount) {
+      //update story count on the Model
+      this.controller.storySummary.set("storyCount", storyCount);
+
+      //register animated elements
+      this.controller.newAnimatedElement("storySummary", {
+        el: this.$el.find(".slider-fullsize.slider-summary"),
+        animateDuration: 1000
+      });
+
+      this.controller.newAnimatedElement("storyDetail", {
+        el: this.$el.find(".slider-fullsize.slider-detail"),
+        animateDuration: 1000
+      });
+
+      this.controller.newAnimatedElement("summaryNav", {
+        el: this.$el.find(".summary-navigation"),
+        animateDuration: 400
+      });
+
+    }
+  }
+};
+SlidePresenterBurrellSummary.prototype.events = {
+  "click .summary-navigation-left-right a.go-next": "nextStoryClickHandler",
+  "click .summary-navigation-left-right a.go-previous": "previousStoryClickHandler",
+  "click .slider-summary a.go-detail": "detailClickHandler"
+};
+
+// DOM event handlers
+SlidePresenterBurrellSummary.prototype.nextStoryClickHandler = function(ev){
+  ev.preventDefault();
+  console.log("SlidePresenterBurrellSummary.nextStoryClickHandler: this %o", this);
+  console.log("SlidePresenterBurrellSummary.nextStoryClickHandler: this.controller %o", this.controller);
+  this.controller.stopAutoRotation();
+  this.controller.nextStory(this.controller.storySummary);
+};
+
+SlidePresenterBurrellSummary.prototype.previousStoryClickHandler = function(ev){
+  ev.preventDefault();
+  this.controller.stopAutoRotation();
+  this.controller.previousStory(this.controller.storySummary);
+};
+
+SlidePresenterBurrellSummary.prototype.detailClickHandler = function(ev){
+  ev.preventDefault();
+  var detailIndex = parseInt($(ev.target).attr("data-storyindex"));
+  this.goToDetail(detailIndex)
+};
+
+// Data event handlers
+SlidePresenterBurrellSummary.prototype.storyIndexChangeHandler = function(story) {
+  console.log("SlidePresenterBurrellSummary.storyIndexChangeHandler for model %o", story);
+  this.goToSlide(story.get("storyIndex"));
+};
+
+SlidePresenterBurrellSummary.prototype.bindDataEvents = function(){
+  //Subscribe to the change event on the model via the controller
+  this.controller.storySummary.on("change:storyIndex", this.storyIndexChangeHandler.bind(this));
+};
+
+SlidePresenterBurrellSummary.prototype.goToSlide = function(slideIndex){
+  console.log("SlidePresenterBurrellSummary.goToSlide slideIndex %o", slideIndex);
+  var slideOffsetFromZero = 0;
+  var sliderOffset = this.$el.find(".slider-fullsize.slider-summary").css("left");
+  sliderOffset = -(sliderOffset.substring(0, sliderOffset.length-2));
+  this.$el.find(".slider-summary .story").each(function(idx) {
+    if (idx+1 <= slideIndex) {
+      slideOffsetFromZero += $(this).width();
+    };
+  });
+  console.log("SlidePresenterBurrellSummary.goToSlide sliderOffset %o, total slideOffsetFromZero %o", sliderOffset, slideOffsetFromZero);
+  var totalSlide = slideOffsetFromZero - sliderOffset;
+  console.log("SlidePresenterBurrellSummary.goToSlide total slide: %o", totalSlide);
+
+  var navAnimation = this.controller.getAnimatedElement("summaryNav");
+  navAnimation.options.animateProperties = { opacity: 0 };
+  navAnimation.startAnimation();
+
+  var storyAnimation = this.controller.getAnimatedElement("storySummary");
+  storyAnimation.options.animateProperties.left = "-="+totalSlide;
+  storyAnimation.options.animateCallback = function(){
+    navAnimation.options.animateProperties = { opacity: 1 };
+    navAnimation.startAnimation();
+  };
+  console.log("working with storyAnimation %o for element %o, totalSlide %o left", storyAnimation, storyAnimation.options.el[0], totalSlide);
+  storyAnimation.startAnimation();
+
+};
+
+SlidePresenterBurrellSummary.prototype.goToDetail = function(slideIndex){
+  this.controller.stopAutoRotation();
+  console.log("SlidePresenterBurrellSummary.goToDetail %o", slideIndex);
+  //set the detail story state
+  if (typeof slideIndex === "number") {
+    //via the Controller, The Detail Presenter sets this
+    this.controller.detailPresenter.snapToStory(slideIndex);
+  }
+  var detailAnimation = this.controller.getAnimatedElement("storyDetail");
+  var summaryAnimation = this.controller.getAnimatedElement("storySummary");
+  var detailNavAnimation = this.controller.getAnimatedElement("detailNav");
+  var summaryNavAnimation = this.controller.getAnimatedElement("summaryNav");
+  var itemNavAnimation = this.controller.getAnimatedElement("itemNav");
+
+  console.log("itemNavAnimation %o on el %o", itemNavAnimation, itemNavAnimation.options.el[0]);
+  console.log("detailNavAnimation %o on el %o", detailNavAnimation, detailNavAnimation.options.el[0]);
+  console.log("summaryNavAnimation %o on el %o", summaryNavAnimation, summaryNavAnimation.options.el[0]);
+
+  detailAnimation.options.animateProperties = { opacity: 1 };
+  detailAnimation.options.animateCallback = function(){ };
+
+  summaryAnimation.options.animateProperties = { opacity: 0 };
+  summaryAnimation.options.animateCallback = function(){
+    $(summaryAnimation.options.el).hide();
+  };
+  summaryAnimation.startAnimation();
+
+  $(detailAnimation.options.el).css({ opacity: 0, display: "block" });
+  detailAnimation.startAnimation();
+
+  summaryNavAnimation.options.animateProperties = { opacity: 0 };
+  summaryNavAnimation.options.animateCallback = function(){
+    $(summaryNavAnimation.options.el).hide();
+  };
+  summaryNavAnimation.startAnimation();
+
+  detailNavAnimation.options.el.css({ opacity: "0", display: "block" });
+  detailNavAnimation.options.animateProperties = { opacity: 1 };
+  detailNavAnimation.options.animateCallback = function(){ };
+  detailNavAnimation.startAnimation();
+
+  itemNavAnimation.options.el.css({ opacity: "0", display: "block" });
+  itemNavAnimation.options.animateProperties = { opacity: 1 };
+  itemNavAnimation.options.animateCallback = function(){ };
+  itemNavAnimation.startAnimation();
+};
+
+var SlidePresenterBurrellDetail = function(options){
+  SlidePresenter.call(this, options); //call super constructor
+  this.init();
+};
+SlidePresenterBurrellDetail.prototype = Object.create(SlidePresenter.prototype);
+SlidePresenterBurrellDetail.prototype.parent = SlidePresenter.prototype;
+SlidePresenterBurrellDetail.prototype.init = function() {
+  // Call the parent init function
+  this.parent.init.call(this);
+
+  var storyCount;
+
+  if (this.$el) {
+    storyCount = this.$el.find(".slider-detail .story").length;
+    if (storyCount) {
+      //update story count on the Model
+      this.controller.storyDetail.set("storyCount", storyCount);
+
+      //register animated elements
+      this.controller.newAnimatedElement("storyDetail", {
+        el: this.$el.find(".slider-fullsize.slider-detail"),
+        animateDuration: 1000
+      });
+
+      this.controller.newAnimatedElement("detailNav", {
+        el: this.$el.find(".detail-navigation"),
+        animateDuration: 200
+      });
+
+      this.controller.newAnimatedElement("itemNav", {
+        el: this.$el.find(".item-navigation"),
+        animateDuration: 200
+      });
+    }
+  }
+};
+SlidePresenterBurrellDetail.prototype.events = {
+  "click .detail-navigation .go-next": "nextStoryClickHandler",
+  "click .detail-navigation .go-previous": "previousStoryClickHandler",
+  "click .item-navigation .go-to-story": "goToClickHandler"
+};
+
+// DOM event handlers
+SlidePresenterBurrellDetail.prototype.goToClickHandler = function(ev){
+  ev.preventDefault();
+  console.log("inspecting %o", $(ev.target).parent() );
+  var storyIndex = $(ev.target).parent().attr("data-storyindex");
+  console.log("Let's go storyIndex %o", storyIndex);
+  this.controller.goToStory(this.controller.storyDetail, storyIndex);
+};
+
+SlidePresenterBurrellDetail.prototype.nextStoryClickHandler = function(ev){
+  ev.preventDefault();
+  this.controller.nextStory(this.controller.storyDetail);
+};
+
+SlidePresenterBurrellDetail.prototype.previousStoryClickHandler = function(ev){
+  ev.preventDefault();
+  this.controller.previousStory(this.controller.storyDetail);
+};
+
+
+// Data event handlers
+SlidePresenterBurrellDetail.prototype.storyIndexChangeHandler = function(story) {
+  console.log("SlidePresenterBurrellDetail.storyIndexChangeHandler for model %o", story);
+  console.log("Calling stopAnimations %o", this.controller);
+  this.controller.stopAnimations();
+  this.goToSlide(story.get("storyIndex"));
+  this.updateActiveStateItemNav(story.get("storyIndex"));
+};
+
+SlidePresenterBurrellDetail.prototype.bindDataEvents = function(){
+  //Subscribe to the change event on the model via the controller
+  this.controller.storyDetail.on("change:storyIndex", this.storyIndexChangeHandler.bind(this));
+};
+
+SlidePresenterBurrellDetail.prototype.snapToStory = function(slideIndex){
+  console.log("SlidePresenterBurrellDetail.snapToStory slideIndex %o", slideIndex);
+  var newSlidePos = this.getSlideOffsetFromZero(slideIndex);
+  var storyAnimation = this.controller.getAnimatedElement("storyDetail");
+  storyEl = storyAnimation.options.el;
+
+  //set the slide visually
+  $(storyEl).css("left", -newSlidePos+"px");
+
+  //set the model property
+  var model = this.controller.storyDetail;
+  this.controller.storyDetail.set("storyIndex", slideIndex);
+};
+
+SlidePresenterBurrellDetail.prototype.getSlideOffsetFromZero = function(slideIndex){
+  var slideOffsetFromZero = 0;
+  var sliderOffset = this.getSliderOffset();
+  this.$el.find(".slider-detail .story").each(function(idx) {
+    if (idx+1 <= slideIndex) {
+      slideOffsetFromZero += $(this).width();
+    };
+  });
+  return slideOffsetFromZero;
+};
+
+SlidePresenterBurrellDetail.prototype.getSliderOffset = function(slideIndex){
+  var sliderOffset = this.$el.find(".slider-fullsize.slider-detail").css("left");
+  return -( sliderOffset.substring(0, sliderOffset.length-2) );
+};
+
+SlidePresenterBurrellDetail.prototype.getSlideMoveOffset = function(slideIndex){
+  var sliderOffset = this.getSliderOffset();
+  var slideOffsetFromZero = this.getSlideOffsetFromZero(slideIndex);
+  var totalSlide = slideOffsetFromZero - sliderOffset;
+  return totalSlide;
+};
+
+SlidePresenterBurrellDetail.prototype.goToSlide = function(slideIndex){
+  //console.log("SlidePresenterBurrellDetail.goToSlide slideIndex %o", slideIndex);
+
+  var navAnimation = this.controller.getAnimatedElement("detailNav");
+  navAnimation.options.animateProperties = { opacity: 0 };
+  navAnimation.startAnimation();
+
+  var storyAnimation = this.controller.getAnimatedElement("storyDetail");
+  var totalSlide = this.getSlideMoveOffset(slideIndex);
+  console.log("totalSlide %o", totalSlide);
+  if (totalSlide != 0) {
+    storyAnimation.options.animateProperties.left = "-="+totalSlide;
+    storyAnimation.options.animateCallback = function(){
+      navAnimation.options.animateProperties = { opacity: 1 };
+      navAnimation.startAnimation();
+    };
+    storyAnimation.startAnimation();
+  }
+
+};
+
+
+SlidePresenterBurrellDetail.prototype.updateActiveStateItemNav = function(slideIndex){
+  console.log("SlidePresenterBurrellDetail.updateActiveStateItemNav slideIndex %o", slideIndex);
+  this.$el.find(".item-navigation .nav-item a").removeClass("active").eq(slideIndex).addClass("active");
+};
