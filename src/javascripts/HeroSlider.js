@@ -88,6 +88,12 @@ var Animator = {
   },
   getAnimationQueue: function(el, queueName){
     return $(el).queue(queueName);
+  },
+  fadeIn: function(el, duration, callback){
+    $(el).fadeIn(duration, callback);
+  },
+  fadeOut: function(el, duration, callback){
+    $(el).fadeOut(duration, callback);
   }
 }
 
