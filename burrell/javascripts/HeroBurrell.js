@@ -135,8 +135,8 @@ SlidePresenterBurrellSummary.prototype.init = function() {
 };
 SlidePresenterBurrellSummary.prototype.events = {
   "click .summary-navigation-left-right a.go-next": "nextStoryClickHandler",
-  "click .summary-navigation-left-right a.go-previous": "previousStoryClickHandler"
-  //"click .slider-summary a.go-detail": "detailClickHandler"
+  "click .summary-navigation-left-right a.go-previous": "previousStoryClickHandler",
+  "click .slider-summary a.go-detail": "detailClickHandler"
 };
 
 // DOM event handlers
