@@ -124,17 +124,19 @@ SlidePresenterBurrellSummary.prototype.init = function() {
       });
 
       this.controller.newAnimatedElement("summaryNav", {
-        el: this.$el.find(".summary-navigation"),
+        el: this.$el.find(".summary-navigation-left-right"),
         animateDuration: 400
       });
 
+      this.showSummarySlides();
+      this.showSummaryNav();
     }
   }
 };
 SlidePresenterBurrellSummary.prototype.events = {
   "click .summary-navigation-left-right a.go-next": "nextStoryClickHandler",
-  "click .summary-navigation-left-right a.go-previous": "previousStoryClickHandler",
-  "click .slider-summary a.go-detail": "detailClickHandler"
+  "click .summary-navigation-left-right a.go-previous": "previousStoryClickHandler"
+  //"click .slider-summary a.go-detail": "detailClickHandler"
 };
 
 // DOM event handlers
@@ -206,45 +208,95 @@ SlidePresenterBurrellSummary.prototype.goToDetail = function(slideIndex){
     //via the Controller, The Detail Presenter sets this
     this.controller.detailPresenter.snapToStory(slideIndex);
   }
-  var detailAnimation = this.controller.getAnimatedElement("storyDetail");
-  var summaryAnimation = this.controller.getAnimatedElement("storySummary");
-  var detailNavAnimation = this.controller.getAnimatedElement("detailNav");
-  var summaryNavAnimation = this.controller.getAnimatedElement("summaryNav");
-  var itemNavAnimation = this.controller.getAnimatedElement("itemNav");
 
-  console.log("itemNavAnimation %o on el %o", itemNavAnimation, itemNavAnimation.options.el[0]);
-  console.log("detailNavAnimation %o on el %o", detailNavAnimation, detailNavAnimation.options.el[0]);
-  console.log("summaryNavAnimation %o on el %o", summaryNavAnimation, summaryNavAnimation.options.el[0]);
-
+  this.hideDetailSlides();
+  /*
   detailAnimation.options.animateProperties = { opacity: 1 };
   detailAnimation.options.animateCallback = function(){ };
+  $(detailAnimation.options.el).css({ opacity: 0, display: "block" });
+  detailAnimation.startAnimation();
+  */
 
+
+  this.showSummarySlides();
+  /*
   summaryAnimation.options.animateProperties = { opacity: 0 };
   summaryAnimation.options.animateCallback = function(){
     $(summaryAnimation.options.el).hide();
   };
   summaryAnimation.startAnimation();
+  */
 
-  $(detailAnimation.options.el).css({ opacity: 0, display: "block" });
-  detailAnimation.startAnimation();
+  this.hideSummaryNav();
 
-  summaryNavAnimation.options.animateProperties = { opacity: 0 };
-  summaryNavAnimation.options.animateCallback = function(){
-    $(summaryNavAnimation.options.el).hide();
-  };
-  summaryNavAnimation.startAnimation();
-
+  this.showDetailNav();
+  /*
   detailNavAnimation.options.el.css({ opacity: "0", display: "block" });
   detailNavAnimation.options.animateProperties = { opacity: 1 };
   detailNavAnimation.options.animateCallback = function(){ };
   detailNavAnimation.startAnimation();
+  */
 
+  this.showItemNav();
+  /*
   itemNavAnimation.options.el.css({ opacity: "0", display: "block" });
   itemNavAnimation.options.animateProperties = { opacity: 1 };
   itemNavAnimation.options.animateCallback = function(){ };
   itemNavAnimation.startAnimation();
+  */
 };
 
+SlidePresenterBurrellSummary.prototype.showSummarySlides = function(){
+  var summaryAnimation = this.controller.getAnimatedElement("storySummary");
+  Animator.fadeIn(summaryAnimation.options.el, summaryAnimation.options.duration);
+};
+
+SlidePresenterBurrellSummary.prototype.hideSummarySlides = function(){
+  var summaryAnimation = this.controller.getAnimatedElement("storySummary");
+  Animator.fadeOut(summaryAnimation.options.el, summaryAnimation.options.duration);
+};
+
+SlidePresenterBurrellSummary.prototype.showDetailSlides = function(){
+  var detailAnimation = this.controller.getAnimatedElement("storyDetail");
+  Animator.fadeIn(detailAnimation.options.el, detailAnimation.options.duration);
+};
+
+SlidePresenterBurrellSummary.prototype.hideDetailSlides = function(){
+  var detailAnimation = this.controller.getAnimatedElement("storyDetail");
+  Animator.fadeOut(detailAnimation.options.el, detailAnimation.options.duration);
+};
+
+SlidePresenterBurrellSummary.prototype.showDetailNav = function(){
+  var detailNavAnimation = this.controller.getAnimatedElement("detailNav");
+  Animator.fadeIn(detailNavAnimation.options.el, detailNavAnimation.options.duration);
+};
+
+SlidePresenterBurrellSummary.prototype.hideDetailNav = function(){
+  var detailNavAnimation = this.controller.getAnimatedElement("detailNav");
+  Animator.fadeOut(detailNavAnimation.options.el, detailNavAnimation.options.duration);
+};
+
+SlidePresenterBurrellSummary.prototype.showItemNav = function(){
+  var itemNavAnimation = this.controller.getAnimatedElement("itemNav");
+  Animator.fadeIn(itemNavAnimation.options.el, itemNavAnimation.options.duration);
+};
+
+SlidePresenterBurrellSummary.prototype.hideItemNav = function(){
+  var itemNavAnimation = this.controller.getAnimatedElement("itemNav");
+  Animator.fadeOut(itemNavAnimation.options.el, itemNavAnimation.options.duration);
+};
+
+SlidePresenterBurrellSummary.prototype.showSummaryNav = function(){
+  var summaryNavAnimation = this.controller.getAnimatedElement("summaryNav");
+  Animator.fadeIn(summaryNavAnimation.options.el, summaryNavAnimation.options.duration);
+};
+SlidePresenterBurrellSummary.prototype.hideSummaryNav = function(){
+  var summaryNavAnimation = this.controller.getAnimatedElement("summaryNav");
+  Animator.fadeOut(summaryNavAnimation.options.el, summaryNavAnimation.options.duration);
+};
+
+
+/* Presenter: Detail Slides */
 var SlidePresenterBurrellDetail = function(options){
   SlidePresenter.call(this, options); //call super constructor
   this.init();
