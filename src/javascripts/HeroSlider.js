@@ -29,13 +29,35 @@ BasicModel.prototype.get = function(property){
 };
 
 BasicModel.prototype.set = function(property, value){
-  this.previous[property] = this[property];
-  this[property] = value;
-  if (value != this.previous[property]) {
-    this.trigger("change");
-    this.trigger("change:"+property);
+  var propertyCollection = { };
+  if (typeof property === "string") {
+    propertyCollection[property] = value;
+  } else if (typeof property === "object") {
+    propertyCollection = property;
   }
-  return this[property] = value;
+
+  var hasChanged = false;
+  for (var i in propertyCollection) {
+    var property = i,
+        value = propertyCollection[i];
+
+    //update the previous version before setting the new property
+    this.previous[property] = this[property];
+
+    //set the property
+    this[property] = value;
+
+    //trigger change event if the property has changed
+    if (value != this.previous[property]) {
+      this.trigger("change:"+property);
+      hasChanged = true;
+    }
+  }
+  if (hasChanged) {
+    this.trigger("change");
+  }
+
+  return this;
 };
 
 BasicModel.prototype.trigger = function(triggerName) {
@@ -94,8 +116,32 @@ var Animator = {
   },
   fadeOut: function(el, duration, callback){
     $(el).fadeOut(duration, callback);
+  },
+  getBoxDimensions: function(el){
+    return {
+      width: $(el).width(),
+      height: $(el).height()
+    }
+  },
+  resizeBox: function(el, newBounds, duration){
+    if (duration && duration > 0) {
+      $(el).animate({
+        width: newBounds.width,
+        height: newBounds.height
+        },
+        duration,
+        easing,
+        callback
+      );
+    } else {
+      console.log("set CSS on el %o", el[0]);
+      $(el).css({
+        width: newBounds.width,
+        height: newBounds.height
+      });
+    }
   }
-}
+};
 
 //General Animation Controller for one DOM element
 var AnimatedElement = function(options){
@@ -114,7 +160,7 @@ var AnimatedElement = function(options){
   };
 
   this.options = $.extend({}, defaults, options);
-  this.el = this.options.el;
+  this.$el = this.options.el;
   this.isPlaying = false;
 
   this.startAnimation = function(){
@@ -123,7 +169,7 @@ var AnimatedElement = function(options){
     this.isPlaying = true;
 
     //external interface
-    Animator.startAnimation(this.el, this.options.animateProperties, {
+    Animator.startAnimation(this.$el, this.options.animateProperties, {
       duration: this.options.animateDuration,
       easing: this.options.animateEasing,
       callback: this.options.animateCallback
@@ -135,17 +181,17 @@ var AnimatedElement = function(options){
     this.isPlaying = false;
 
     //external interface
-    Animator.stopAnimation(this.el);
+    Animator.stopAnimation(this.$el);
   };
 
   this.deQueueAnimation = function(){
     //external interface
-    Animator.deQueueAnimation(this.el, this.options.animateProperties.queueName);
+    Animator.deQueueAnimation(this.$el, this.options.animateProperties.queueName);
   };
 
   this.getAnimationQueue = function(){
     //external interface
-    return Animator.getAnimationQueue(this.el, this.options.animateProperties.queueName);
+    return Animator.getAnimationQueue(this.$el, this.options.animateProperties.queueName);
   };
 
 };
@@ -174,8 +220,8 @@ var HeroSlider = function(options){
   this.options = $.extend({}, defaults, options);
 
   // Our DOM scope
-  this.el = this.options.el;
-  //console.log("HeroSlider.init: this.el %o", this.el);
+  this.$el = $(this.options.el);
+  //console.log("HeroSlider.init: this.$el %o", this.$el);
 
   // Initial behaviors
   // Let's be very deliberate about this configuration
@@ -437,7 +483,7 @@ HeroSliderExampleA.prototype.init = function(){
   });
 
   // When DOM
-  if (this.el) {
+  if (this.$el) {
 
     this.slidePresenter = new SlidePresenterExampleA({
 
@@ -767,7 +813,7 @@ HeroSliderExampleB.prototype.init = function(){
   });
 
   // Assure we have DOM before creating Presenters
-  if (this.el) {
+  if (this.$el) {
 
     this.summaryPresenter = new SlidePresenterExampleBSummary({
 

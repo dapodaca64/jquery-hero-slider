@@ -8,7 +8,7 @@ $.fn.heroSlider = function(){
 
   return $(this).each(function(){
 
-    var slider = new HeroSliderBurrell({ el: this, autoRotate: true });
+    var slider = new HeroSliderBurrell({ el: this, autoRotate: false });
 
     //expose the base object as an "API"
     $(this).data("heroSlider", slider);

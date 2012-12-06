@@ -41,8 +41,10 @@ HeroSliderBurrell.prototype.init = function(){
     storyCount: 0
   });
 
+  this.setupViewport();
+
   // Assure we have DOM before creating Presenters
-  if (this.el) {
+  if (this.$el.length) {
 
     this.summaryPresenter = new SlidePresenterBurrellSummary({
 
@@ -70,7 +72,35 @@ HeroSliderBurrell.prototype.init = function(){
       console.log("HeroSliderBurrell going to auto-rotate!");
       this.startAutoRotation();
     }
+
   }
+
+};
+
+HeroSliderBurrell.prototype.setupViewport = function(){
+
+  // Model for the viewport size
+  var viewportDims = Animator.getBoxDimensions(window);
+  this.viewport = new BasicModel({
+    width: viewportDims.width,
+    height: viewportDims.height
+  });
+
+  // Resize the hero based on the viewport
+  this.resizeHero(viewportDims);
+
+  //Subscribe to the change event on the model via the controller
+  this.viewport.on("change", this.viewportChangeHandler.bind(this));
+
+  //Bind the DOM event that updates the model
+  $(window).resize(function(ev){
+  console.log("HeroSliderBurrell.window resize this %o..", this);
+    var viewportDims = Animator.getBoxDimensions(window);
+    this.viewport.set({
+      width: viewportDims.width,
+      height: viewportDims.height
+    });
+  }.bind(this));
 
 };
 
@@ -95,8 +125,28 @@ HeroSliderBurrell.prototype.stopRotateTimeout = function(){
   }
 };
 
+HeroSliderBurrell.prototype.viewportChangeHandler = function(viewport){
+  console.log("HeroSliderBurrell.viewportChangeHandler(%o) this %o", viewport, this);
+  this.resizeHero(viewport);
+};
+
+HeroSliderBurrell.prototype.resizeHero = function(vp){
+  this.$el.css({
+    backgroundColor: "red"
+  });
+  Animator.resizeBox(this.$el, {
+    width: vp.width,
+    height: vp.height
+  }, 0);
+};
+
+
+
+/* Summary Slides Presenter */
+
 var SlidePresenterBurrellSummary = function(options){
   SlidePresenter.call(this, options); //call super constructor
+  this.$el = this.controller.$el;
   this.init();
 };
 SlidePresenterBurrellSummary.prototype = Object.create(SlidePresenter.prototype);
@@ -106,27 +156,15 @@ SlidePresenterBurrellSummary.prototype.init = function() {
   this.parent.init.call(this);
 
   var storyCount;
+  console.log("this.$el %o", this.$el);
   if (this.$el) {
-    storyCount = this.$el.find(".slider-summary .story").length;
+    storyCount = this.controller.$el.find(".slider-summary .story").length;
     if (storyCount) {
       //update story count on the Model
       this.controller.storySummary.set("storyCount", storyCount);
 
       //register animated elements
-      this.controller.newAnimatedElement("storySummary", {
-        el: this.$el.find(".slider-fullsize.slider-summary"),
-        animateDuration: 1000
-      });
-
-      this.controller.newAnimatedElement("storyDetail", {
-        el: this.$el.find(".slider-fullsize.slider-detail"),
-        animateDuration: 1000
-      });
-
-      this.controller.newAnimatedElement("summaryNav", {
-        el: this.$el.find(".summary-navigation-left-right"),
-        animateDuration: 400
-      });
+      this.setupAnimatedElements();
 
       this.showSummarySlides();
       this.showSummaryNav();
@@ -166,9 +204,10 @@ SlidePresenterBurrellSummary.prototype.storyIndexChangeHandler = function(story)
   this.goToSlide(story.get("storyIndex"));
 };
 
-SlidePresenterBurrellSummary.prototype.bindDataEvents = function(){
-  //Subscribe to the change event on the model via the controller
+ SlidePresenterBurrellSummary.prototype.bindDataEvents = function(){
+    //Subscribe to the change event on the model via the controller
   this.controller.storySummary.on("change:storyIndex", this.storyIndexChangeHandler.bind(this));
+  this.controller.viewport.on("change", this.resizeBackgrounds.bind(this));
 };
 
 SlidePresenterBurrellSummary.prototype.goToSlide = function(slideIndex){
@@ -179,7 +218,7 @@ SlidePresenterBurrellSummary.prototype.goToSlide = function(slideIndex){
   this.$el.find(".slider-summary .story").each(function(idx) {
     if (idx+1 <= slideIndex) {
       slideOffsetFromZero += $(this).width();
-    };
+    }
   });
   console.log("SlidePresenterBurrellSummary.goToSlide sliderOffset %o, total slideOffsetFromZero %o", sliderOffset, slideOffsetFromZero);
   var totalSlide = slideOffsetFromZero - sliderOffset;
@@ -295,6 +334,44 @@ SlidePresenterBurrellSummary.prototype.hideSummaryNav = function(){
   Animator.fadeOut(summaryNavAnimation.options.el, summaryNavAnimation.options.duration);
 };
 
+SlidePresenterBurrellSummary.prototype.setupAnimatedElements = function(){
+
+  console.log("SlidePresenterBurrellSummary.setupAnimatedElements..");
+  this.controller.newAnimatedElement("summaryBackground", {
+    el: this.$el.find(".slider-fullsize.slider-summary .background.summary"),
+    animateDuration: 1000
+  });
+
+  this.controller.newAnimatedElement("storySummary", {
+    el: this.$el.find(".slider-fullsize.slider-summary"),
+    animateDuration: 1000
+  });
+
+  this.controller.newAnimatedElement("storyDetail", {
+    el: this.$el.find(".slider-fullsize.slider-detail"),
+    animateDuration: 1000
+  });
+
+  this.controller.newAnimatedElement("summaryNav", {
+    el: this.$el.find(".summary-navigation-left-right"),
+    animateDuration: 400
+  });
+
+  var viewportDims = Animator.getBoxDimensions(window);
+  this.resizeBackgrounds(viewportDims);
+
+};
+
+SlidePresenterBurrellSummary.prototype.resizeBackgrounds = function(vp){
+  var background = this.controller.getAnimatedElement("summaryBackground")
+  console.log("background.$el %o", background.$el);
+  console.log("set to width: %o, height: %o", vp.width, vp.height);
+  Animator.resizeBox(background.$el, {
+    width: vp.width,
+    height: vp.height
+  }, 0);
+
+};
 
 /* Presenter: Detail Slides */
 var SlidePresenterBurrellDetail = function(options){
@@ -357,7 +434,6 @@ SlidePresenterBurrellDetail.prototype.previousStoryClickHandler = function(ev){
   ev.preventDefault();
   this.controller.previousStory(this.controller.storyDetail);
 };
-
 
 // Data event handlers
 SlidePresenterBurrellDetail.prototype.storyIndexChangeHandler = function(story) {
