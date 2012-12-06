@@ -1,14 +1,8 @@
-/* Hero Slider Demo CSS */
-
-/* Page Layout */
-.everything {
-}
-
 /* Hero Slider */
 .hero-slider {
-  width: 1500px;
-  height: 721px;
-  margin: 0 auto;
+  width: 100%;
+  min-height: 200px;
+  margin: 0;
   position: relative;
   overflow: hidden;
 }
@@ -29,15 +23,19 @@
 /* Story Slide */
 .story {
   float: left;
+  /*
   width: 1500px;
   height: 721px;
+  */
+  width: 100%;
+  height: 100%;
   margin: 0;
   padding: 0;
 }
   .story .relative-frame {
     position: relative;
-    width: 1500px;
-    height: 721px;
+    width: 100%;
+    height: 100%;
   }
   .story .background {
     position: absolute;
@@ -49,14 +47,14 @@
     position: absolute;
     top: 257px;
     left: 0;
-    width: 1500px;
+    width: 100%;
     height: 237px;
     z-index: 3;
   }
     .story .teaser .story-detail {
       display: block;
       height: 237px;
-      width: 1500px;
+      width: 100%;
       padding: 0;
       margin: 0;
       position: relative;
@@ -78,7 +76,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 1500px;
+    width: 100%;
     height: 360px;
     z-index: 2;
     background-color: rgba(130, 130, 130, 0.6);
@@ -93,7 +91,7 @@
       top: 210px;
       left: 0;
       z-index: 1;
-      width: 1500px;
+      width: 100%;
       padding: 60px 20px 20px 70px;
       background-color: rgba(0, 0, 0, 0.9);
     }
@@ -161,7 +159,7 @@
   }
 /* Hero/Story Navigation */
 .navigation {
-  width: 1500px !important;
+  width: 100% !important;
   position: absolute;;
   top: 359px;
   left: 0;

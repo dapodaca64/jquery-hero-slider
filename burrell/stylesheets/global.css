@@ -1,0 +1,11 @@
+/* Global Burell Styles */
+
+/* Page */
+body {
+  background: url(images/background_page.jpg) 50% 0 repeat;
+  height: 10000px;
+}
+.everything {
+  width: 100%;
+  min-width: 960px;
+}
