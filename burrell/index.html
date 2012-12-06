@@ -5,12 +5,14 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/webfont.css" />
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/grid_1500_30_col.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/global.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/heroslider.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/modules.css" media="screen" />
   </head>
   <body>
-    <div class="everything container_30">
-      <h1>Hero</h1>
+    <div class="everything">
 
+      <!-- HERO -->
       <div id="hero-slider" class="hero-slider">
         <div class="slider-fullsize slider-summary" style="display:none">
         <ul>
@@ -18,7 +20,7 @@
           <!--
             <img class="background" src="images/background_summary_1.jpg" width="1500" height="721" alt="story 1 background" />
             -->
-            <img class="background" src="images/background_summary_poc.jpg" width="1500" height="721" alt="" />
+            <img class="background summary" src="images/background_summary_poc.jpg" width="1500" height="721" alt="" />
             <div class="teaser">
               <img class="background" src="images/background_teaser_1.jpg" width="1500" height="237" alt="" />
               <!--
@@ -48,7 +50,7 @@
             </ul>
           </div></li>
           <li class="story"><div class="relative-frame">
-            <img class="background" src="images/background_summary_2.jpg" width="1500" height="721" alt="story 2 background" />
+            <img class="background summary" src="images/background_summary_2.jpg" width="1500" height="721" alt="story 2 background" />
             <div class="teaser">
               <img class="background" src="images/background_teaser_2.jpg" width="1500" height="237" alt="" />
               <!--
@@ -78,7 +80,7 @@
             </ul>
           </div></li>
           <li class="story"><div class="relative-frame">
-            <img class="background" src="images/background_summary_3.jpg" width="1500" height="721" alt="story 3 background" />
+            <img class="background summary" src="images/background_summary_3.jpg" width="1500" height="721" alt="story 3 background" />
             <div class="teaser">
               <img class="background" src="images/background_teaser_3.jpg" width="1500" height="237" alt="" />
               <!--
@@ -227,6 +229,26 @@
           </li>
         </ul>
       </div><!-- end div.hero-slider -->
+
+      <!-- FILTER THE MODULES NAVIGATION -->
+      <nav class="filter-modules-navigation">
+        <ul class="filter-nav-group">
+          <li>
+            <a class="filter-nav-item" href="#" data-filter-category="campaigns">WIN CAMPAIGNS</a>
+          </li>
+          <li>
+            <a class="filter-nav-item" href="#" data-filter-category="legislation">IMPACT LEGISLATION</a>
+          </li>
+        </ul>
+        <ul class="filter-nav-group">
+          <li>
+            <a class="filter-nav-item filter-nav-disabled" href="#" data-filter-category="burrell">THE BURRELL WAY</a>
+          </li>
+          <li>
+            <a class="filter-nav-item filter-nav-disabled" href="#" data-filter-category="results">RESULTS</a>
+          </li>
+        </ul>
+      </nav>
 
     </div><!-- end div.page -->
 
