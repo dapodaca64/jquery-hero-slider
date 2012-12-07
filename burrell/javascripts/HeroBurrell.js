@@ -142,7 +142,7 @@ HeroSliderBurrell.prototype.resizeHero = function(vp){
 
 
 
-/* Summary Slides Presenter */
+/* Presenter: Summary Slides */
 
 var SlidePresenterBurrellSummary = function(options){
   SlidePresenter.call(this, options); //call super constructor
@@ -249,40 +249,14 @@ SlidePresenterBurrellSummary.prototype.goToDetail = function(slideIndex){
   }
 
   this.hideDetailSlides();
-  /*
-  detailAnimation.options.animateProperties = { opacity: 1 };
-  detailAnimation.options.animateCallback = function(){ };
-  $(detailAnimation.options.el).css({ opacity: 0, display: "block" });
-  detailAnimation.startAnimation();
-  */
-
 
   this.showSummarySlides();
-  /*
-  summaryAnimation.options.animateProperties = { opacity: 0 };
-  summaryAnimation.options.animateCallback = function(){
-    $(summaryAnimation.options.el).hide();
-  };
-  summaryAnimation.startAnimation();
-  */
 
   this.hideSummaryNav();
 
   this.showDetailNav();
-  /*
-  detailNavAnimation.options.el.css({ opacity: "0", display: "block" });
-  detailNavAnimation.options.animateProperties = { opacity: 1 };
-  detailNavAnimation.options.animateCallback = function(){ };
-  detailNavAnimation.startAnimation();
-  */
 
   this.showItemNav();
-  /*
-  itemNavAnimation.options.el.css({ opacity: "0", display: "block" });
-  itemNavAnimation.options.animateProperties = { opacity: 1 };
-  itemNavAnimation.options.animateCallback = function(){ };
-  itemNavAnimation.startAnimation();
-  */
 };
 
 SlidePresenterBurrellSummary.prototype.showSummarySlides = function(){
@@ -357,20 +331,81 @@ SlidePresenterBurrellSummary.prototype.setupAnimatedElements = function(){
     animateDuration: 400
   });
 
+
+  //Setup resizable background
+  var width = $(this.controller.getAnimatedElement("summaryBackground").$el).width();
+  var height = $(this.controller.getAnimatedElement("summaryBackground").$el).height();
+  console.log("summary background original width, height %o, %o", width, height);
+  this.summaryBackground = new BasicModel({
+    widthOrig: width,
+    heightOrig: height,
+    width: width,
+    height: height
+  });
+  this.summaryBackground.on("change", this.summaryBackgroundChangeHandler.bind(this));
   var viewportDims = Animator.getBoxDimensions(window);
   this.resizeBackgrounds(viewportDims);
 
 };
 
-SlidePresenterBurrellSummary.prototype.resizeBackgrounds = function(vp){
+SlidePresenterBurrellSummary.prototype.summaryBackgroundChangeHandler = function(summaryBackground){
   var background = this.controller.getAnimatedElement("summaryBackground")
   console.log("background.$el %o", background.$el);
-  console.log("set to width: %o, height: %o", vp.width, vp.height);
   Animator.resizeBox(background.$el, {
-    width: vp.width,
-    height: vp.height
+    width: summaryBackground.get("width"),
+    height: summaryBackground.get("height")
   }, 0);
 
+};
+
+SlidePresenterBurrellSummary.prototype.getProportionalFit = function(b, a, prop1, prop2){
+  // b is projected proportionally on a,
+  // where b[prop1] / b[prop2] ratio is maintained
+
+};
+
+SlidePresenterBurrellSummary.prototype.resizeBackgrounds = function(vp){
+  console.log("set to width: %o, height: %o", vp.width, vp.height);
+  console.log("original width: %o, height: %o", this.summaryBackground.get("widthOrig"), this.summaryBackground.get("heightOrig") );
+  //get proportional fit to new width
+  var fitByWidth = { width: vp.width, height: vp.width/this.summaryBackground.get("widthOrig")*this.summaryBackground.get("heightOrig") };
+  console.log("FIT BY WIDTH width: %o, height %o", fitByWidth.width, fitByWidth.height);
+  var fitByHeight = { width: vp.height/this.summaryBackground.get("heightOrig")*this.summaryBackground.get("widthOrig"), height: vp.height };
+  console.log("FIT BY HEIGHT width: %o, height %o", fitByHeight.width, fitByHeight.height);
+  var fitChoice;
+  // is fit by width not wide enough?
+  if (vp.width/vp.height > 1) {
+    console.log("wide viewport.");
+    if (vp.height > fitByWidth.height) {
+      console.log("choose height!");
+      fitChoice = fitByHeight;
+    } else {
+      console.log("choose width!");
+      fitChoice = fitByWidth;
+    }
+  // is fit by height not tall enough?
+  } else if (vp.width/vp.height < 1) {
+    console.log("tall viewport.");
+    if (vp.width > fitByHeight.width) {
+      console.log("choose width!");
+      fitChoice = fitByWidth;
+    } else {
+      console.log("choose height!");
+      fitChoice = fitByHeight;
+    }
+    fitChoice = fitByHeight;
+  //square viewport: either fit types will fill it
+  } else {
+    console.log("square viewport.");
+    fitChoice = fitByWidth;
+  }
+
+  //get proportional fit to new height
+
+  this.summaryBackground.set({
+    width: fitChoice.width,
+    height: fitChoice.height
+  });
 };
 
 /* Presenter: Detail Slides */
