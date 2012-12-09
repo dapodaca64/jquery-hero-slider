@@ -118,12 +118,14 @@ var Animator = {
     $(el).fadeOut(duration, callback);
   },
   getBoxDimensions: function(el){
+    //console.log("getBoxDimensions for el %o", $(el)[0] );
     return {
       width: $(el).width(),
       height: $(el).height()
     }
   },
   resizeBox: function(el, newBounds, duration){
+    //console.log("Animator.resizeBox with el %o, newBounds %o, duration %o", el, newBounds, duration);
     if (duration && duration > 0) {
       $(el).animate({
         width: newBounds.width,
@@ -134,7 +136,6 @@ var Animator = {
         callback
       );
     } else {
-      console.log("set CSS on el %o", el[0]);
       $(el).css({
         width: newBounds.width,
         height: newBounds.height
