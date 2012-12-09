@@ -19,20 +19,6 @@
   border-top: solid 1px #d4c9c0;
   background: url(images/background_filternav.png) 50% 0 no-repeat;
 }
-#logo-ribbon-large {
-  width: 178px;
-  height: 175px;
-  display: block;
-  position: fixed;
-  left: 50%;
-  top: 0;
-  margin-top: -4px;
-  margin-left: -84px;
-  text-align: left;
-  text-indent: -9000px;
-  z-index: 100;
-  background: url(images/sprite_background.png) 0 -180px no-repeat;
-}
 .filter-nav-group {
   position: absolute;
   top: 0;
@@ -55,7 +41,7 @@
       display: block;
       height: 38px;
       padding: 16px 20px 0;
-      font-family: "Franklin ITC Pro Cond Med";
+      font-family: "LeagueGothicRegular";
       font-size: 28px;
       line-height: 28px;
       text-decoration: none;

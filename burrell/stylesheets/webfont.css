@@ -8,20 +8,13 @@
   font-weight: normal;
   font-style: normal;
 }
-.franklinitcprocondbold {
-  font-family: "Franklin ITC Pro Cond Bold";
-  font-style: normal;
+@font-face {
+  font-family: 'LeagueGothicRegular';
+  src: url('../fonts/leagueGothic/League_Gothic-webfont.eot');
+  src: url('../fonts/leagueGothic/League_Gothic-webfont.eot?#iefix') format('embedded-opentype'),
+  url('../fonts/leagueGothic/League_Gothic-webfont.woff') format('woff'),
+  url('../fonts/leagueGothic/League_Gothic-webfont.ttf') format('truetype'),
+  url('../fonts/leagueGothic/League_Gothic-webfont.svg#LeagueGothicRegular') format('svg');
   font-weight: normal;
-}
-
-.franklinitcprocondlight {
-  font-family: "Franklin ITC Pro Cond Light";
   font-style: normal;
-  font-weight: normal;
-}
-
-.franklinitcprocondmed {
-  font-family: "Franklin ITC Pro Cond Med";
-  font-style: normal;
-  font-weight: normal;
 }
