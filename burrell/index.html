@@ -4,13 +4,21 @@
     <title>Hero</title>
     <link rel="stylesheet" type="text/css" href="stylesheets/webfont.css" />
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen" />
+    <!--
     <link rel="stylesheet" type="text/css" href="stylesheets/grid_1500_30_col.css" media="screen" />
+    -->
+    <link rel="stylesheet" type="text/css" href="stylesheets/grid_liquid_30_col.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/global.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/heroslider.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/modules.css" media="screen" />
+    <!-- Fonts from Webtype font service -->
+    <link href="//cloud.webtype.com/css/01220659-0d05-4b94-950b-5aff2eb1eaf3.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
-    <div class="everything">
+    <div class="everything liquid_container_30">
+      <h1 id="logo-ribbon-large">
+        Burrell
+      </h1>
 
       <!-- HERO -->
       <div id="hero-slider" class="hero-slider">
@@ -20,94 +28,109 @@
           <!--
             <img class="background" src="images/background_summary_1.jpg" width="1500" height="721" alt="story 1 background" />
             -->
-            <img class="background summary" src="images/background_summary_poc.jpg" width="1500" height="721" alt="" />
+            <img class="background summary" src="images/background_summary_1.jpg" width="1500" height="721" alt="" />
             <div class="teaser">
-              <img class="background" src="images/background_teaser_1.jpg" width="1500" height="237" alt="" />
+              <img class="background teaser-background" src="images/background_teaser_generic.jpg" width="1500" height="237" alt="" />
               <!--
               <a class="story-detail grid_30 actionable-box actionable-text go-detail" data-storyindex="0" href="#">
               -->
               <div class="story-detail grid_30" data-storyindex="0" href="#">
-                <span class="teaser-text teaser-text-left grid_7 prefix_8">
-                  TO US A NIGHT <br />
-                  ON THE TOWN
-                </span>
-                <span class="teaser-text teaser-text-right grid_7 prefix_2">
-                  IS ONLY ANOTHER <br />
-                  STRATEGY SESSION
-                </span>
+                <p class="teaser-logo"><span><img src="images/logo_teaser_1.png" alt="" /></span></p>
+                <p class="teaser-text-left grid_12">
+                  <span class="teaser-text">
+                   TO US A NIGHT <br />
+                   ON THE TOWN
+                  </span>
+                </p>
+                <p class="teaser-text-right grid_12">
+                  <span class="teaser-text">
+                    IS ONLY ANOTHER <br />
+                    STRATEGY SESSION
+                  </span>
+                </p>
               </div>
               <!--
               </a>
               -->
-            </div>
-            <ul class="navigation summary-navigation-left-right" style="display:none">
-              <li class="nav-col nav-col-left">
-                  <a class="actionable-text go-previous" href="#">Previous</a>
-              </li>
-              <li class="nav-col nav-col-right">
-                  <a class="actionable-text go-next" href="#">Next</a>
-              </li>
+              <ul class="navigation summary-navigation-left-right" style="display:none">
+                <li class="nav-col nav-col-left">
+                    <a class="actionable-text go-previous" href="#">Previous</a>
+                </li>
+                <li class="nav-col nav-col-right">
+                    <a class="actionable-text go-next" href="#">Next</a>
+                </li>
             </ul>
+            </div>
           </div></li>
           <li class="story"><div class="relative-frame">
             <img class="background summary" src="images/background_summary_2.jpg" width="1500" height="721" alt="story 2 background" />
             <div class="teaser">
-              <img class="background" src="images/background_teaser_2.jpg" width="1500" height="237" alt="" />
+              <img class="background teaser-background" src="images/background_teaser_generic.jpg" width="1500" height="237" alt="" />
               <!--
               <a class="story-detail grid_30 actionable-box actionable-text go-detail" data-storyindex="0" href="#">
               -->
               <div class="story-detail grid_30" data-storyindex="0" href="#">
-                <span class="teaser-text teaser-text-left grid_9 prefix_5">
-                  WHAT DO WE DO IF <br />
-                  WE HIT A BRICK WALL?
-                </span>
-                <span class="teaser-text teaser-text-right grid_9 prefix_3">
-                  TURN AROUND AND <br />
-                  HIT IT RIGHT BACK.
-                </span>
+                <p class="teaser-logo"><span><img src="images/logo_teaser_2.png" alt="" /></span></p>
+                <p class="teaser-text-left grid_12">
+                  <span class="teaser-text">
+                    WHAT DO WE DO IF <br />
+                    WE HIT A BRICK WALL?
+                  </span>
+                </p>
+                <p class="teaser-text-right grid_12">
+                  <span class="teaser-text">
+                    TURN AROUND AND <br />
+                    HIT IT RIGHT BACK.
+                  </span>
+                </p>
               </div>
               <!--
               </a>
               -->
+              <ul class="navigation summary-navigation-left-right" style="display:none">
+                <li class="nav-col nav-col-left">
+                    <a class="actionable-text go-previous" href="#">Previous</a>
+                </li>
+                <li class="nav-col nav-col-right">
+                    <a class="actionable-text go-next" href="#">Next</a>
+                </li>
+              </ul>
             </div>
-            <ul class="navigation summary-navigation-left-right" style="display:none">
-              <li class="nav-col nav-col-left">
-                  <a class="actionable-text go-previous" href="#">Previous</a>
-              </li>
-              <li class="nav-col nav-col-right">
-                  <a class="actionable-text go-next" href="#">Next</a>
-              </li>
-            </ul>
           </div></li>
           <li class="story"><div class="relative-frame">
             <img class="background summary" src="images/background_summary_3.jpg" width="1500" height="721" alt="story 3 background" />
             <div class="teaser">
-              <img class="background" src="images/background_teaser_3.jpg" width="1500" height="237" alt="" />
+              <img class="background teaser-background" src="images/background_teaser_generic.jpg" width="1500" height="237" alt="" />
               <!--
               <a class="story-detail grid_30 actionable-box actionable-text go-detail" data-storyindex="0" href="#">
               -->
               <div class="story-detail grid_30" data-storyindex="0" href="#">
-                <span class="teaser-text teaser-text-left grid_9 prefix_5">
-                  GENIUS IS BRASH. IT <br />
-                  ACTS UPON UNCOMMON
-                </span>
-                <span class="teaser-text teaser-text-right grid_9 prefix_3">
-                  THOUGHT TO YIELD <br />
-                  UNCOMMON RESULTS
-                </span>
+                <p class="teaser-logo"><span><img src="images/logo_teaser_3.png" alt="" /></span></p>
+                <p class="teaser-text-left grid_12">
+                  <span class="teaser-text">
+                    GENIUS IS BRASH. IT <br />
+                    ACTS UPON UNCOMMON
+                  </span>
+                </p>
+                <p class="teaser-text-right grid_12">
+                  <span class="teaser-text">
+                    THOUGHT TO YIELD <br />
+                    UNCOMMON RESULTS
+                  </span>
+                </p>
               </div>
               <!--
               </a>
               -->
+              <ul class="navigation summary-navigation-left-right" style="display:none">
+                <li class="nav-col nav-col-left">
+                    <a class="actionable-text go-previous" href="#">Previous</a>
+                </li>
+                <li class="nav-col nav-col-right">
+                    <a class="actionable-text go-next" href="#">Next</a>
+                </li>
+              </ul>
             </div>
-            <ul class="navigation summary-navigation-left-right" style="display:none">
-              <li class="nav-col nav-col-left">
-                  <a class="actionable-text go-previous" href="#">Previous</a>
-              </li>
-              <li class="nav-col nav-col-right">
-                  <a class="actionable-text go-next" href="#">Next</a>
-              </li>
-            </ul>
           </div></li>
         </ul>
         </div><!-- end div.slider-fullsize -->
@@ -203,6 +226,7 @@
           </div></li>
         </ul>
         </div><!-- end div.slider-fullsize -->
+        <!--
         <ul class="navigation detail-navigation">
           <li class="nav-col nav-col-left">
               <a class="actionable-text go-previous" href="#">Previous</a>
@@ -228,33 +252,45 @@
               <a class="story-detail-nav" data-storyindex="4" href="#"><img class="nav-icon go-to-story" src="../src/images/icon_5.jpg" width="50" height="50" alt="3" /></a>
           </li>
         </ul>
+        -->
       </div><!-- end div.hero-slider -->
 
       <!-- FILTER THE MODULES NAVIGATION -->
-      <nav class="filter-modules-navigation">
+      <nav class="filter-modules-navigation"><div class="filter-modules-sticky">
         <ul class="filter-nav-group">
-          <li>
-            <a class="filter-nav-item" href="#" data-filter-category="campaigns">WIN CAMPAIGNS</a>
+          <li class="filter-nav-item">
+            <a class="filter-nav-link filter-button-blue" href="#" data-filter-category="campaigns"><span>WIN CAMPAIGNS<span></a>
           </li>
-          <li>
-            <a class="filter-nav-item" href="#" data-filter-category="legislation">IMPACT LEGISLATION</a>
+          <li class="filter-nav-item">
+            <a class="filter-nav-link filter-button-green" href="#" data-filter-category="legislation"><span>IMPACT LEGISLATION</span></a>
           </li>
         </ul>
+        <!--
+        <p class="logo-ribbon-large">
+          Burrell
+        </p>
+        -->
         <ul class="filter-nav-group">
-          <li>
-            <a class="filter-nav-item filter-nav-disabled" href="#" data-filter-category="burrell">THE BURRELL WAY</a>
+          <li class="filter-nav-item">
+            <a class="filter-nav-link filter-button-gold filter-nav-disabled" href="#" data-filter-category="burrell"><span>THE BURRELL WAY</span></a>
           </li>
-          <li>
-            <a class="filter-nav-item filter-nav-disabled" href="#" data-filter-category="results">RESULTS</a>
+          <li class="filter-nav-item">
+            <a class="filter-nav-link filter-button-purple filter-nav-disabled" href="#" data-filter-category="results"><span>RESULTS</span></a>
           </li>
         </ul>
-      </nav>
+      </div></nav>
+
+      <div class="main-modules">
+      </div>
 
     </div><!-- end div.page -->
 
     <script type="text/javascript" src="javascripts/lib/jquery-1.8.3.js"></script>
     <script type="text/javascript" src="../src/javascripts/HeroSlider.js"></script>
     <script type="text/javascript" src="javascripts/HeroBurrell.js"></script>
+    <script type="text/javascript" src="javascripts/FilterNavigation.js"></script>
+    <script type="text/javascript" src="javascripts/StickyElement.js"></script>
     <script type="text/javascript" src="javascripts/init.js"></script>
+
   </body>
 </html>

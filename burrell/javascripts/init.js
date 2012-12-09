@@ -28,4 +28,48 @@ $(function(){
   window.heroSlider = $("#hero-slider").data("heroSlider");
   heroSlider.init();
 
+  //Filter Navigation
+  window.filterNavigation = new FilterNavigation({
+    el: $(".filter-modules-navigation")
+  });
+
+  //Sticky Elements
+  window.stickies = {
+    navigation: new StickyElement({
+      el: $(".filter-modules-sticky"),
+      stickyOnScrollY: function(){
+        return $("#hero-slider").height()
+      },
+      stickyScrollWidthLimit: 1024,
+      stickyOnWidth: 1024,
+      stickyWidthScrollLimit: function(){
+        return $("#hero-slider").height()
+      },
+      stickyStyle: {
+        position: "fixed",
+      },
+      unStickyStyle: {
+        position: "relative",
+      }
+    }),
+    ribbon: new StickyElement({
+      el: $("#logo-ribbon-large"),
+      stickyInput: "scroll",
+      stickyOnScrollY: function(){
+        return 0
+      },
+      stickyScrollWidthLimit: 1024,
+      stickyOnWidth: 1024,
+      stickyWidthScrollLimit: function(){
+        return $("#hero-slider").height()
+      },
+      stickyStyle: {
+        position: "fixed"
+      },
+      unStickyStyle: {
+        position: "absolute"
+      }
+    })
+  };
+
 });

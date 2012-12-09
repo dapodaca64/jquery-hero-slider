@@ -41,8 +41,6 @@ HeroSliderBurrell.prototype.init = function(){
     storyCount: 0
   });
 
-  this.setupViewport();
-
   // Assure we have DOM before creating Presenters
   if (this.$el.length) {
 
@@ -68,6 +66,8 @@ HeroSliderBurrell.prototype.init = function(){
 
     });
 
+    this.setupViewport();
+
     if (this.autoRotate) {
       console.log("HeroSliderBurrell going to auto-rotate!");
       this.startAutoRotation();
@@ -80,28 +80,39 @@ HeroSliderBurrell.prototype.init = function(){
 HeroSliderBurrell.prototype.setupViewport = function(){
 
   // Model for the viewport size
-  var viewportDims = Animator.getBoxDimensions(window);
-  this.viewport = new BasicModel({
-    width: viewportDims.width,
-    height: viewportDims.height
-  });
+  var viewportDims = this.getViewportDims();
+  console.log("viewportDims %o", viewportDims);
+  this.viewport = new BasicModel(viewportDims);
 
   // Resize the hero based on the viewport
-  this.resizeHero(viewportDims);
+  //this.resizeHero(viewportDims);
 
   //Subscribe to the change event on the model via the controller
   this.viewport.on("change", this.viewportChangeHandler.bind(this));
 
   //Bind the DOM event that updates the model
   $(window).resize(function(ev){
-  console.log("HeroSliderBurrell.window resize this %o..", this);
-    var viewportDims = Animator.getBoxDimensions(window);
-    this.viewport.set({
-      width: viewportDims.width,
-      height: viewportDims.height
-    });
-  }.bind(this));
+  //console.log("HeroSliderBurrell window resize this %o..", this);
+    var viewportDims = this.getViewportDims();
+    console.log("HeroSliderBurrell window resize to, h %o, %o", viewportDims.width, viewportDims.height);
 
+    this.viewport.set(viewportDims);
+
+    this.summaryPresenter.resizeBackgrounds(viewportDims);
+
+  }.bind(this));
+  //$(window).trigger("resize");
+  this.viewport.trigger("change");
+
+};
+
+HeroSliderBurrell.prototype.getViewportDims = function(){
+  var frameDims = Animator.getBoxDimensions(".everything");
+  var windowDims = Animator.getBoxDimensions(window);
+  return {
+    width: frameDims.width,
+    height: windowDims.height
+  };
 };
 
 HeroSliderBurrell.prototype.startAutoRotation = function(){
@@ -126,20 +137,18 @@ HeroSliderBurrell.prototype.stopRotateTimeout = function(){
 };
 
 HeroSliderBurrell.prototype.viewportChangeHandler = function(viewport){
-  console.log("HeroSliderBurrell.viewportChangeHandler(%o) this %o", viewport, this);
+  //console.log("HeroSliderBurrell.viewportChangeHandler(%o) this %o", viewport, this);
   this.resizeHero(viewport);
 };
 
 HeroSliderBurrell.prototype.resizeHero = function(vp){
-  this.$el.css({
-    backgroundColor: "red"
-  });
+  //console.log("resizeHero with this.$el %o", this.$el);
   Animator.resizeBox(this.$el, {
     width: vp.width,
-    height: vp.height
+    //leave room for some content to 'peek' above the fold
+    height: vp.height-100
   }, 0);
 };
-
 
 
 /* Presenter: Summary Slides */
@@ -156,7 +165,7 @@ SlidePresenterBurrellSummary.prototype.init = function() {
   this.parent.init.call(this);
 
   var storyCount;
-  console.log("this.$el %o", this.$el);
+  console.log("SlidePresenterBurrellSummary.init with this.$el %o", this.$el);
   if (this.$el) {
     storyCount = this.controller.$el.find(".slider-summary .story").length;
     if (storyCount) {
@@ -207,7 +216,8 @@ SlidePresenterBurrellSummary.prototype.storyIndexChangeHandler = function(story)
  SlidePresenterBurrellSummary.prototype.bindDataEvents = function(){
     //Subscribe to the change event on the model via the controller
   this.controller.storySummary.on("change:storyIndex", this.storyIndexChangeHandler.bind(this));
-  this.controller.viewport.on("change", this.resizeBackgrounds.bind(this));
+  //subscribe for all resize events instead of viewport change, since a min-width keeps the change from firing
+  //this.controller.viewport.on("change", this.resizeBackgrounds.bind(this));
 };
 
 SlidePresenterBurrellSummary.prototype.goToSlide = function(slideIndex){
@@ -310,9 +320,18 @@ SlidePresenterBurrellSummary.prototype.hideSummaryNav = function(){
 
 SlidePresenterBurrellSummary.prototype.setupAnimatedElements = function(){
 
-  console.log("SlidePresenterBurrellSummary.setupAnimatedElements..");
   this.controller.newAnimatedElement("summaryBackground", {
     el: this.$el.find(".slider-fullsize.slider-summary .background.summary"),
+    animateDuration: 1000
+  });
+
+  this.controller.newAnimatedElement("teaser", {
+    el: this.$el.find(".slider-fullsize.slider-summary .teaser"),
+    animateDuration: 1000
+  });
+
+  this.controller.newAnimatedElement("teaserBackground", {
+    el: this.$el.find(".slider-fullsize.slider-summary .background.teaser-background"),
     animateDuration: 1000
   });
 
@@ -326,16 +345,29 @@ SlidePresenterBurrellSummary.prototype.setupAnimatedElements = function(){
     animateDuration: 1000
   });
 
+  this.controller.newAnimatedElement("storySlide", {
+    el: this.$el.find(".slider-fullsize.slider-summary .story"),
+    animateDuration: 1000
+  });
+
   this.controller.newAnimatedElement("summaryNav", {
     el: this.$el.find(".summary-navigation-left-right"),
     animateDuration: 400
   });
 
+  //Setup resizables
 
-  //Setup resizable background
+  //Story slide
+  this.storySlide = new BasicModel({
+    width: 1000
+  });
+  this.storySlide.on("change", this.storySlideChangeHandler.bind(this));
+  this.storySlide.set("width", $(".everything").width());
+
+  //Story background
   var width = $(this.controller.getAnimatedElement("summaryBackground").$el).width();
   var height = $(this.controller.getAnimatedElement("summaryBackground").$el).height();
-  console.log("summary background original width, height %o, %o", width, height);
+  //console.log("summary background original width, height %o, %o", width, height);
   this.summaryBackground = new BasicModel({
     widthOrig: width,
     heightOrig: height,
@@ -343,20 +375,63 @@ SlidePresenterBurrellSummary.prototype.setupAnimatedElements = function(){
     height: height
   });
   this.summaryBackground.on("change", this.summaryBackgroundChangeHandler.bind(this));
-  var viewportDims = Animator.getBoxDimensions(window);
-  this.resizeBackgrounds(viewportDims);
+
+  //Teaser background
+  var teaserWidth = $(this.controller.getAnimatedElement("teaserBackground").$el).width();
+  var teaserHeight = $(this.controller.getAnimatedElement("teaserBackground").$el).height();
+  //console.log("teaser background original width, height %o, %o", teaserWidth, teaserHeight);
+  this.teaser = new BasicModel({
+    widthOrig: teaserWidth,
+    heightOrig: teaserHeight,
+    width: teaserWidth,
+    height: teaserHeight
+  });
+  this.teaser.on("change", this.teaserSizeChangeHandler.bind(this));
+
+  var viewportDims = Animator.getBoxDimensions(".everything");
+  var windowDims = Animator.getBoxDimensions(window);
+  //console.log("++ SET viewport to dims %o, %o", viewportDims.width, viewportDims.height);
+  this.resizeBackgrounds({
+    width: viewportDims.width,
+    height: windowDims.height
+  });
+
+};
+
+SlidePresenterBurrellSummary.prototype.storySlideChangeHandler = function(storySlide){
+  //console.log("SlidePresenterBurrellSummary.storySlideChangeHandler with %o", storySlide);
+  var background = this.controller.getAnimatedElement("storySlide");
+  Animator.resizeBox(background.$el, {
+    width: storySlide.get("width")
+  }, 0);
 
 };
 
 SlidePresenterBurrellSummary.prototype.summaryBackgroundChangeHandler = function(summaryBackground){
-  var background = this.controller.getAnimatedElement("summaryBackground")
-  console.log("background.$el %o", background.$el);
+  var background = this.controller.getAnimatedElement("summaryBackground");
   Animator.resizeBox(background.$el, {
     width: summaryBackground.get("width"),
     height: summaryBackground.get("height")
   }, 0);
 
 };
+
+SlidePresenterBurrellSummary.prototype.teaserSizeChangeHandler = function(teaserBackground){
+  //console.log("SlidePresenterBurrellSummary.teaserBackgroundChangeHandler with %o", teaserBackground);
+  var teaser = this.controller.getAnimatedElement("teaserBackground");
+  Animator.resizeBox(teaser.$el, {
+    width: teaserBackground.get("width"),
+    height: teaserBackground.get("height")
+  }, 0);
+
+  //Teaser box
+  var teaserBox = this.controller.getAnimatedElement("teaser");
+  Animator.resizeBox(teaserBox.$el, {
+    width: teaserBackground.get("width"),
+    height: teaserBackground.get("height")
+  }, 0);
+
+}
 
 SlidePresenterBurrellSummary.prototype.getProportionalFit = function(b, a, prop1, prop2){
   // b is projected proportionally on a,
@@ -365,47 +440,48 @@ SlidePresenterBurrellSummary.prototype.getProportionalFit = function(b, a, prop1
 };
 
 SlidePresenterBurrellSummary.prototype.resizeBackgrounds = function(vp){
-  console.log("set to width: %o, height: %o", vp.width, vp.height);
-  console.log("original width: %o, height: %o", this.summaryBackground.get("widthOrig"), this.summaryBackground.get("heightOrig") );
+  console.log("SlidePresenterBurrellSummary.resizeBackgrounds: set to width, height: %o, %o", vp.width, vp.height);
   //get proportional fit to new width
+  //background image
   var fitByWidth = { width: vp.width, height: vp.width/this.summaryBackground.get("widthOrig")*this.summaryBackground.get("heightOrig") };
-  console.log("FIT BY WIDTH width: %o, height %o", fitByWidth.width, fitByWidth.height);
+  //console.log("FIT BY WIDTH width: %o, height %o", fitByWidth.width, fitByWidth.height);
   var fitByHeight = { width: vp.height/this.summaryBackground.get("heightOrig")*this.summaryBackground.get("widthOrig"), height: vp.height };
-  console.log("FIT BY HEIGHT width: %o, height %o", fitByHeight.width, fitByHeight.height);
+  //console.log("FIT BY HEIGHT width: %o, height %o", fitByHeight.width, fitByHeight.height);
+
   var fitChoice;
   // is fit by width not wide enough?
   if (vp.width/vp.height > 1) {
-    console.log("wide viewport.");
+    //console.log("wide viewport.");
     if (vp.height > fitByWidth.height) {
-      console.log("choose height!");
       fitChoice = fitByHeight;
     } else {
-      console.log("choose width!");
       fitChoice = fitByWidth;
     }
   // is fit by height not tall enough?
   } else if (vp.width/vp.height < 1) {
-    console.log("tall viewport.");
+    //console.log("tall viewport.");
     if (vp.width > fitByHeight.width) {
-      console.log("choose width!");
       fitChoice = fitByWidth;
     } else {
-      console.log("choose height!");
       fitChoice = fitByHeight;
     }
     fitChoice = fitByHeight;
   //square viewport: either fit types will fill it
   } else {
-    console.log("square viewport.");
+    //console.log("square viewport.");
     fitChoice = fitByWidth;
   }
 
-  //get proportional fit to new height
 
-  this.summaryBackground.set({
-    width: fitChoice.width,
-    height: fitChoice.height
-  });
+  //set story width
+  this.storySlide.set({ width: vp.width });
+
+  //set proportional fit
+  this.summaryBackground.set(fitChoice);
+
+  //teaser ribbon size
+  var teaserFit = { width: vp.width, height: vp.width/this.teaser.get("widthOrig")*this.teaser.get("heightOrig") };
+  this.teaser.set(teaserFit);
 };
 
 /* Presenter: Detail Slides */
@@ -472,8 +548,8 @@ SlidePresenterBurrellDetail.prototype.previousStoryClickHandler = function(ev){
 
 // Data event handlers
 SlidePresenterBurrellDetail.prototype.storyIndexChangeHandler = function(story) {
-  console.log("SlidePresenterBurrellDetail.storyIndexChangeHandler for model %o", story);
-  console.log("Calling stopAnimations %o", this.controller);
+  //console.log("SlidePresenterBurrellDetail.storyIndexChangeHandler for model %o", story);
+  //console.log("Calling stopAnimations %o", this.controller);
   this.controller.stopAnimations();
   this.goToSlide(story.get("storyIndex"));
   this.updateActiveStateItemNav(story.get("storyIndex"));
@@ -485,7 +561,7 @@ SlidePresenterBurrellDetail.prototype.bindDataEvents = function(){
 };
 
 SlidePresenterBurrellDetail.prototype.snapToStory = function(slideIndex){
-  console.log("SlidePresenterBurrellDetail.snapToStory slideIndex %o", slideIndex);
+  //console.log("SlidePresenterBurrellDetail.snapToStory slideIndex %o", slideIndex);
   var newSlidePos = this.getSlideOffsetFromZero(slideIndex);
   var storyAnimation = this.controller.getAnimatedElement("storyDetail");
   storyEl = storyAnimation.options.el;
@@ -530,7 +606,7 @@ SlidePresenterBurrellDetail.prototype.goToSlide = function(slideIndex){
 
   var storyAnimation = this.controller.getAnimatedElement("storyDetail");
   var totalSlide = this.getSlideMoveOffset(slideIndex);
-  console.log("totalSlide %o", totalSlide);
+  //console.log("totalSlide %o", totalSlide);
   if (totalSlide != 0) {
     storyAnimation.options.animateProperties.left = "-="+totalSlide;
     storyAnimation.options.animateCallback = function(){
@@ -544,6 +620,6 @@ SlidePresenterBurrellDetail.prototype.goToSlide = function(slideIndex){
 
 
 SlidePresenterBurrellDetail.prototype.updateActiveStateItemNav = function(slideIndex){
-  console.log("SlidePresenterBurrellDetail.updateActiveStateItemNav slideIndex %o", slideIndex);
+  //console.log("SlidePresenterBurrellDetail.updateActiveStateItemNav slideIndex %o", slideIndex);
   this.$el.find(".item-navigation .nav-item a").removeClass("active").eq(slideIndex).addClass("active");
 };

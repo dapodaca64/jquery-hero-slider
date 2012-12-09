@@ -3,9 +3,19 @@
 /* Page */
 body {
   background: url(images/background_page.jpg) 50% 0 repeat;
-  height: 10000px;
 }
 .everything {
   width: 100%;
-  min-width: 960px;
+  min-width: 1024px;
+  margin: 0 auto;
+  padding: 0;
+  position: relative;
+}
+.main-modules {
+  width: 100%;
+  height: 7164px;
+  /*
+  margin-top: -102px;
+  */
+  background: url(images/BurrellCo_ModuleGrid_R1_Open_V2_poc.png) 50% 0 repeat;
 }

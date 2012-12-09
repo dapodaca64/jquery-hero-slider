@@ -3,25 +3,122 @@
   min-height: 100px;
   height: 162px;
   position: relative;
+  margin-bottom: -102px;
+  /*
   overflow: visible;
-  background: url(images/poc_filter_navigation.png) 50% 0 no-repeat;
-  background-color: rgba(200, 200, 200, 0.5);
+  top: 0;
+  left: 0;
+  */
 }
-.logo-ribbon-large {
+.filter-modules-sticky {
+  width: 100%;
+  height: 162px;
+  position: relative;
+  top: 0;
+  left: 0;
+  border-top: solid 1px #d4c9c0;
+  background: url(images/background_filternav.png) 50% 0 no-repeat;
+}
+#logo-ribbon-large {
   width: 178px;
   height: 175px;
   display: block;
-  position: absolute;
+  position: fixed;
   left: 50%;
   top: 0;
-  z-index: 1;
+  margin-top: -4px;
+  margin-left: -84px;
+  text-align: left;
+  text-indent: -9000px;
+  z-index: 100;
   background: url(images/sprite_background.png) 0 -180px no-repeat;
 }
 .filter-nav-group {
-  width: 622px;
-  float: right;
-  background-color: rgba(255, 0, 0, 0.2);
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 41.5%;
+  height: 60px;
+  margin: 0;
+  padding: 0 !important;
+  list-style: none;
+  -webkit-box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.65);
+  -moz-box-shadow:    0px 0px 30px rgba(0, 0, 0, 0.65);
+  box-shadow:         0px 0px 30px rgba(0, 0, 0, 0.65);
 }
+  .filter-nav-group .filter-nav-item {
+    width: 50%;
+    float: left;
+    background: url(images/sprite_repeat_horizontal.png) 0 0 repeat-x;
+  }
+    .filter-nav-group .filter-nav-item .filter-nav-link {
+      display: block;
+      height: 38px;
+      padding: 16px 20px 0;
+      font-family: "Franklin ITC Pro Cond Med";
+      font-size: 28px;
+      line-height: 28px;
+      text-decoration: none;
+    }
 .filter-nav-group:first-child {
+  left: 0;
+/*
   float: left;
+  margin-right: 10.2%;
+  */
+}
+.filter-button-blue,
+.filter-button-green,
+.filter-button-gold,
+.filter-button-purple {
+  border-bottom: solid 6px #93aeca;
+  border-right: solid 1px #93aeca;
+  background: url(images/sprite_background.png) 100% 0 no-repeat;
+}
+.filter-button-blue {
+  color: #93aeca;
+  color: rgb(147, 174, 202);
+  border-color: rgb(147, 174, 202);
+  border-right-color: rgba(147, 174, 202, 0.7);
+  background-position: 100% -400px;
+}
+.filter-button-blue:hover {
+  color: rgb(127, 154, 182);
+  border-color: rgb(127, 154, 182);
+  background-position: 100% -470px;
+}
+.filter-button-green {
+  color: #68bda0;
+  border-color: rgb(104, 189, 160);
+  border-right-color: rgba(104, 189, 160, 0.7);
+  background-position: 100% -530px;
+}
+.filter-button-green:hover {
+  color: rgb(84, 169, 140);
+  border-color: rgb(84, 169, 140);
+  background-position: 100% -600px;
+}
+.filter-button-gold {
+  color: rgb(236, 213, 119);
+  border-color: rgb(236, 213, 119);
+  border-right: none;
+  border-left: solid 1px rgba(236, 212, 119, 0.7);
+  background-position: 100% -690px;
+}
+.filter-button-gold:hover {
+  color: rgb(216, 193, 99);
+  border-color: rgb(216, 193, 99);
+  background-position: 100% -770px;
+}
+.filter-button-purple {
+  color: rgb(134, 100, 123);
+  border-color: rgb(134, 100, 123);
+  border-right: none;
+  border-left: solid 1px rgba(134, 100, 123, 0.7);
+  background-position: 100% -850px;
+}
+.filter-button-purple:hover {
+  color: rgb(114, 80, 103);
+  border-color: rgb(114, 80, 103);
+  background-position: 100% -920px;
 }

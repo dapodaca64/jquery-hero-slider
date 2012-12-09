@@ -1,10 +1,14 @@
 /* Hero Slider */
 .hero-slider {
   width: 100%;
-  min-height: 200px;
+  min-height: 600px;
   margin: 0;
   position: relative;
   overflow: hidden;
+  /*
+  background-color: red;
+  */
+  background-color: #ccc;
 }
 .slider-fullsize {
   position: absolute;
@@ -14,7 +18,7 @@
   height: 360px;
 }
 .hero-slider ul {
-  width: 100%;
+  width: 9999px;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -23,12 +27,12 @@
 /* Story Slide */
 .story {
   float: left;
+  display: block;
   /*
-  width: 1500px;
-  height: 721px;
-  */
-  width: 100%;
   height: 100%;
+  width: 1500px;
+  */
+  height: 721px;
   margin: 0;
   padding: 0;
 }
@@ -48,29 +52,73 @@
     top: 257px;
     left: 0;
     width: 100%;
-    height: 237px;
+    height: 238px;
     z-index: 3;
   }
     .story .teaser .story-detail {
       display: block;
-      height: 237px;
+      height: 100%;
       width: 100%;
       padding: 0;
       margin: 0;
       position: relative;
       z-index: 2;
     }
-    .story .teaser .teaser-text {
-      margin-top: 92px;
-      font-family: "silverfakeregular", Times, serif;
-      font-size: 22px;
-      line-height: 26px;
-      color: rgb(175, 173, 158);
+    .story .teaser .teaser-logo {
+      display: block;
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: 156px;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      margin-left: -78px;
+    }
+    .story .teaser .teaser-logo span {
+      display: block;
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+      .story .teaser .teaser-logo span img {
+        position: absolute;
+        top: 50%;
+        margin-top: -116px;
+      }
+    .story .teaser .teaser-text-left,
+    .story .teaser .teaser-text-right {
+      position: absolute;
+      left: 50%;
+      top: 42%;
+      display: block;
+      /*
+      background-color: rgba(200, 200, 0, 0.3);
+      */
     }
     .story .teaser .teaser-text-left {
+      right: 50%;
+      left: auto;
     }
     .story .teaser .teaser-text-right {
+      margin-left: 90px;
     }
+      .story .teaser .teaser-text {
+        font-family: "silverfakeregular", Times, serif;
+        font-size: 22px;
+        line-height: 26px;
+        color: rgb(175, 173, 158);
+        /*
+        background-color: rgba(0, 0, 200, 0.3);
+        */
+      }
+      .story .teaser .teaser-text-left .teaser-text {
+        float: right;
+        margin-right: 90px;
+      }
+      .story .teaser .teaser-text-right .teaser-text {
+        float: left;
+      }
   .story .detail {
     display: none;
     position: absolute;
@@ -164,6 +212,9 @@
   top: 359px;
   left: 0;
   z-index: 3;
+}
+.teaser .navigation {
+  top: 45%;
 }
   .navigation .nav-col {
     width: 84px;
