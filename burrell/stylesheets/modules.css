@@ -4,6 +4,7 @@
   height: 162px;
   position: relative;
   margin-bottom: -102px;
+  z-index: 1;
   /*
   overflow: visible;
   top: 0;
@@ -111,14 +112,18 @@
 
 /* Clients Module */
 .clients-module {
-  height: 1024px;
-  margin-bottom: -1047px !important;
+  position: relative;
+  width: 1032px !important;
+  padding-top: 25px;
+  padding-left: 7px;
+  min-height: 688px;
+  background: url(images/background_clients.png) 0 0 no-repeat;
 }
 .clients-header {
   color: #c44c1a;
   font-family: "LeagueGothicRegular", sans-serif;
   font-size: 24px;
-  margin: 24px 0;
+  margin: 0 0 24px;
   padding: 0 18px;
   line-height: 28px;
 }
@@ -127,6 +132,9 @@
   left: -4px;
   padding: 8px 0;
   margin: 16px 0;
+}
+.omega .client-list:first-child {
+  margin-top: 0;
 }
   .client-category {
     font-family: "LeagueGothicRegular", sans-serif;
@@ -137,6 +145,8 @@
     line-height: 30px;
     float: left;
     clear: left;
+  }
+  .clients-module .omega {
   }
   .clients {
     width: 100%;
@@ -158,6 +168,9 @@
         color: #707070;
         font-family: "Helvetica Neue", Helvetica, sans-serif;
       }
+      .omega .clients > ul > li {
+        padding: 2px 15px;
+      }
         .clients .client-sub-title {
           font-family: "LeagueGothicRegular", sans-serif;
           color: #d78e6f;
@@ -173,3 +186,60 @@
       }
       .clients ul > li > ul > li {
       }
+.clients-close {
+  position: absolute;
+  top: 1px;
+  right: 8px;
+  width: 81px;
+  height: 81px;
+  text-indent: -9000px;
+  text-align: left;
+  background: url(images/sprite_background.png) 0 -1120px no-repeat;
+}
+
+/* Contact Module (fits within Clients Module) */
+.module-contact {
+  position: absolute;
+  /*
+  bottom: 0;
+  */
+  width: 407px;
+  height: 199px;
+  top: 515px;
+  right: 7px;
+  display: block;
+  cursor: pointer;
+}
+.contact-header {
+  font-family: "LeagueGothicRegular", sans-serif;
+  color: #aa9e97;
+  font-size: 25px;
+  padding: 0 24px;
+  margin: 16px 0;
+}
+
+/* General Module Group */
+.module-row {
+  width: 100%;
+  height: 637px;
+  padding: 133px 0 30px;
+  background: rgba(100, 0, 0, 0.4) url(images/sprite_background_modules.png) 50% 0 no-repeat;
+}
+.module-group {
+  width: 1024px;
+  margin: 0 auto;
+}
+.module-case-study {
+  width: 612px;
+  height: 406px;
+  float: left;
+}
+.module-supplement {
+  float: left;
+  width: 406px;
+  height: 406px;
+}
+.main_left .module-case-study {
+}
+.main_left .module-supplement {
+}
