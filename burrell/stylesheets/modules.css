@@ -4,12 +4,7 @@
   height: 162px;
   position: relative;
   margin-bottom: -102px;
-  z-index: 1;
-  /*
-  overflow: visible;
-  top: 0;
-  left: 0;
-  */
+  z-index: 10;
 }
 .filter-modules-sticky {
   width: 100%;
@@ -233,15 +228,20 @@
 .module-title {
   display: block;
   width: 553px;
-  height: 193px;
-  position: relative;
-  top: -19px;
-  left: -1px;
+  height: 230px;
   margin: 0;
-  padding: 30px 0 0 60px;
   font-weight: normal;
   font-family: "LeagueGothicRegular", sans-serif;
-  background: url(images/sprite_modules.png) 0 -372px no-repeat;
+}
+.module-case-study .module-title {
+  position: relative;
+  z-index: 2;
+  top: -19px;
+  left: -1px;
+  padding: 30px 0 0 60px;
+  background: url(images/sprite_module_title_background.png) 0 0 no-repeat;
+}
+.module-culture .module-title {
 }
   .module-title .lead {
     display: block;
@@ -258,33 +258,83 @@
   }
 .module-blue .module-title {
   color: #93aeca;
-  background-position: 0 -672px;
+  background-position: -11px 1px;
+}
+.module-blue:hover .module-title {
+  color: #93aeca;
+  background-position: -11px -299px;
 }
 .module-green .module-title {
   color: #68bda0;
-  background-position: 0 -372px;
+  background-position: 0 -600px;
+}
+.module-green:hover .module-title {
+  color: #68bda0;
+  background-position: 0 -900px;
 }
 .module-case-study {
   width: 612px;
   height: 406px;
   margin-right: 5px;
   float: left;
+  position: relative;
 }
+.module-background {
+  position: absolute;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+  .module-case-study .module-background {
+    width: 612px;
+    height: 406px;
+  }
+    .module-case-study:hover .module-background img {
+      margin-left: -612px;
+    }
+.module-culture {
+  width: 818px;
+  height: 504px;
+  margin-right: 5px;
+  float: left;
+  position: relative;
+}
+  .module-culture .module-background {
+    width: 818px;
+    height: 504px;
+  }
+    .module-culture:hover .module-background img {
+      margin-left: -818px;
+    }
+
 .module-supplement {
   float: left;
   width: 406px;
   height: 406px;
   overflow: hidden;
+  position: relative;
+  z-index: 3;
 }
   .module-supplement img {
   }
   .module-supplement img:hover {
     margin-left: -406px;
   }
-.main_left .module-case-study {
+.module-supplement.infographic {
+  width: 200px;
+  background-clor: rgba(255, 255, 255, 0.2);
 }
-.main_left .module-supplement {
-}
+  .module-supplement.infographic .data {
+    width: 200px;
+    height: 463px;
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+  .module-supplement.infographic .source {
+    width: 200px;
+    height: 36px;
+    background-color: rgba(255, 0, 0, 0.2);
+  }
 .module-navigation {
   width: 580px;
   height: 133px;
