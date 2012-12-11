@@ -220,26 +220,113 @@
 
 /* General Module Group */
 .module-row {
+  position: relative;
   width: 100%;
-  height: 637px;
-  padding: 133px 0 30px;
-  background: rgba(100, 0, 0, 0.4) url(images/sprite_background_modules.png) 50% 0 no-repeat;
+  height: 540px;
+  padding: 0;
+  background: rgba(100, 0, 0, 0.18) url(images/sprite_background_modules.png) 50% 0 no-repeat;
 }
 .module-group {
   width: 1024px;
   margin: 0 auto;
 }
+.module-title {
+  display: block;
+  width: 553px;
+  height: 193px;
+  position: relative;
+  top: -19px;
+  left: -1px;
+  margin: 0;
+  padding: 30px 0 0 60px;
+  font-weight: normal;
+  font-family: "LeagueGothicRegular", sans-serif;
+  background: url(images/sprite_modules.png) 0 -372px no-repeat;
+}
+  .module-title .lead {
+    display: block;
+    font-size: 52px;
+    line-height: 48px;
+    padding: 6px 0 0;
+  }
+  .module-title .abstract {
+    display: block;
+    color: #867d83;
+    font-family: "League Gothic Condensed", "LeagueGothicRegular", sans-serif;
+    font-size: 24px;
+    line-height: 24px;
+  }
+.module-blue .module-title {
+  color: #93aeca;
+  background-position: 0 -672px;
+}
+.module-green .module-title {
+  color: #68bda0;
+  background-position: 0 -372px;
+}
 .module-case-study {
   width: 612px;
   height: 406px;
+  margin-right: 5px;
   float: left;
 }
 .module-supplement {
   float: left;
   width: 406px;
   height: 406px;
+  overflow: hidden;
 }
+  .module-supplement img {
+  }
+  .module-supplement img:hover {
+    margin-left: -406px;
+  }
 .main_left .module-case-study {
 }
 .main_left .module-supplement {
 }
+.module-navigation {
+  width: 580px;
+  height: 133px;
+  margin: 0 auto;
+}
+  .module-navigation a {
+    float: left;
+    height: 120px;
+  }
+  .module-navigation .arrow-right,
+  .module-navigation .arrow-left {
+    width: 141px;
+    height: 60px;
+    margin-top: 60px;
+    text-indent: -9000px;
+    overflow: hidden;
+    background: url(images/sprite_modules.png) 32px -126px no-repeat;
+  }
+  .module-navigation .arrow-right {
+    background-position: 32px -126px;
+  }
+  .module-navigation .arrow-right:hover {
+    background-position: 32px -246px;
+  }
+  .module-navigation .arrow-left {
+    background-position: -272px -126px;
+  }
+  .module-navigation .arrow-left:hover {
+    background-position: -272px -246px;
+  }
+  .module-navigation .arrow-left.go-top {
+    background-position: -136px -126px;
+  }
+  .module-navigation .arrow-left.go-top:hover {
+    background-position: -136px -246px;
+  }
+  .module-navigation .tab {
+    width: 296px;
+    text-indent: -9000px;
+    overflow: hidden;
+    background: url(images/sprite_modules.png) 86px 29px no-repeat;
+  }
+  .module-navigation .tab:hover {
+    background-position: -154px 29px;
+  }
