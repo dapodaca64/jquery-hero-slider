@@ -33,6 +33,8 @@ $(function(){
     el: $(".filter-modules-navigation")
   });
 
+  window.pageNavigation = new PageNavigation();
+
   //Sticky Elements
   window.stickies = {
     navigation: new StickyElement({
@@ -71,5 +73,9 @@ $(function(){
       }
     })
   };
+
+  console.log("Backbone %o", Backbone);
+  //Kick off the Backbone.js Router
+  Backbone.history.start();
 
 });
