@@ -25,9 +25,9 @@ body {
   z-index: 100;
   background: url(images/sprite_background.png) 0 -180px no-repeat;
 }
-.main-modules {
+.footer-modules {
   width: 100%;
-  height: 6452px;
-  margin-top: -24px;
+  height: 1014px;
+  margin-top: -2px;
   background: url(images/BurrellCo_ModuleGrid_R1_Open_V2_poc.png) 50% 0 repeat;
 }

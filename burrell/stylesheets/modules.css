@@ -217,21 +217,58 @@
 .module-row {
   position: relative;
   width: 100%;
-  height: 540px;
+  min-height: 538px;
   padding: 0;
-  background: rgba(100, 0, 0, 0.18) url(images/sprite_background_modules.png) 50% 0 no-repeat;
+  background: url(images/sprite_background_modules.png) 50% 0 no-repeat;
 }
-.module-group {
-  width: 1024px;
-  margin: 0 auto;
+  .module-group {
+    width: 1024px;
+    margin: 0 auto;
+  }
+    .module-title {
+      display: block;
+      width: 553px;
+      height: 230px;
+      margin: 0;
+      position: relative;
+      z-index: 2;
+      font-weight: normal;
+      font-family: "LeagueGothicRegular", sans-serif;
+    }
+      .module-title .lead {
+        display: block;
+        font-size: 52px;
+        line-height: 48px;
+        padding: 6px 0 0;
+      }
+      .module-title .abstract {
+        display: block;
+        color: #867d83;
+        font-family: "League Gothic Condensed", "LeagueGothicRegular", sans-serif;
+        font-size: 24px;
+        line-height: 24px;
+      }
+.module-background {
+  position: absolute;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+  z-index: 1;
 }
-.module-title {
-  display: block;
-  width: 553px;
-  height: 230px;
-  margin: 0;
-  font-weight: normal;
-  font-family: "LeagueGothicRegular", sans-serif;
+
+
+/* Case Study Module */
+.module-case-study {
+  width: 612px;
+  height: 406px;
+  float: left;
+  position: relative;
+}
+.main-left .module-case-study {
+  margin-right: 5px;
+}
+.main-right .module-case-study {
+  margin-left: 5px;
 }
 .module-case-study .module-title {
   position: relative;
@@ -241,51 +278,6 @@
   padding: 30px 0 0 60px;
   background: url(images/sprite_module_title_background.png) 0 0 no-repeat;
 }
-.module-culture .module-title {
-}
-  .module-title .lead {
-    display: block;
-    font-size: 52px;
-    line-height: 48px;
-    padding: 6px 0 0;
-  }
-  .module-title .abstract {
-    display: block;
-    color: #867d83;
-    font-family: "League Gothic Condensed", "LeagueGothicRegular", sans-serif;
-    font-size: 24px;
-    line-height: 24px;
-  }
-.module-blue .module-title {
-  color: #93aeca;
-  background-position: -11px 1px;
-}
-.module-blue:hover .module-title {
-  color: #93aeca;
-  background-position: -11px -299px;
-}
-.module-green .module-title {
-  color: #68bda0;
-  background-position: 0 -600px;
-}
-.module-green:hover .module-title {
-  color: #68bda0;
-  background-position: 0 -900px;
-}
-.module-case-study {
-  width: 612px;
-  height: 406px;
-  margin-right: 5px;
-  float: left;
-  position: relative;
-}
-.module-background {
-  position: absolute;
-  overflow: hidden;
-  top: 0;
-  left: 0;
-  z-index: 1;
-}
   .module-case-study .module-background {
     width: 612px;
     height: 406px;
@@ -293,48 +285,170 @@
     .module-case-study:hover .module-background img {
       margin-left: -612px;
     }
+
+
+/* Module color theme for Case Study Module */
+/* blue */
+.module-blue .module-title {
+  color: #93aeca;
+  background-position: -11px 1px;
+}
+.module-blue:hover .module-title {
+  color: #fff;
+  background-position: -11px -299px;
+}
+.module-blue:hover .module-title .abstract {
+  color: #fff;
+}
+/* green */
+.module-green .module-title {
+  color: #68bda0;
+  background-position: -12px -600px;
+}
+.module-green:hover .module-title {
+  color: #fff;
+  background-position: -12px -900px;
+}
+.module-green:hover .module-title .abstract {
+  color: #fff;
+}
+
+
+/* Culture Module */
 .module-culture {
   width: 818px;
-  height: 504px;
-  margin-right: 5px;
+  height: 498px;
   float: left;
   position: relative;
+  border-top: solid 7px #ecd477;
 }
+.module-culture.minor {
+  width: 612px;
+}
+.main-left .module-culture {
+  margin-right: 5px;
+}
+.main-right .module-culture {
+  margin-left: 5px;
+}
+  .module-culture .module-title {
+    color: rgba(170, 158, 151, 0.4);
+  }
+  .module-culture:hover .module-title {
+    color: rgba(229, 213, 206, 0.8);
+  }
+    .module-culture .module-quote {
+      font-size: 40px;
+      line-height: 45px;
+      margin: 27px 0 0 30px;
+    }
+    .module-culture .module-quote:before,
+    .module-culture .module-quote:after {
+      position: relative;
+      font-size: 112px;
+      line-height: 0;
+    }
+    .module-culture .module-quote:before {
+      content: "\201C";
+      top: 54px;
+      left: 1px;
+    }
+    .module-culture .module-quote:after {
+      content: "\201D";
+      top: 54px;
+      left: 1px;
+    }
+    .module-culture .source {
+      float: left;
+      height: 30px;
+      padding: 0 0 0 81px;
+      margin: 8px 26px;
+      font-size: 24px;
+      line-height: 26px;
+      background-color: rgba(0, 0, 0, 0.1);
+      background: url(images/sprite_modules.png) 0 -784px no-repeat;
+    }
+    .module-culture:hover .source {
+      background-position: 0 -854px;
+    }
+      .module-culture .source .arrow {
+        display: block;
+        padding: 0 50px 0 0;
+        background: url(images/sprite_modules.png) 100% -784px no-repeat;
+      }
+      .module-culture:hover .source .arrow {
+        background-position: 100% -854px;
+      }
   .module-culture .module-background {
     width: 818px;
-    height: 504px;
+    height: 500px;
+    overflow: hidden;
   }
+  .module-culture.minor .module-background {
+    width: 612px;
+  }
+    .module-culture .module-background img {
+      top: -3px;
+      position: relative;
+    }
     .module-culture:hover .module-background img {
       margin-left: -818px;
     }
+    .module-culture.minor:hover .module-background img {
+      margin-left: -612px;
+    }
 
+
+/* Supplement for Case Study Module */
 .module-supplement {
   float: left;
   width: 406px;
   height: 406px;
   overflow: hidden;
   position: relative;
-  z-index: 3;
+  z-index: 2;
 }
-  .module-supplement img {
-  }
-  .module-supplement img:hover {
+  .module-supplement:hover img {
     margin-left: -406px;
   }
-.module-supplement.infographic {
+
+/* Results Module */
+.module-results {
+  float: left;
   width: 200px;
-  background-clor: rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-top: solid 7px #86647b;
 }
-  .module-supplement.infographic .data {
-    width: 200px;
-    height: 463px;
+.module-results.major {
+  width: 406px;
+}
+  .module-results .data {
+    width: 100%;
+    height: 456px;
+    overflow: hidden;
+    position: relative;
+    z-index: 2;
     background-color: rgba(0, 0, 0, 0.2);
   }
-  .module-supplement.infographic .source {
-    width: 200px;
-    height: 36px;
-    background-color: rgba(255, 0, 0, 0.2);
+    .module-results .data:hover img {
+      margin-left: -200px;
+    }
+    .module-results.major .data:hover img {
+      margin-left: -406px;
+    }
+  .module-results .source {
+    width: 185px;
+    height: 27px;
+    margin: 5px 0 0;
+    padding: 9px 0 0 16px;
+    color: #95989c;
+    font-family: "LeagueGothicRegular", sans-serif;
+    font-size: 16px;
   }
+
+
+/* Module Navigation */
 .module-navigation {
   width: 580px;
   height: 133px;
@@ -373,10 +487,59 @@
   }
   .module-navigation .tab {
     width: 296px;
-    text-indent: -9000px;
-    overflow: hidden;
+    height: 20px;
+    padding: 90px 0 0;
+    font-size: 11px;
+    line-height: 14px;
+    color: #ac9e92;
+    text-decoration: none;
+    text-align: center;
+    font-family: "deming_epregular", serif;
     background: url(images/sprite_modules.png) 86px 29px no-repeat;
   }
   .module-navigation .tab:hover {
+    color: #ac9e92;
     background-position: -154px 29px;
+  }
+  .module-navigation .tab.logo-bco {
+    background-position: 86px 29px;
+  }
+  .module-navigation .tab.logo-bco:hover {
+    background-position: -154px 29px;
+  }
+  .module-navigation .tab.logo-hickory {
+    background-position: -824px -178px;
+  }
+  .module-navigation .tab.logo-hickory:hover {
+    background-position: -824px -608px;
+  }
+  .module-navigation .tab.logo-maverick {
+    background-position: -625px 15px;
+  }
+  .module-navigation .tab.logo-maverick:hover {
+    background-position: -625px -416px;
+  }
+  .module-navigation .tab.logo-gunslinger {
+    background-position: -444px 30px;
+  }
+  .module-navigation .tab.logo-gunslinger:hover {
+    background-position: -444px -400px;
+  }
+  .module-navigation .tab.logo-yardmaster {
+    background-position: -424px -172px;
+  }
+  .module-navigation .tab.logo-yardmaster:hover {
+    background-position: -424px -602px;
+  }
+  .module-navigation .tab.logo-ramblin {
+    background-position: -624px -192px;
+  }
+  .module-navigation .tab.logo-ramblin:hover {
+    background-position: -624px -622px;
+  }
+  .module-navigation .tab.logo-midnight {
+    background-position: -823px 5px;
+  }
+  .module-navigation .tab.logo-midnight:hover {
+    background-position: -823px -425px;
   }
