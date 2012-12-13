@@ -282,11 +282,16 @@
       }
 .module-background {
   position: absolute;
-  overflow: hidden;
   top: 0;
   left: 0;
   z-index: 1;
 }
+  .module-background img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
 
 
 /* Case Study Module */
@@ -309,7 +314,9 @@
     height: 406px;
   }
     .module-case-study:hover .module-background img {
+    /*slide left
       margin-left: -612px;
+      */
     }
 
 
@@ -354,7 +361,7 @@
   .module-culture .module-title {
     color: rgba(170, 158, 151, 0.4);
   }
-  .module-culture:hover .module-title {
+  .module-culture.active .module-title {
     color: rgba(229, 213, 206, 0.8);
   }
     .module-culture .module-quote {
@@ -388,7 +395,7 @@
       background-color: rgba(0, 0, 0, 0.1);
       background: url(images/sprite_modules.png) 0 -784px no-repeat;
     }
-    .module-culture:hover .source {
+    .module-culture.active .source {
       background-position: 0 -854px;
     }
       .module-culture .source .arrow {
@@ -396,7 +403,7 @@
         padding: 0 50px 0 0;
         background: url(images/sprite_modules.png) 100% -784px no-repeat;
       }
-      .module-culture:hover .source .arrow {
+      .module-culture.active .source .arrow {
         background-position: 100% -854px;
       }
   .module-culture .module-background {
@@ -409,13 +416,16 @@
   }
     .module-culture .module-background img {
       top: -3px;
-      position: relative;
     }
     .module-culture:hover .module-background img {
+    /*slide left
       margin-left: -818px;
+      */
     }
     .module-culture.minor:hover .module-background img {
+    /*slide left
       margin-left: -612px;
+      */
     }
 
 
@@ -429,7 +439,9 @@
   z-index: 2;
 }
   .module-supplement:hover img {
+  /*slide left
     margin-left: -406px;
+    */
   }
 
 /* Results Module */
@@ -459,10 +471,14 @@
     background-color: rgba(0, 0, 0, 0.2);
   }
     .module-results .data:hover img {
+    /*slide left
       margin-left: -200px;
+      */
     }
     .module-results.major .data:hover img {
+    /* slide left
       margin-left: -406px;
+      */
     }
   .module-results .source {
     width: 185px;

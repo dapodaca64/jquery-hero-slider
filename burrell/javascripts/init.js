@@ -83,4 +83,11 @@ $(function(){
   //Kick off the Backbone.js routers
   Backbone.history.start();
 
+  //Story Module
+  app.storyModules = [ ];
+  $(".module-culture").each(function(){
+    var module = new StoryModule({ el: this });
+    app.storyModules.push(module);
+  });
+
 });
