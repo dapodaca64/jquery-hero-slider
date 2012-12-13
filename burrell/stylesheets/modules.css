@@ -229,6 +229,7 @@
   }
   .module-fixed-width {
     width: 1025px;
+    padding-left: 1px;
     margin: 0 auto;
   }
     .module {
@@ -550,6 +551,11 @@
   .module-navigation .tab:hover {
     color: #ac9e92;
     background-position: -154px 29px;
+  }
+  .module-navigation .tab.no-text {
+    background: none;
+    text-align: left;
+    text-indent: -9000px;
   }
   .module-navigation .tab.logo-bco {
     background-position: 86px 29px;

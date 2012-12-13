@@ -17,6 +17,9 @@ $.fn.heroSlider = function(){
 
 };
 
+//put our application under one global object
+var app = { };
+
 //DOM ready
 $(function(){
 
@@ -25,18 +28,18 @@ $(function(){
   var hero = $("#hero-slider").heroSlider();
 
   //enable JS console debugging of this "API" of the Hero instance
-  window.heroSlider = $("#hero-slider").data("heroSlider");
-  heroSlider.init();
+  app.heroSlider = $("#hero-slider").data("heroSlider");
+  app.heroSlider.init();
 
   //Filter Navigation
-  window.filterNavigation = new FilterNavigation({
+  app.filterNavigation = new FilterNavigation({
     el: $(".filter-modules-navigation")
   });
 
-  window.pageNavigation = new PageNavigation();
+  app.pageNavigation = new PageNavigation();
 
   //Sticky Elements
-  window.stickies = {
+  app.stickies = {
     navigation: new StickyElement({
       el: $(".filter-modules-sticky"),
       stickyOnScrollY: function(){
@@ -74,8 +77,10 @@ $(function(){
     })
   };
 
-  console.log("Backbone %o", Backbone);
-  //Kick off the Backbone.js Router
+  //Add one router for the application
+  app.router = new Workspace();
+
+  //Kick off the Backbone.js routers
   Backbone.history.start();
 
 });

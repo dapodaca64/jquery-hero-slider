@@ -31,6 +31,19 @@ body {
   margin-top: -2px;
   background: url(images/BurrellCo_ModuleGrid_R1_Open_V2_poc.png) 50% 0 repeat;
 }
+  .footer-modules .module-navigation {
+    background: none;
+    height: 175px;
+    padding-top: 42px;
+  }
+  .footer-modules .module-navigation .tab {
+    height: 88px;
+  }
+  .footer-modules .module-navigation:before,
+  .footer-modules .module-navigation:after {
+    content: "";
+    background: none;
+  }
 .clear {
   width: 0;
   height: 0;

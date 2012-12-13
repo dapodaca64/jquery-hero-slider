@@ -1,17 +1,19 @@
 var Workspace = Backbone.Router.extend({
 
   routes: {
-    "hero":                 "goToHero",
-    "hero/:story_index":    "goToHero",
-    "story/:module_index":  "goToModule"
+    "hero":               "goToHero",
+    "hero/:slide_index":  "goToHero",
+    "story/:story_index": "goToStory"
   },
 
-  goToHero: function(storyIndex) {
-      console.log("Backbone.Router.goToHero(%o)", storyIndex);
+  goToHero: function(slideIndex) {
+      console.log("Backbone.Router.goToHero(%o)", slideIndex);
+      app.pageNavigation.goToHero(slideIndex);
   },
 
-  goToStory: function(moduleIndex) {
-    console.log("Backbone.Router.goToStory(%o)", moduleIndex);
+  goToStory: function(storyIndex) {
+    console.log("Backbone.Router.goToStory(%o)", storyIndex);
+    app.pageNavigation.goToStory(storyIndex);
   }
 
 });
