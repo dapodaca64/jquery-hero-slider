@@ -33,7 +33,7 @@ StoryModule.prototype.bindEvents = function(){
 
   this.bindCollapsedHovers();
 
-  this.$el.click(this.moduleClickHandler.bind(this));
+  this.$el.on("click", this.moduleClickHandler.bind(this));
 
   this.$el.find(".close-button").on("click", this.closeClickHandler.bind(this));
 
@@ -42,6 +42,14 @@ StoryModule.prototype.bindEvents = function(){
   this.$videoPlaceholder = this.$el.next(".module-expanded").find(".embed-youtube-video");
   //console.log("$videoPlaceholder %o", this.$videoPlaceholder[0]);
   this.$videoPlaceholder.on("click", this.videoPlaceholderClickHandler.bind(this));
+
+};
+
+StoryModule.prototype.hasExpanded = function(){
+
+  //var expanded = this.$el.next(".module-expanded");
+  //console.log("hasExpanded test %o", expanded);
+  return (this.$el.next(".module-expanded").length) ? true : false;
 
 };
 
@@ -151,14 +159,22 @@ StoryModule.prototype.hoverOutHandler = function(ev){
 
 StoryModule.prototype.moduleClickHandler = function(ev) {
   ev.preventDefault();
+  //console.log("click on this %o ev %o, ev.target %o,  ev.currentTarget %o", this, ev, ev.target, ev.currentTarget);
 
-  //console.log("click on this %o", this);
+  //only do operation if we have an expansion state to use
+  if (this.hasExpanded()) {
 
-  if (this.expanded) {
-    //make a function of a close button
-    //this.doCollapse();
-  } else {
-    this.doExpansion();
+    if (this.expanded) {
+
+      //make a function of a close button
+      //this.doCollapse();
+
+    } else {
+
+      this.doExpansion();
+
+    }
+
   }
 
 };
