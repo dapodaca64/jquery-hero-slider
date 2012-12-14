@@ -24,7 +24,7 @@ PageNavigation.prototype.init = function(){
     storyIndex: 0
   });
   this.modules.on("change", function(module){
-    console.log("change story to storyIndex %o", module);
+    //console.log("change story to storyIndex %o", module);
     var storyIndex = module.get("storyIndex");
     //window.location.hash = "#story/"+storyIndex;
   }.bind(this));
@@ -44,14 +44,14 @@ PageNavigation.prototype.bindEvents = function(){
   $.waypoints.settings.scrollThrottle = 30;
   /*
   $(".everything").waypoint(function(ev, direction){
-    console.log("everything waypoint ev %o, direction %o", ev, direction);
+    //console.log("everything waypoint ev %o, direction %o", ev, direction);
   }, {
     offset: "-100%"
   });
   */
   $(".module-row, .footer-modules").waypoint(function(ev, direction){
     ev.stopPropagation();
-    console.log("module row waypoint on ev %o, direction %o", ev, direction);
+    //console.log("module row waypoint on ev %o, direction %o", ev, direction);
     var storyIndex;
     var rowIndex = $(ev.currentTarget).attr("data-row-index");
     //var rowIndex = this.modules.get("storyIndex");
@@ -86,7 +86,7 @@ PageNavigation.prototype.backLinkClickHandler = function(ev){
 
   //or can read from an internal model
   var rowIndex = this.modules.get("storyIndex");
-  console.log("PageNavigation.backLinkClickHandler rowIndex %o", rowIndex);
+  //console.log("PageNavigation.backLinkClickHandler rowIndex %o", rowIndex);
 
   //only go back to the first story, no further
   var goingToIndex = (rowIndex) ? rowIndex - 1 : rowIndex;
@@ -111,7 +111,7 @@ PageNavigation.prototype.heroLinkClickHandler = function(ev){
 
 PageNavigation.prototype.goToStory = function(storyIndex) {
 
-  console.log("PageNavigation.goToStory %o", storyIndex);
+  //nconsole.log("PageNavigation.goToStory %o", storyIndex);
 
   //update the model
   this.modules.set("storyIndex", +(storyIndex));
@@ -119,7 +119,7 @@ PageNavigation.prototype.goToStory = function(storyIndex) {
   //update the view
   var $target = $("[data-row-index='"+storyIndex+"']");
 
-  console.log("scroll to %o", $target[0]);
+  //console.log("scroll to %o", $target[0]);
 
   $.smoothScroll({
     scrollTarget: $target,
@@ -130,7 +130,7 @@ PageNavigation.prototype.goToStory = function(storyIndex) {
 
 PageNavigation.prototype.goToHero = function(slideIndex) {
 
-  console.log("PageNavigation.goToHero %o", slideIndex);
+  //console.log("PageNavigation.goToHero %o", slideIndex);
 
   var $target = $(".hero-slider");
   $.smoothScroll({

@@ -4,7 +4,7 @@ var StoryModule = function(options) {
   var defaults = {
     el: false,
     animatedElementSelectors: [ ],
-    animationDuration: 400
+    animationDuration: 200
   };
 
   //set options
@@ -14,6 +14,7 @@ var StoryModule = function(options) {
   this.$el = $(this.options.el);
   this.aSpeed = this.options.animationDuration;
   this.isAnimating = false;
+  this.originalRowHeight = this.$el.parents(".module-row").height();
 
   this.init();
 
@@ -23,15 +24,57 @@ StoryModule.prototype.init = function(){
 
   if (this.$el) {
     this.bindEvents();
+    this.addCursor();
   }
 
 };
 
 StoryModule.prototype.bindEvents = function(){
 
-  this.$el.hover(this.hoverHandler.bind(this), this.hoverOutHandler.bind(this));
+  this.bindCollapsedHovers();
 
-  this.$el.click(this.clickHandler.bind(this));
+  this.$el.click(this.moduleClickHandler.bind(this));
+
+  this.$el.find(".close-button").on("click", this.closeClickHandler.bind(this));
+
+  this.$el.find(".close-button").on("mouseenter", this.closeHoverHandler.bind(this));
+
+  this.$videoPlaceholder = this.$el.next(".module-expanded").find(".embed-youtube-video");
+  //console.log("$videoPlaceholder %o", this.$videoPlaceholder[0]);
+  this.$videoPlaceholder.on("click", this.videoPlaceholderClickHandler.bind(this));
+
+};
+
+StoryModule.prototype.addCursor = function(){
+
+  var expandedState = this.$el.parents(".module-row").find(".module-expanded");
+  if (expandedState) {
+    this.$el.css({
+      cursor: "pointer"
+    });
+  }
+
+};
+
+StoryModule.prototype.removeCursor = function(){
+  this.$el.css({
+    cursor: ""
+  });
+};
+
+StoryModule.prototype.bindCollapsedHovers = function(ev){
+
+  this.$el.on("mouseenter", this.hoverHandler.bind(this));
+
+  this.$el.on("mouseleave", this.hoverOutHandler.bind(this));
+
+};
+
+StoryModule.prototype.unBindCollapsedHovers = function(ev){
+
+  this.$el.off("mouseenter");
+
+  this.$el.off("mouseleave");
 
 };
 
@@ -106,18 +149,128 @@ StoryModule.prototype.hoverOutHandler = function(ev){
 
 };
 
-StoryModule.prototype.clickHandler = function(ev) {
+StoryModule.prototype.moduleClickHandler = function(ev) {
   ev.preventDefault();
 
   //console.log("click on this %o", this);
 
-  var expandedState = this.$el.parents(".module-row").find(".module-expanded");
+  if (this.expanded) {
+    //make a function of a close button
+    //this.doCollapse();
+  } else {
+    this.doExpansion();
+  }
 
-  console.log("have expandedState %o", expandedState);
-  if (expandedState) {
+};
 
+StoryModule.prototype.closeHoverHandler = function(ev) {
+  ev.stopPropagation();
+  ev.preventDefault();
+  //console.log("close hover.");
+};
+
+StoryModule.prototype.closeClickHandler = function(ev) {
+  ev.stopPropagation();
+
+  this.doCollapse();
+
+};
+
+StoryModule.prototype.videoPlaceholderClickHandler = function(ev) {
+  ev.preventDefault();
+
+  var videoID = $(ev.currentTarget).attr("rel");
+
+  if (videoID) {
+
+    this.doYouTubeEmbed(videoID);
 
   }
 
 };
 
+StoryModule.prototype.doExpansion = function(ev) {
+
+  var collapsedBackground = this.$el.find(".module-background");
+  var expandedState = this.$el.parents(".module-row").find(".module-expanded");
+  var closeButton = this.$el.parents(".module-row").find(".close-button");
+
+  if (expandedState) {
+
+    var expandedHeight = $(expandedState).height();
+
+    this.$el.parents(".module-row").animate({
+      height: expandedHeight+141
+    }, this.aSpeed, function(){
+      //console.log("expansion complete.");
+    });
+
+    collapsedBackground.fadeOut(this.aSpeed);
+    expandedState.fadeIn(this.aSpeed);
+    closeButton.fadeIn(this.aSpeed);
+
+  }
+
+  this.removeCursor();
+  this.unBindCollapsedHovers();
+  this.expanded = true;
+
+};
+
+StoryModule.prototype.doCollapse = function(ev) {
+
+  var collapsedBackground = this.$el.find(".module-background");
+  var expandedState = this.$el.parents(".module-row").find(".module-expanded");
+  var closeButton = this.$el.parents(".module-row").find(".close-button");
+
+  if (expandedState) {
+
+    //console.log("set height of row to %o", this.originalRowHeight);
+
+    this.removeYouTubeEmbed();
+
+    var wait = setTimeout(function(){
+
+      this.$el.parents(".module-row").animate({
+        height: this.originalRowHeight
+      }, this.aSpeed, function(){
+        //console.log("collapse complete.");
+      });
+
+      //expandedState.find(".expanded-background").fadeOut(this.aSpeed);
+      collapsedBackground.fadeIn(this.aSpeed/1.5);
+      expandedState.fadeOut(this.aSpeed);
+      closeButton.fadeOut(this.aSpeed);
+
+    }.bind(this), 50);
+
+  }
+
+  this.addCursor();
+  this.bindCollapsedHovers();
+  this.expanded = false;
+
+};
+
+StoryModule.prototype.doYouTubeEmbed = function(videoID) {
+
+  //console.log("doYouTubeEmbed for %o...", videoID);
+
+  this.$videoPlaceholder.hide();
+
+  var embed = '<div class="youtube-embed"><iframe width="640" height="360" ' +
+              'src="http://www.youtube-nocookie.com/embed/' +
+              videoID +
+              '?rel=0&autoplay=1" frameborder="0" allowfullscreen></iframe></div>';
+
+  this.$el.parents(".module-row").find(".module-expanded .module-fixed-width").append(embed);
+
+};
+
+StoryModule.prototype.removeYouTubeEmbed = function() {
+
+  this.$videoPlaceholder.show();
+
+  this.$el.parents(".module-row").find(".module-expanded .youtube-embed").empty();
+
+};

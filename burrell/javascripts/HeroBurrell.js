@@ -69,7 +69,7 @@ HeroSliderBurrell.prototype.init = function(){
     this.setupViewport();
 
     if (this.autoRotate) {
-      console.log("HeroSliderBurrell going to auto-rotate!");
+      //console.log("HeroSliderBurrell going to auto-rotate!");
       this.startAutoRotation();
     }
 
@@ -81,7 +81,7 @@ HeroSliderBurrell.prototype.setupViewport = function(){
 
   // Model for the viewport size
   var viewportDims = this.getViewportDims();
-  console.log("viewportDims %o", viewportDims);
+  //console.log("viewportDims %o", viewportDims);
   this.viewport = new BasicModel(viewportDims);
 
   // Resize the hero based on the viewport
@@ -94,7 +94,7 @@ HeroSliderBurrell.prototype.setupViewport = function(){
   $(window).resize(function(ev){
   //console.log("HeroSliderBurrell window resize this %o..", this);
     var viewportDims = this.getViewportDims();
-    console.log("HeroSliderBurrell window resize to, h %o, %o", viewportDims.width, viewportDims.height);
+    //console.log("HeroSliderBurrell window resize to, h %o, %o", viewportDims.width, viewportDims.height);
 
     this.viewport.set(viewportDims);
 
@@ -165,7 +165,7 @@ SlidePresenterBurrellSummary.prototype.init = function() {
   this.parent.init.call(this);
 
   var storyCount;
-  console.log("SlidePresenterBurrellSummary.init with this.$el %o", this.$el);
+  //console.log("SlidePresenterBurrellSummary.init with this.$el %o", this.$el);
   if (this.$el) {
     storyCount = this.controller.$el.find(".slider-summary .story").length;
     if (storyCount) {
@@ -189,8 +189,8 @@ SlidePresenterBurrellSummary.prototype.events = {
 // DOM event handlers
 SlidePresenterBurrellSummary.prototype.nextStoryClickHandler = function(ev){
   ev.preventDefault();
-  console.log("SlidePresenterBurrellSummary.nextStoryClickHandler: this %o", this);
-  console.log("SlidePresenterBurrellSummary.nextStoryClickHandler: this.controller %o", this.controller);
+  //console.log("SlidePresenterBurrellSummary.nextStoryClickHandler: this %o", this);
+  //console.log("SlidePresenterBurrellSummary.nextStoryClickHandler: this.controller %o", this.controller);
   this.controller.stopAutoRotation();
   this.controller.nextStory(this.controller.storySummary);
 };
@@ -209,7 +209,7 @@ SlidePresenterBurrellSummary.prototype.detailClickHandler = function(ev){
 
 // Data event handlers
 SlidePresenterBurrellSummary.prototype.storyIndexChangeHandler = function(story) {
-  console.log("SlidePresenterBurrellSummary.storyIndexChangeHandler for model %o", story);
+  //console.log("SlidePresenterBurrellSummary.storyIndexChangeHandler for model %o", story);
   this.goToSlide(story.get("storyIndex"));
 };
 
@@ -221,7 +221,7 @@ SlidePresenterBurrellSummary.prototype.storyIndexChangeHandler = function(story)
 };
 
 SlidePresenterBurrellSummary.prototype.goToSlide = function(slideIndex){
-  console.log("SlidePresenterBurrellSummary.goToSlide slideIndex %o", slideIndex);
+  //console.log("SlidePresenterBurrellSummary.goToSlide slideIndex %o", slideIndex);
   var slideOffsetFromZero = 0;
   var sliderOffset = this.$el.find(".slider-fullsize.slider-summary").css("left");
   sliderOffset = -(sliderOffset.substring(0, sliderOffset.length-2));
@@ -230,9 +230,9 @@ SlidePresenterBurrellSummary.prototype.goToSlide = function(slideIndex){
       slideOffsetFromZero += $(this).width();
     }
   });
-  console.log("SlidePresenterBurrellSummary.goToSlide sliderOffset %o, total slideOffsetFromZero %o", sliderOffset, slideOffsetFromZero);
+  //console.log("SlidePresenterBurrellSummary.goToSlide sliderOffset %o, total slideOffsetFromZero %o", sliderOffset, slideOffsetFromZero);
   var totalSlide = slideOffsetFromZero - sliderOffset;
-  console.log("SlidePresenterBurrellSummary.goToSlide total slide: %o", totalSlide);
+  //console.log("SlidePresenterBurrellSummary.goToSlide total slide: %o", totalSlide);
 
   var navAnimation = this.controller.getAnimatedElement("summaryNav");
   navAnimation.options.animateProperties = { opacity: 0 };
@@ -244,14 +244,14 @@ SlidePresenterBurrellSummary.prototype.goToSlide = function(slideIndex){
     navAnimation.options.animateProperties = { opacity: 1 };
     navAnimation.startAnimation();
   };
-  console.log("working with storyAnimation %o for element %o, totalSlide %o left", storyAnimation, storyAnimation.options.el[0], totalSlide);
+  //console.log("working with storyAnimation %o for element %o, totalSlide %o left", storyAnimation, storyAnimation.options.el[0], totalSlide);
   storyAnimation.startAnimation();
 
 };
 
 SlidePresenterBurrellSummary.prototype.goToDetail = function(slideIndex){
   this.controller.stopAutoRotation();
-  console.log("SlidePresenterBurrellSummary.goToDetail %o", slideIndex);
+  //console.log("SlidePresenterBurrellSummary.goToDetail %o", slideIndex);
   //set the detail story state
   if (typeof slideIndex === "number") {
     //via the Controller, The Detail Presenter sets this
@@ -440,7 +440,7 @@ SlidePresenterBurrellSummary.prototype.getProportionalFit = function(b, a, prop1
 };
 
 SlidePresenterBurrellSummary.prototype.resizeBackgrounds = function(vp){
-  console.log("SlidePresenterBurrellSummary.resizeBackgrounds: set to width, height: %o, %o", vp.width, vp.height);
+  //console.log("SlidePresenterBurrellSummary.resizeBackgrounds: set to width, height: %o, %o", vp.width, vp.height);
   //get proportional fit to new width
   //background image
   var fitByWidth = { width: vp.width, height: vp.width/this.summaryBackground.get("widthOrig")*this.summaryBackground.get("heightOrig") };
@@ -530,9 +530,9 @@ SlidePresenterBurrellDetail.prototype.events = {
 // DOM event handlers
 SlidePresenterBurrellDetail.prototype.goToClickHandler = function(ev){
   ev.preventDefault();
-  console.log("inspecting %o", $(ev.target).parent() );
+  //console.log("inspecting %o", $(ev.target).parent() );
   var storyIndex = $(ev.target).parent().attr("data-storyindex");
-  console.log("Let's go storyIndex %o", storyIndex);
+  //console.log("Let's go storyIndex %o", storyIndex);
   this.controller.goToStory(this.controller.storyDetail, storyIndex);
 };
 
