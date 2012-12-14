@@ -17,7 +17,7 @@ var StickyElement = function(options) {
 };
 
 StickyElement.prototype.init = function(){
-  console.log("StickyElement.init with el %o", $(this.$el)[0]);
+  //console.log("StickyElement.init with el %o", $(this.$el)[0]);
 
   this.setupViewportModel();
 
