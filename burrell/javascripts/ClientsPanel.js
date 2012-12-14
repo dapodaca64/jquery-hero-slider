@@ -24,34 +24,81 @@ ClientsPanel.prototype.init = function(){
 
 };
 
+ClientsPanel.prototype.addCursor = function(){
+
+  this.$el.css("cursor", "pointer");
+
+};
+
+ClientsPanel.prototype.removeCursor = function(){
+
+  this.$el.css("cursor", "");
+
+};
+
 ClientsPanel.prototype.bindEvents = function(){
 
   //console.log("ClientsPanel.bindEvents...");
+  this.bindContactEvents();
 
-  this.$contactButton.on("click", this.contactButtonClickHandler.bind(this));
+  this.bindPanelClick();
 
   this.$closeButton.on("click", this.closeButtonClickHandler.bind(this));
 
 };
 
+ClientsPanel.prototype.bindPanelClick = function(){
+
+  this.addCursor();
+
+  this.unBindContactEvents();
+
+  this.$el.on("click", this.clientsClickHandler.bind(this));
+
+};
+
+ClientsPanel.prototype.unBindPanelClick = function(){
+
+  this.removeCursor();
+
+  this.bindContactEvents();
+
+  this.$el.off("click");
+
+};
+
+ClientsPanel.prototype.bindContactEvents = function(ev){
+
+  this.$contactButton.on("click", this.contactButtonClickHandler.bind(this));
+
+};
+
+ClientsPanel.prototype.unBindContactEvents = function(ev){
+
+  this.$contactButton.off("click");
+
+};
+
 ClientsPanel.prototype.contactButtonClickHandler = function(ev){
   ev.preventDefault();
+  ev.stopPropagation();
 
-  if (this.expanded) {
+  this.scrollToFooter();
 
-    //this.doCollapse();
-    this.scrollToFooter();
+};
 
-  } else {
+ClientsPanel.prototype.clientsClickHandler = function(ev){
+  ev.preventDefault();
 
-    this.doExpand();
+  //console.log("clientsClickHandler...");
 
-  }
+  this.doExpand();
 
 };
 
 ClientsPanel.prototype.closeButtonClickHandler = function(ev){
   ev.preventDefault();
+  ev.stopPropagation();
 
   this.doCollapse();
 
@@ -67,6 +114,8 @@ ClientsPanel.prototype.doCollapse = function(){
     this.$el.addClass("collapsed");
   }.bind(this));
 
+  this.bindPanelClick();
+
   this.expanded = false;
 
 };
@@ -80,6 +129,8 @@ ClientsPanel.prototype.doExpand = function(){
   }, this.aSpeed, function(){
     this.$closeButton.fadeIn(this.aSpeed);
   }.bind(this));
+
+  this.unBindPanelClick();
 
   this.expanded = true;
 
