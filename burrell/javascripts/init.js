@@ -86,7 +86,41 @@ $(function(){
   //Story Module
   app.storyModules = [ ];
   $(".module-culture").each(function(){
-    var module = new StoryModule({ el: this });
+    var module = new StoryModule({
+      el: this,
+      animatedElementSelectors: [ 
+        { fadeIn: ".module-background .active" },
+        { fadeIn: ".module-title.active", fadeOut: ".module-title.default" }
+      ]
+    });
+    app.storyModules.push(module);
+  });
+  $(".module-case-study").each(function(){
+    var module = new StoryModule({
+      el: this,
+      animatedElementSelectors: [
+        { fadeIn: ".module-background .active"},
+        { fadeIn: ".module-title.active" }
+      ]
+    });
+    app.storyModules.push(module);
+  });
+  $(".module-results").each(function(){
+    var module = new StoryModule({
+      el: this,
+      animatedElementSelectors: [
+        { fadeIn: ".data .active" }
+      ]
+    });
+    app.storyModules.push(module);
+  });
+  $(".module-supplement").each(function(){
+    var module = new StoryModule({
+      el: this,
+      animatedElementSelectors: [
+        { fadeIn: ".active" }
+      ]
+    });
     app.storyModules.push(module);
   });
 
