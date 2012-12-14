@@ -1,17 +1,22 @@
 .filter-modules-navigation {
   width: 100%;
+  /*
   min-height: 100px;
   height: 162px;
-  position: relative;
   margin-bottom: -102px;
+  */
+  height: 61px;
+  margin-bottom: -1px;
+  min-height: 61px;
+  position: relative;
   z-index: 10;
 }
 .filter-modules-sticky {
   width: 100%;
   /*
-  height: 162px;
-  */
   height: 0;
+  */
+  height: 61px;
   position: relative;
   top: 0;
   left: 0;
@@ -139,8 +144,15 @@
   width: 1032px !important;
   padding-top: 25px;
   padding-left: 7px;
+  /* now controlled via JS
+     for expand/collapse behavior
   min-height: 688px;
+  */
+  overflow: hidden;
   background: url(images/background_clients.png) 0 0 no-repeat;
+}
+.clients-module.collapsed {
+  background: url(images/background_clients_collapsed.png) 0 100% no-repeat;
 }
 .clients-header {
   color: #c44c1a;
@@ -150,14 +162,24 @@
   padding: 0 18px;
   line-height: 28px;
 }
+.collapsed .clients-header {
+  color: rgb(138, 133, 131);
+  opacity: 0.7;
+}
 .client-list {
   position: relative;
   left: -4px;
   padding: 8px 0;
   margin: 16px 0;
 }
-.omega .client-list:first-child {
+.client-list.continuation {
+  padding-top: 0;
   margin-top: 0;
+}
+.omega .client-list:first-child {
+/*now doing with .continuation class on the list itself
+  margin-top: 0;
+  */
 }
   .client-category {
     font-family: "LeagueGothicRegular", sans-serif;
@@ -169,7 +191,16 @@
     float: left;
     clear: left;
   }
-  .clients-module .omega {
+  .collapsed .client-list .client-category {
+    color: rgb(138, 133, 131);
+    opacity: 0.5;
+    background: none;
+  }
+  .major .client-category {
+    float: none;
+    left: -3px;
+    position: relative;
+    width: 362px;
   }
   .clients {
     width: 100%;
@@ -185,6 +216,9 @@
       clear: left;
       margin: 12px 0 6px;
     }
+    .major .clients > ul {
+      margin-top: 8px;
+    }
       .clients > ul > li {
         padding: 2px 22px;
         font-size: 14px;
@@ -194,6 +228,17 @@
       .omega .clients > ul > li {
         padding: 2px 15px;
       }
+      .major .clients > ul > li {
+        color: #d78c68;
+        font-size: 26px;
+        padding: 0 22px;
+        font-family: "LeagueGothicRegular", sans-serif;
+      }
+      .collapsed .client-list .clients > ul > li,
+      .collapsed .client-list .major .clients > ul > li {
+        color: rgb(138, 133, 131);
+        opacity: 0.5;
+      }
         .clients .client-sub-title {
           font-family: "LeagueGothicRegular", sans-serif;
           color: #d78e6f;
@@ -202,6 +247,10 @@
           padding: 0 30px;
           clear: left;
           float: left;
+        }
+        .collapsed .client-list .clients .client-sub-title {
+          color: rgb(138, 133, 131);
+          opacity: 0.5;
         }
       .clients ul + h5 {
       }
@@ -220,20 +269,22 @@
   background: url(images/sprite_background.png) 0 -1120px no-repeat;
 }
 .clients-close {
+  cursor: pointer;
 }
 
 /* Contact Module (fits within Clients Module) */
 .module-contact {
   position: absolute;
   /*
-  bottom: 0;
+  top: 515px;
   */
+  bottom: 0;
   width: 407px;
   height: 199px;
-  top: 515px;
   right: 7px;
   display: block;
   cursor: pointer;
+  background: rgb(237, 233, 229) url(images/background_clients.png) -625px -515px no-repeat;
 }
 .contact-header {
   font-family: "LeagueGothicRegular", sans-serif;

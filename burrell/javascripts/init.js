@@ -88,7 +88,7 @@ $(function(){
   $(".module-culture").each(function(){
     var module = new StoryModule({
       el: this,
-      animatedElementSelectors: [ 
+      animatedElementSelectors: [
         { fadeIn: ".module-background .active" },
         { fadeIn: ".module-title.active", fadeOut: ".module-title.default" }
       ]
@@ -122,6 +122,11 @@ $(function(){
       ]
     });
     app.storyModules.push(module);
+  });
+
+  //Clients Panel
+  app.clientsPanel = new ClientsPanel({
+    el: $(".clients-module")
   });
 
 });

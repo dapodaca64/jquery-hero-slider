@@ -35,11 +35,11 @@ PageNavigation.prototype.init = function(){
 
 PageNavigation.prototype.bindEvents = function(){
 
-  this.$topLinks.click(this.topLinkClickHandler);
+  this.$topLinks.click(this.topLinkClickHandler.bind(this));
 
-  this.$backLinks.click(this.backLinkClickHandler.bind(this));
+  this.$backLinks.click(this.backLinkClickHandler);
 
-  this.$heroLinks.click(this.heroLinkClickHandler);
+  this.$heroLinks.click(this.heroLinkClickHandler.bind(this));
 
   $.waypoints.settings.scrollThrottle = 30;
   /*
@@ -53,14 +53,18 @@ PageNavigation.prototype.bindEvents = function(){
     ev.stopPropagation();
     //console.log("module row waypoint on ev %o, direction %o", ev, direction);
     var storyIndex;
-    var rowIndex = $(ev.currentTarget).attr("data-row-index");
-    //var rowIndex = this.modules.get("storyIndex");
+    var rowIndex = $(ev.currentTarget).parents(".page-navigation").attr("data-row-index");
+    if (!rowIndex) {
+      rowIndex = this.modules.get("storyIndex");
+    }
+    //console.log("rowIndex %o", rowIndex);
     rowIndex = +(rowIndex);
     if (direction === "down") {
       storyIndex = rowIndex;
     } else {
       storyIndex = (rowIndex) ? rowIndex - 1 : rowIndex;
     }
+    //console.log("set storyIndex to %o", storyIndex);
     //window.location.hash = "#story/"+storyIndex;
     this.modules.set("storyIndex", storyIndex);
   }.bind(this), {
@@ -73,7 +77,21 @@ PageNavigation.prototype.topLinkClickHandler = function(ev){
 
   ev.preventDefault();
 
-  window.location.hash = "#story/0";
+  var hashChoice = "#story/0";
+
+  this.refreshHash(hashChoice);
+
+};
+
+
+PageNavigation.prototype.refreshHash = function(newHash){
+
+  if (window.location.hash === newHash) {
+    window.location.hash = newHash+"##";
+  }
+  var waitABit = setTimeout(function(){
+    window.location.hash = newHash;
+  }, 50);
 
 };
 
@@ -82,10 +100,10 @@ PageNavigation.prototype.backLinkClickHandler = function(ev){
   ev.preventDefault();
 
   //can read from the current link's index
-  //var rowIndex = $(this).parents('.module-row').attr("data-row-index");
+  var rowIndex = $(this).parents(".page-navigation").attr("data-row-index");
 
   //or can read from an internal model
-  var rowIndex = this.modules.get("storyIndex");
+  //var rowIndex = this.modules.get("storyIndex");
   //console.log("PageNavigation.backLinkClickHandler rowIndex %o", rowIndex);
 
   //only go back to the first story, no further
@@ -100,12 +118,7 @@ PageNavigation.prototype.heroLinkClickHandler = function(ev){
 
   ev.preventDefault();
 
-  if (window.location.hash === "#hero") {
-    window.location.hash = "#hero1";
-  }
-  var waitABit = setTimeout(function(){
-    window.location.hash = "#hero";
-  }, 50);
+  this.refreshHash("#hero");
 
 };
 

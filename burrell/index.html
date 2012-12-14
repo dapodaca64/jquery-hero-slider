@@ -254,7 +254,7 @@
       </div><!-- end div.hero-slider -->
 
       <!-- FILTER THE MODULES NAVIGATION -->
-      <nav class="filter-modules-navigation"><div class="filter-modules-sticky">
+      <nav class="filter-modules-navigation page-navigation" data-row-index="0"><div class="filter-modules-sticky">
         <ul class="filter-nav-group">
           <li class="filter-nav-item">
             <a class="filter-nav-link filter-button-blue filter-button-disabled" href="#" data-filter-category="campaigns"><span>WIN CAMPAIGNS<span></a>
@@ -263,11 +263,6 @@
             <a class="filter-nav-link filter-button-green filter-button-disabled" href="#" data-filter-category="legislation"><span>IMPACT LEGISLATION</span></a>
           </li>
         </ul>
-        <!--
-        <p class="logo-ribbon-large">
-          Burrell
-        </p>
-        -->
         <ul class="filter-nav-group">
           <li class="filter-nav-item">
             <a class="filter-nav-link filter-button-gold filter-button-disabled" href="#" data-filter-category="burrell"><span>THE BURRELL WAY</span></a>
@@ -278,7 +273,7 @@
         </ul>
       </div></nav>
 
-      <section class="clients-module static_container_60">
+      <section class="clients-module static_container_60 collapsed" style="height: 250px">
 
         <h3 class="clients-header">OUR CLIENTS</h3>
 
@@ -330,42 +325,6 @@
             <dd>
           </dl>
           <dl class="client-list">
-            <dt class="client-category">PACS &amp; ORGANIZATIONS</dt>
-            <dd class="clients">
-              <ul>
-                <li>
-                  The Hermanator PAC
-                </li>
-                <li>
-                  Americans for Prosperity &ndash; NC
-                </li>
-                <li>
-                  Americans for Prosperity &ndash; GA
-                </li>
-                <li>
-                  BIPEC &ndash; MS
-                </li>
-                <li>
-                  Personhood &ndash; MS
-                </li>
-                <li>
-                  NC CIVITAS &ndash; NC
-                </li>
-                <li>
-                  Wake PAC &ndash; NC
-                </li>
-                <li>
-                  Kentucky Right to Life &ndash; KY
-                </li>
-                <li>
-                  Energy Choice Now &ndash; MI
-                </li>
-              </ul>
-            </dd>
-          </dl>
-        </div>
-        <div class="grid_18">
-          <dl class="client-list">
             <dt class="client-category">NOTABLE PAST CANDIDATES</dt>
             <dd class="clients">
               <h5 class="client-sub-title">PRESIDENTIAL</h5>
@@ -394,6 +353,14 @@
                 <li>
                   Governor Sonny Perdue &ndash; GA
                 </li>
+              </ul>
+            </dd>
+          </dl>
+        </div>
+        <div class="grid_18">
+          <dl class="client-list continuation">
+            <dd class="clients">
+              <ul>
                 <li>
                   Governor Jeb Bush &ndash; FL
                 </li>
@@ -443,14 +410,6 @@
                 <li>
                   Southern Insights &ndash; Birmingham, AL
                 </li>
-              </ul>
-            </dd>
-          </dl>
-        </div>
-        <div class="grid_23 omega">
-          <dl class="client-list">
-            <dd class="clients">
-                <ul>
                 <li>
                   Cap South &ndash; Washington DC
                 </li>
@@ -481,6 +440,8 @@
               </ul>
             </dd>
           </dl>
+        </div>
+        <div class="grid_23 omega">
           <dl class="client-list">
             <dt class="client-category">CURRENT CANDIDATES &amp; PUBLIC FIGURES</dt>
             <dd class="clients">
@@ -507,19 +468,36 @@
             </dd>
           </dl>
 
+          <dl class="client-list major">
+            <dt class="client-category">CLIENTS</dt>
+            <dd class="clients">
+              <ul>
+                <li>
+                  100+ CAMPAIGNS
+                </li>
+                <li>
+                  2 DOZEN+ ORGANIZATIONS
+                </li>
+                <li>
+                  CORPORATIONS IN 20 STATES.
+                </li>
+              </ul>
+            </dd>
+          </dl>
+
         </div>
 
         <div class="module-contact">
           <h4 class="contact-header">LET&rsquo;S TALK</h4>
         </div>
 
-        <p class="close-button clients-close">Close</p>
+        <p class="close-button clients-close" style="display:none">Close</p>
 
       </section>
 
         <!-- ROW 1 -->
-        <div class="module-row clearfix" data-row-index="1">
-          <nav class="module-navigation">
+        <div class="module-row clearfix">
+          <nav class="module-navigation page-navigation" data-row-index="1">
             <ul class="nav-list">
               <li><a class="arrow-right go-top" href="#">TOP</a></li>
               <li><a class="tab go-hero logo-hickory" href="#">
@@ -574,8 +552,8 @@
 
 
         <!-- ROW 2 -->
-        <div class="module-row clearfix" data-row-index="3">
-          <nav class="module-navigation">
+        <div class="module-row clearfix">
+          <nav class="module-navigation page-navigation" data-row-index="2">
             <ul class="nav-list">
               <li><a class="arrow-right go-top" href="#">TOP</a></li>
               <li><a class="tab go-hero logo-maverick" href="#">
@@ -628,8 +606,8 @@
         </div><!-- end module-row -->
 
         <!-- ROW 3 -->
-        <div class="module-row clearfix" data-row-index="4">
-          <nav class="module-navigation">
+        <div class="module-row clearfix">
+          <nav class="module-navigation page-navigation" data-row-index="3">
             <ul class="nav-list">
               <li><a class="arrow-right go-top" href="#">TOP</a></li>
               <li><a class="tab go-hero logo-bco" href="#">
@@ -682,8 +660,8 @@
         </div><!-- end module-row -->
 
         <!-- ROW 4 -->
-        <div class="module-row clearfix" data-row-index="5">
-          <nav class="module-navigation">
+        <div class="module-row clearfix">
+          <nav class="module-navigation page-navigation" data-row-index="4">
             <ul class="nav-list">
               <li><a class="arrow-right go-top" href="#">TOP</a></li>
               <li><a class="tab go-hero logo-gunslinger" href="#">
@@ -738,8 +716,8 @@
         </div><!-- end module-row -->
 
         <!-- ROW 5 -->
-        <div class="module-row clearfix" data-row-index="6">
-          <nav class="module-navigation">
+        <div class="module-row clearfix">
+          <nav class="module-navigation page-navigation" data-row-index="5">
             <ul class="nav-list">
               <li><a class="arrow-right go-top" href="#">TOP</a></li>
               <li><a class="tab go-hero logo-yardmaster" href="#">
@@ -790,8 +768,8 @@
         </div><!-- end module-row -->
 
         <!-- ROW 6 -->
-        <div class="module-row clearfix" data-row-index="7">
-          <nav class="module-navigation">
+        <div class="module-row clearfix">
+          <nav class="module-navigation page-navigation" data-row-index="6">
             <ul class="nav-list">
               <li><a class="arrow-right go-top" href="#">TOP</a></li>
               <li><a class="tab go-hero logo-ramblin" href="#">
@@ -846,8 +824,8 @@
         </div><!-- end module-row -->
 
         <!-- ROW 7 -->
-        <div class="module-row clearfix" data-row-index="8">
-          <nav class="module-navigation">
+        <div class="module-row clearfix">
+          <nav class="module-navigation page-navigation" data-row-index="7">
             <ul class="nav-list">
               <li><a class="arrow-right go-top" href="#">TOP</a></li>
               <li><a class="tab go-hero logo-midnight" href="#">
@@ -900,7 +878,7 @@
         </div><!-- end module-row -->
 
         <!-- INACTIVE MODULES
-        <div class="module-row clearfix" data-row-index="0">
+        <div class="module-row clearfix page-navigation" data-row-index="0">
           <nav class="module-navigation">
             <ul class="nav-list">
             <li><a class="arrow-right go-top" href="#">TOP</a></li>
@@ -933,7 +911,7 @@
           </div></div>--><!-- end module-group -->
         <!--INACTIVE MODULES </div>--><!-- end module-row -->
         <!-- INACTIVE MODULES
-        <div class="module-row clearfix" data-row-index="2">
+        <div class="module-row clearfix page-navigation" data-row-index="2">
           <nav class="module-navigation">
             <ul class="nav-list">
               <li><a class="arrow-right go-top" href="#">TOP</a></li>
@@ -965,8 +943,8 @@
           </div></div>--><!-- end module-group -->
         <!--INACTIVE MODULES </div>--><!-- end module-row -->
 
-      <div class="footer-modules" data-row-index="9">
-          <nav class="module-navigation">
+      <div class="footer-modules">
+          <nav class="module-navigation page-navigation" data-row-index="8">
             <ul class="nav-list">
             <li><a class="arrow-right go-top" href="#">TOP</a></li>
             <li><a class="tab go-hero no-text" href="#">
@@ -975,6 +953,8 @@
             <li><a class="arrow-left go-back" href="#">BACK</a></li>
           </ul>
           </nav>
+          <footer id="footer">
+          </footer>
       </div><!-- end footer-modules
 
     </div><!-- end div.page -->
@@ -992,6 +972,7 @@
     <script type="text/javascript" src="javascripts/PageNavigation.js"></script>
     <script type="text/javascript" src="javascripts/StickyElement.js"></script>
     <script type="text/javascript" src="javascripts/StoryModule.js"></script>
+    <script type="text/javascript" src="javascripts/ClientsPanel.js"></script>
     <script type="text/javascript" src="javascripts/init.js"></script>
 
   </body>
