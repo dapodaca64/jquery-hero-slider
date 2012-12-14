@@ -8,7 +8,10 @@
 }
 .filter-modules-sticky {
   width: 100%;
+  /*
   height: 162px;
+  */
+  height: 0;
   position: relative;
   top: 0;
   left: 0;
