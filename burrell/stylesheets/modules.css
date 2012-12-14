@@ -279,19 +279,29 @@
   top: 515px;
   */
   bottom: 0;
-  width: 407px;
+  width: 408px;
   height: 199px;
   right: 7px;
-  display: block;
   cursor: pointer;
-  background: rgb(237, 233, 229) url(images/background_clients.png) -625px -515px no-repeat;
+  background: rgb(237, 233, 229) url(images/sprite_modules.png) 0 -350px no-repeat;
 }
+  .module-contact .module-background {
+    position: absolute;
+    width: 408px;
+    height: 199px;
+    bottom: 0;
+    right: 7px;
+    display: block;
+
+  }
 .contact-header {
   font-family: "LeagueGothicRegular", sans-serif;
   color: #aa9e97;
   font-size: 25px;
   padding: 0 24px;
   margin: 16px 0;
+  position: relative;
+  z-index: 2;
 }
 
 /* General Module Group */

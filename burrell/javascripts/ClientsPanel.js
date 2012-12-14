@@ -12,6 +12,7 @@ var ClientsPanel = function(options) {
   this.heightTall = this.$el.height() - 27; //TODO: Make the 25 pixels padding dynamic calc
   this.$el.css("height", this.heightOrig);
   this.aSpeed = 800;
+  this.hoverSpeed = 200;
 
   this.init();
 
@@ -67,7 +68,25 @@ ClientsPanel.prototype.unBindPanelClick = function(){
 
 };
 
+ClientsPanel.prototype.bindContactHover = function(){
+
+  this.$contactButton.on("mouseenter", this.contactButtonHoverHandler.bind(this));
+
+  this.$contactButton.on("mouseleave", this.contactButtonHoverOutHandler.bind(this));
+
+};
+
+ClientsPanel.prototype.unBindContactHover = function(){
+
+  this.$contactButton.off("mouseenter");
+
+  this.$contactButton.off("mouseleave");
+
+};
+
 ClientsPanel.prototype.bindContactEvents = function(ev){
+
+  this.bindContactHover();
 
   this.$contactButton.on("click", this.contactButtonClickHandler.bind(this));
 
@@ -75,7 +94,31 @@ ClientsPanel.prototype.bindContactEvents = function(ev){
 
 ClientsPanel.prototype.unBindContactEvents = function(ev){
 
+  this.unBindContactHover();
+
   this.$contactButton.off("click");
+
+};
+
+ClientsPanel.prototype.stopContactHoverAnimation = function(ev){
+
+  this.$contactButton.find(".module-background .active").stop();
+
+};
+
+ClientsPanel.prototype.contactButtonHoverHandler = function(ev){
+
+  this.stopContactHoverAnimation();
+
+  this.$contactButton.find(".module-background .active").fadeIn(this.hoverSpeed);
+
+};
+
+ClientsPanel.prototype.contactButtonHoverOutHandler = function(ev){
+
+  this.stopContactHoverAnimation();
+
+  this.$contactButton.find(".module-background .active").fadeOut(this.hoverSpeed);
 
 };
 
