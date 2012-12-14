@@ -10,6 +10,7 @@ var FilterNavigation = function(options) {
 
   //set initial properties
   this.$el = this.options.el;
+  this.$filterLinks = this.$el.find(".filter-nav-link");
   this.init();
 
 };
@@ -29,6 +30,18 @@ FilterNavigation.prototype.init = function(){
 
   this.setupResizing();
 
+  this.bindClickEvents();
+
+};
+
+FilterNavigation.prototype.bindClickEvents = function(){
+
+  this.$filterLinks.on("click", this.filterLinkClickHandler.bind(this));
+
+};
+
+FilterNavigation.prototype.filterLinkClickHandler = function(ev){
+  ev.preventDefault();
 };
 
 FilterNavigation.prototype.setupResizing = function(){
