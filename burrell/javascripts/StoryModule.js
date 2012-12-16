@@ -88,7 +88,18 @@ StoryModule.prototype.unBindCollapsedHovers = function(ev){
 
 StoryModule.prototype.hoverHandler = function(ev){
   //console.log("hoverHandler");
-  //
+  this.highlight();
+};
+
+StoryModule.prototype.hoverOutHandler = function(ev){
+  //console.log("hover out.");
+
+  this.unHighlight();
+
+};
+
+StoryModule.prototype.highlight = function(){
+
   for (var i=0, j=this.options.animatedElementSelectors.length; i<j; i++) {
 
     //console.log("animation targets %o", this.options.animatedElementSelectors[i]);
@@ -128,31 +139,34 @@ StoryModule.prototype.hoverHandler = function(ev){
 
 };
 
-StoryModule.prototype.hoverOutHandler = function(ev){
-  //console.log("hover out.");
+StoryModule.prototype.unHighlight = function(){
 
-  this.isAnimating = true;
+  if (!this.$el.hasClass("sticky-highlight")) {
 
-  for (var i=0, j=this.options.animatedElementSelectors.length; i<j; i++) {
+    this.isAnimating = true;
 
-    //console.log("animated selector %o", this.options.animatedElementSelectors[i] );
-    for (var targetType in this.options.animatedElementSelectors[i]) {
+    for (var i=0, j=this.options.animatedElementSelectors.length; i<j; i++) {
 
-      var $target = this.$el.find(this.options.animatedElementSelectors[i][targetType]);
-      if (targetType === "fadeIn") {
+      //console.log("animated selector %o", this.options.animatedElementSelectors[i] );
+      for (var targetType in this.options.animatedElementSelectors[i]) {
 
-        $target.fadeOut(this.aSpeed);
+        var $target = this.$el.find(this.options.animatedElementSelectors[i][targetType]);
+        if (targetType === "fadeIn") {
 
-      } else if (targetType === "fadeOut") {
+          $target.fadeOut(this.aSpeed);
 
-        $target.fadeIn(this.aSpeed, function(){
-          this.isAnimating = true;
-        }.bind(this));
+        } else if (targetType === "fadeOut") {
+
+          $target.fadeIn(this.aSpeed, function(){
+            this.isAnimating = true;
+          }.bind(this));
+
+        }
 
       }
 
-
     }
+
   }
 
 };

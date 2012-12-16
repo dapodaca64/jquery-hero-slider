@@ -36,8 +36,6 @@ $(function(){
     el: $(".filter-modules-navigation")
   });
 
-  app.pageNavigation = new PageNavigation();
-
   //Sticky Elements
   app.stickies = {
     navigation: new StickyElement({
@@ -77,56 +75,79 @@ $(function(){
     })
   };
 
-  //Add one router for the application
-  app.router = new Workspace();
-
-  //Kick off the Backbone.js routers
-  Backbone.history.start();
-
   //Story Module
   app.storyModules = [ ];
+
+  //Workhorse function to stay DRY
+  var createStoryModule = function(moduleOpts, el) {
+
+    // New instance of StoryModule
+    var module = new StoryModule(moduleOpts);
+
+    // Add to the JS application layer
+    app.storyModules.push(module);
+
+    // Add the StoryModule instance to the DOM to serve as an API
+    $(el).data("storyModule", module);
+
+  };
+
   $(".module-culture").each(function(){
-    var module = new StoryModule({
+    var moduleOptions = {
       el: this,
       animatedElementSelectors: [
         { fadeIn: ".module-background .active" },
         { fadeIn: ".module-title.active", fadeOut: ".module-title.default" }
       ]
-    });
-    app.storyModules.push(module);
+    };
+    createStoryModule(moduleOptions, this);
   });
   $(".module-case-study").each(function(){
-    var module = new StoryModule({
+    var moduleOptions = {
       el: this,
       animatedElementSelectors: [
         { fadeIn: ".module-background .active"},
         { fadeIn: ".module-title.active" }
       ]
-    });
-    app.storyModules.push(module);
+    };
+    createStoryModule(moduleOptions, this);
   });
   $(".module-results").each(function(){
-    var module = new StoryModule({
+    var moduleOptions = {
       el: this,
       animatedElementSelectors: [
         { fadeIn: ".data .active" }
       ]
-    });
-    app.storyModules.push(module);
+    };
+    createStoryModule(moduleOptions, this);
   });
   $(".module-supplement").each(function(){
-    var module = new StoryModule({
+    var moduleOptions = {
       el: this,
       animatedElementSelectors: [
         { fadeIn: ".active" }
       ]
-    });
-    app.storyModules.push(module);
+    };
+    createStoryModule(moduleOptions, this);
   });
 
   //Clients Panel
   app.clientsPanel = new ClientsPanel({
     el: $(".clients-module")
   });
+
+  //Page Navigation
+  // does work on Story Modules
+  // therefore include AFTER Story Modules
+  // have been created
+  app.pageNavigation = new PageNavigation();
+
+  //Do this last!
+  //
+  //Add one router for the application
+  app.router = new Workspace();
+
+  //Kick off the Backbone.js router
+  Backbone.history.start();
 
 });

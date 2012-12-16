@@ -23,11 +23,6 @@ PageNavigation.prototype.init = function(){
   this.modules = new BasicModel({
     storyIndex: 0
   });
-  this.modules.on("change", function(module){
-    //console.log("change story to storyIndex %o", module);
-    var storyIndex = module.get("storyIndex");
-    //window.location.hash = "#story/"+storyIndex;
-  }.bind(this));
 
   this.bindEvents();
 
@@ -42,18 +37,12 @@ PageNavigation.prototype.bindEvents = function(){
   this.$heroLinks.click(this.heroLinkClickHandler.bind(this));
 
   $.waypoints.settings.scrollThrottle = 30;
-  /*
-  $(".everything").waypoint(function(ev, direction){
-    //console.log("everything waypoint ev %o, direction %o", ev, direction);
-  }, {
-    offset: "-100%"
-  });
-  */
   $(".module-row, .footer-modules").waypoint(function(ev, direction){
     ev.stopPropagation();
     //console.log("module row waypoint on ev %o, direction %o", ev, direction);
     var storyIndex;
-    var rowIndex = $(ev.currentTarget).parents(".page-navigation").attr("data-row-index");
+    var rowIndex = $(ev.currentTarget).find(".page-navigation").attr("data-row-index");
+    //console.log("row lookup from DOM: %o", rowIndex);
     if (!rowIndex) {
       rowIndex = this.modules.get("storyIndex");
     }
@@ -68,8 +57,20 @@ PageNavigation.prototype.bindEvents = function(){
     //window.location.hash = "#story/"+storyIndex;
     this.modules.set("storyIndex", storyIndex);
   }.bind(this), {
-    offset: "50%"
+    offset: "45%"
   });
+
+  this.modules.on("change", function(module){
+    var storyIndex = module.get("storyIndex");
+
+    // Highlight the "active" module row
+    this.highlightModuleRow(storyIndex);
+
+    // Activate to use the model change to drive
+    // the "goTo" module behavior via hash route
+    //window.location.hash = "#story/"+storyIndex;
+
+  }.bind(this));
 
 };
 
@@ -152,3 +153,51 @@ PageNavigation.prototype.goToHero = function(slideIndex) {
 
 };
 
+PageNavigation.prototype.highlightModuleRow = function(rowIndex) {
+  //console.log("PageNavigation.highlightModuleRow(%o)", rowIndex);
+
+  var $moduleRow = $(".page-navigation[data-row-index='" + rowIndex + "']").parent();
+
+  //unless footer modules
+  if (!$moduleRow.hasClass("footer-modules")) {
+
+    //unhighlight all modules first
+    this.unHighlightModuleRows(rowIndex);
+
+    //get the modules that need highlighting
+    $moduleRow.find(".story-module").each(function(){
+
+      //get the API
+      var storyModuleAPI = $(this).data("storyModule");
+
+      //do the highlight
+      $(this).addClass("sticky-highlight");
+      storyModuleAPI.highlight();
+
+    });
+
+  }
+
+};
+
+PageNavigation.prototype.unHighlightModuleRows = function(exceptForIndex) {
+
+  $modules = $(".module-row .story-module");
+
+  $modules.each(function(){
+
+    var isAnException = $(this).parents(".module-row").find(".page-navigation").data("row-index") == exceptForIndex;
+
+    if (!isAnException) {
+
+      var storyModuleAPI = $(this).data("storyModule");
+
+      $(this).removeClass("sticky-highlight");
+
+      storyModuleAPI.unHighlight();
+
+    }
+
+  });
+
+};
