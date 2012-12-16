@@ -111,11 +111,15 @@ StoryModule.prototype.highlight = function(){
       }
     }
 
+  if (!this.$el.hasClass("sticky-highlight")) {
+
     this.isAnimating = true;
 
     for (var targetType in this.options.animatedElementSelectors[i]) {
 
       var $target = this.$el.find(this.options.animatedElementSelectors[i][targetType]);
+
+      //console.log("targetType %o", targetType);
 
       if (targetType === "fadeIn") {
         //console.log("fade in %o", $target[0]);
@@ -123,6 +127,7 @@ StoryModule.prototype.highlight = function(){
         $target.fadeIn(this.aSpeed, function(){
           this.isAnimating = false;
         }.bind(this));
+        $target.dequeue();
 
       } else if (targetType === "fadeOut") {
         //console.log("fade out %o", $target[0]);
@@ -130,10 +135,13 @@ StoryModule.prototype.highlight = function(){
         $target.fadeOut(this.aSpeed, function(){
           this.isAnimating = false;
         }.bind(this));
+        $target.dequeue();
 
       }
 
     }
+
+  }
 
   }
 
@@ -153,13 +161,17 @@ StoryModule.prototype.unHighlight = function(){
         var $target = this.$el.find(this.options.animatedElementSelectors[i][targetType]);
         if (targetType === "fadeIn") {
 
-          $target.fadeOut(this.aSpeed);
+          $target.fadeOut(this.aSpeed, function(){
+            this.isAnimating = false;
+          }.bind(this));
+          $target.dequeue();
 
         } else if (targetType === "fadeOut") {
 
           $target.fadeIn(this.aSpeed, function(){
-            this.isAnimating = true;
+            this.isAnimating = false;
           }.bind(this));
+          $target.dequeue();
 
         }
 

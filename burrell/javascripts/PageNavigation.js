@@ -171,8 +171,8 @@ PageNavigation.prototype.highlightModuleRow = function(rowIndex) {
       var storyModuleAPI = $(this).data("storyModule");
 
       //do the highlight
-      $(this).addClass("sticky-highlight");
       storyModuleAPI.highlight();
+      $(this).addClass("sticky-highlight");
 
     });
 

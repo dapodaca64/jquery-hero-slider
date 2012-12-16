@@ -717,17 +717,29 @@
   }
   .module-navigation .tab {
     width: 296px;
-    height: 20px;
-    padding: 90px 0 0;
+    height: 110px;
+    float: left;
+    position: relative;
     font-size: 11px;
     line-height: 14px;
-    color: #ac9e92;
+    color: rgb(203, 194, 188);
     text-decoration: none;
     text-align: center;
     font-family: "deming_epregular", serif;
-    background: url(images/sprite_modules.png) 86px 29px no-repeat;
   }
-  .module-navigation .tab:hover {
+    .module-navigation .tab .module-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 296px;
+      height: 42px;
+      padding: 90px 0 0 !important;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: url(images/sprite_modules.png) 86px 29px no-repeat;
+    }
+  .module-navigation .tab .module-background.active {
     color: #ac9e92;
     background-position: -154px 29px;
   }
@@ -736,45 +748,45 @@
     text-align: left;
     text-indent: -9000px;
   }
-  .module-navigation .tab.logo-bco {
+  .module-navigation .tab .logo-bco {
     background-position: 86px 29px;
   }
-  .module-navigation .tab.logo-bco:hover {
+  .module-navigation .tab .logo-bco.active {
     background-position: -154px 29px;
   }
-  .module-navigation .tab.logo-hickory {
+  .module-navigation .tab .logo-hickory {
     background-position: -824px -178px;
   }
-  .module-navigation .tab.logo-hickory:hover {
+  .module-navigation .tab .logo-hickory.active {
     background-position: -824px -608px;
   }
-  .module-navigation .tab.logo-maverick {
+  .module-navigation .tab .logo-maverick {
     background-position: -625px 15px;
   }
-  .module-navigation .tab.logo-maverick:hover {
-    background-position: -625px -416px;
+  .module-navigation .tab .logo-maverick.active {
+    background-position: -625px -415px;
   }
-  .module-navigation .tab.logo-gunslinger {
+  .module-navigation .tab .logo-gunslinger {
     background-position: -444px 30px;
   }
-  .module-navigation .tab.logo-gunslinger:hover {
+  .module-navigation .tab .logo-gunslinger.active {
     background-position: -444px -400px;
   }
-  .module-navigation .tab.logo-yardmaster {
+  .module-navigation .tab .logo-yardmaster {
     background-position: -424px -172px;
   }
-  .module-navigation .tab.logo-yardmaster:hover {
+  .module-navigation .tab .logo-yardmaster.active {
     background-position: -424px -602px;
   }
-  .module-navigation .tab.logo-ramblin {
+  .module-navigation .tab .logo-ramblin {
     background-position: -624px -192px;
   }
-  .module-navigation .tab.logo-ramblin:hover {
+  .module-navigation .tab .logo-ramblin.active {
     background-position: -624px -622px;
   }
-  .module-navigation .tab.logo-midnight {
+  .module-navigation .tab .logo-midnight {
     background-position: -823px 5px;
   }
-  .module-navigation .tab.logo-midnight:hover {
+  .module-navigation .tab .logo-midnight.active {
     background-position: -823px -425px;
   }

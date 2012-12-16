@@ -131,6 +131,19 @@ $(function(){
     createStoryModule(moduleOptions, this);
   });
 
+  //Handle character logos separately from the story modules
+  $(".module-navigation .tab").each(function(){
+    var moduleOptions = {
+      el: this,
+      animatedElementSelectors: [
+        { fadeIn: ".active" }
+      ]
+    };
+    createStoryModule(moduleOptions, this);
+    //var module = new StoryModule(moduleOptions);
+    //$(this).data("storyModule", module);
+  });
+
   //Clients Panel
   app.clientsPanel = new ClientsPanel({
     el: $(".clients-module")
