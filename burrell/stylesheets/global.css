@@ -44,6 +44,9 @@ body {
     content: "";
     background: none;
   }
+#footer {
+  display: none;
+}
 .clear {
   width: 0;
   height: 0;
