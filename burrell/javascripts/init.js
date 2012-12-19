@@ -49,10 +49,10 @@ $(function(){
         return $("#hero-slider").height()
       },
       stickyStyle: {
-        position: "fixed",
+        position: "fixed"
       },
       unStickyStyle: {
-        position: "relative",
+        position: "relative"
       }
     }),
     ribbon: new StickyElement({

@@ -16,11 +16,16 @@ var StoryModule = function(options) {
   this.isAnimating = false;
   this.originalRowHeight = this.$el.parents(".module-row").height();
 
+  //DOM elements
+  this.expandedState = this.$el.parents(".module-row").find(".module-expanded");
+
   this.init();
 
 };
 
 StoryModule.prototype.init = function(){
+
+  this.setExpandedHeight();
 
   if (this.$el) {
     this.bindEvents();
@@ -55,8 +60,7 @@ StoryModule.prototype.hasExpanded = function(){
 
 StoryModule.prototype.addCursor = function(){
 
-  var expandedState = this.$el.parents(".module-row").find(".module-expanded");
-  if (expandedState) {
+  if (this.expandedState) {
     this.$el.css({
       cursor: "pointer"
     });
@@ -185,11 +189,12 @@ StoryModule.prototype.unHighlight = function(){
 
 StoryModule.prototype.moduleClickHandler = function(ev) {
   ev.preventDefault();
-  //console.log("click on this %o ev %o, ev.target %o,  ev.currentTarget %o", this, ev, ev.target, ev.currentTarget);
+  console.log("click on this %o ev %o, ev.target %o,  ev.currentTarget %o", this, ev, ev.target, ev.currentTarget);
 
   //only do operation if we have an expansion state to use
   if (this.hasExpanded()) {
 
+    console.log("Module has expanded state!");
     if (this.expanded) {
 
       //make a function of a close button
@@ -231,24 +236,34 @@ StoryModule.prototype.videoPlaceholderClickHandler = function(ev) {
 
 };
 
+StoryModule.prototype.setExpandedHeight = function() {
+  $(this.expandedState).css({
+    "visibility": "hidden",
+    "display": "block"
+  });
+  this.expandedHeight = $(this.expandedState).height();
+  $(this.expandedState).css({
+    "visibility": "",
+    "display": "none"
+  });
+};
+
 StoryModule.prototype.doExpansion = function(ev) {
 
   var collapsedBackground = this.$el.find(".module-background");
-  var expandedState = this.$el.parents(".module-row").find(".module-expanded");
   var closeButton = this.$el.parents(".module-row").find(".close-button");
+  console.log("collapsedBackground %o, expandedState %o, closeButton %o", collapsedBackground, this.expandedState, closeButton);
 
-  if (expandedState) {
-
-    var expandedHeight = $(expandedState).height();
+  if (this.expandedState) {
 
     this.$el.parents(".module-row").animate({
-      height: expandedHeight+141
+      height: this.expandedHeight+141
     }, this.aSpeed, function(){
       //console.log("expansion complete.");
     });
 
     collapsedBackground.fadeOut(this.aSpeed);
-    expandedState.fadeIn(this.aSpeed);
+    this.expandedState.fadeIn(this.aSpeed);
     closeButton.fadeIn(this.aSpeed);
 
   }
@@ -262,10 +277,9 @@ StoryModule.prototype.doExpansion = function(ev) {
 StoryModule.prototype.doCollapse = function(ev) {
 
   var collapsedBackground = this.$el.find(".module-background");
-  var expandedState = this.$el.parents(".module-row").find(".module-expanded");
   var closeButton = this.$el.parents(".module-row").find(".close-button");
 
-  if (expandedState) {
+  if (this.expandedState) {
 
     //console.log("set height of row to %o", this.originalRowHeight);
 
@@ -279,9 +293,9 @@ StoryModule.prototype.doCollapse = function(ev) {
         //console.log("collapse complete.");
       });
 
-      //expandedState.find(".expanded-background").fadeOut(this.aSpeed);
+      //this.expandedState.find(".expanded-background").fadeOut(this.aSpeed);
       collapsedBackground.fadeIn(this.aSpeed/1.5);
-      expandedState.fadeOut(this.aSpeed);
+      this.expandedState.fadeOut(this.aSpeed);
       closeButton.fadeOut(this.aSpeed);
 
     }.bind(this), 50);

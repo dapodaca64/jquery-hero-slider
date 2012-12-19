@@ -324,6 +324,7 @@
   }
     .module {
     }
+
     .main-module,
     .module-supplement,
     .module-results {
@@ -331,6 +332,26 @@
       top: -18px;
       margin-bottom: -19px;
     }
+
+    .main-module.position-bottom,
+    .module-supplement.position-bottom,
+    .module-results.position-bottom {
+      position: absolute;
+      bottom: 0;
+    }
+
+    .main-left .main-module,
+    .main-left .main-supplement,
+    .main-left .main-results {
+      right: 0;
+    }
+
+    .main-right .main-module,
+    .main-right .main-supplement,
+    .main-right .main-results {
+      left: 0;
+    }
+
     .main-left .main-module,
     .main-right .module-supplement,
     .main-right .module-results {
@@ -392,7 +413,10 @@
 .module-case-study {
   width: 612px;
   height: 405px;
+  /* TODO: Test removing this rule which is
+           probably unnecessary.
   margin-left: 5px !important;
+  */
   float: left;
   position: relative;
 }
@@ -614,6 +638,10 @@
 }
   .module-expanded .module-fixed-width {
     position: relative;
+  }
+  /* TODO: Make more flexible for CMS */
+  .module-expanded.herman-cain {
+    height: 2289px;
   }
   .expanded-background {
     width: 1021px;
