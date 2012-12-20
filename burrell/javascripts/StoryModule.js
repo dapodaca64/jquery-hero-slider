@@ -311,13 +311,19 @@ StoryModule.prototype.doCollapse = function(ev) {
       this.expandedState.fadeOut(this.aSpeed);
       this.closeButton.fadeOut(this.aSpeed);
 
+      var wait = setTimeout(function(){
+        //set the internal "model"
+        this.expanded = false;
+        //highlight the current row that is collapsed
+        this.highlight();
+      }.bind(this), this.aSpeed);
+
     }.bind(this), 50);
 
   }
 
   this.addCursor();
   this.bindCollapsedHovers();
-  this.expanded = false;
 
 };
 
