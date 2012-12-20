@@ -18,6 +18,9 @@ var StoryModule = function(options) {
 
   //DOM elements
   this.expandedState = this.$el.parents(".module-row").find(".module-expanded");
+  this.collapsedBackground = this.$el.find(".module-background");
+  this.fadedWhileExpanded = this.$el.parents(".module-group").find(".fade-module-expanded");
+  this.closeButton = this.$el.parents(".module-row").find(".close-button");
 
   this.init();
 
@@ -40,9 +43,9 @@ StoryModule.prototype.bindEvents = function(){
 
   this.$el.on("click", this.moduleClickHandler.bind(this));
 
-  this.$el.find(".close-button").on("click", this.closeClickHandler.bind(this));
+  this.closeButton.on("click", this.closeClickHandler.bind(this));
 
-  this.$el.find(".close-button").on("mouseenter", this.closeHoverHandler.bind(this));
+  this.closeButton.on("mouseenter", this.closeHoverHandler.bind(this));
 
   this.$videoPlaceholder = this.$el.next(".module-expanded").find(".embed-youtube-video");
   //console.log("$videoPlaceholder %o", this.$videoPlaceholder[0]);
@@ -189,12 +192,12 @@ StoryModule.prototype.unHighlight = function(){
 
 StoryModule.prototype.moduleClickHandler = function(ev) {
   ev.preventDefault();
-  console.log("click on this %o ev %o, ev.target %o,  ev.currentTarget %o", this, ev, ev.target, ev.currentTarget);
+  //console.log("click on this %o ev %o, ev.target %o,  ev.currentTarget %o", this, ev, ev.target, ev.currentTarget);
 
   //only do operation if we have an expansion state to use
   if (this.hasExpanded()) {
 
-    console.log("Module has expanded state!");
+    //console.log("Module has expanded state!");
     if (this.expanded) {
 
       //make a function of a close button
@@ -250,21 +253,33 @@ StoryModule.prototype.setExpandedHeight = function() {
 
 StoryModule.prototype.doExpansion = function(ev) {
 
-  var collapsedBackground = this.$el.find(".module-background");
-  var closeButton = this.$el.parents(".module-row").find(".close-button");
-  console.log("collapsedBackground %o, expandedState %o, closeButton %o", collapsedBackground, this.expandedState, closeButton);
+  //console.log("collapsedBackground %o, expandedState %o, this.closeButton %o", this.collapsedBackground, this.expandedState, this.closeButton);
 
   if (this.expandedState) {
 
-    this.$el.parents(".module-row").animate({
-      height: this.expandedHeight+141
-    }, this.aSpeed, function(){
-      //console.log("expansion complete.");
-    });
+    var doFadeChanges = function(){
+      this.fadedWhileExpanded.fadeOut(this.aSpeed);
+      this.collapsedBackground.fadeOut(this.aSpeed);
+      this.expandedState.fadeIn(this.aSpeed);
+      this.closeButton.fadeIn(this.aSpeed);
+    }.bind(this);
 
-    collapsedBackground.fadeOut(this.aSpeed);
-    this.expandedState.fadeIn(this.aSpeed);
-    closeButton.fadeIn(this.aSpeed);
+    var doHeightChanges = function(){
+      this.$el.parents(".module-row").animate({
+        height: this.expandedHeight+133
+      }, this.aSpeed, function(){
+        //console.log("expansion complete.");
+      });
+    }.bind(this);
+
+    doFadeChanges();
+
+    var wait = setTimeout(function(){
+
+      doHeightChanges();
+
+    }.bind(this), this.aSpeed*1.5);
+
 
   }
 
@@ -275,9 +290,6 @@ StoryModule.prototype.doExpansion = function(ev) {
 };
 
 StoryModule.prototype.doCollapse = function(ev) {
-
-  var collapsedBackground = this.$el.find(".module-background");
-  var closeButton = this.$el.parents(".module-row").find(".close-button");
 
   if (this.expandedState) {
 
@@ -294,9 +306,10 @@ StoryModule.prototype.doCollapse = function(ev) {
       });
 
       //this.expandedState.find(".expanded-background").fadeOut(this.aSpeed);
-      collapsedBackground.fadeIn(this.aSpeed/1.5);
+      this.collapsedBackground.fadeIn(this.aSpeed/1.5);
+      this.fadedWhileExpanded.fadeIn(this.aSpeed);
       this.expandedState.fadeOut(this.aSpeed);
-      closeButton.fadeOut(this.aSpeed);
+      this.closeButton.fadeOut(this.aSpeed);
 
     }.bind(this), 50);
 

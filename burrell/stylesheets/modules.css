@@ -310,17 +310,18 @@
   width: 100%;
   min-height: 538px;
   padding: 0;
-  background: url(images/sprite_background_modules.png) 50% 100% no-repeat;
+  background: url(images/background_modules_bottom.png) 50% 100% no-repeat;
 }
   .module-group {
     width: 100%;
-    padding-bottom: 1px;
     position: relative;
     z-index: 1;
   }
   .module-fixed-width {
     width: 1024px;
     margin: 0 auto;
+    padding: 0 6px 0 7px;
+    background: url(images/background_module_repeat_vertical.png) 0 0 repeat-y;
   }
     .module {
     }
@@ -338,17 +339,19 @@
     .module-results.position-bottom {
       position: absolute;
       bottom: 0;
+      top: auto;
+      margin-bottom: 1px;
     }
 
-    .main-left .main-module,
-    .main-left .main-supplement,
-    .main-left .main-results {
-      right: 0;
+    .main-left .main-module.position-bottom,
+    .main-left .module-supplement.position-bottom,
+    .main-left .module-results.position-bottom {
+      right: 1px;
     }
 
-    .main-right .main-module,
-    .main-right .main-supplement,
-    .main-right .main-results {
+    .main-right .main-module.position-bottom,
+    .main-right .module-supplement.position-bottom,
+    .main-right .module-results.position-bottom {
       left: 0;
     }
 
@@ -412,13 +415,15 @@
 /* Case Study Module */
 .module-case-study {
   width: 612px;
-  height: 405px;
-  /* TODO: Test removing this rule which is
-           probably unnecessary.
-  margin-left: 5px !important;
-  */
+  height: 406px;
   float: left;
   position: relative;
+}
+.main-left .module-case-study {
+  margin-right: 6px !important;
+}
+.main-right .module-case-study {
+  margin-left: 5px !important;
 }
 .module-case-study .module-title {
   /*
@@ -633,11 +638,13 @@
   width: 100%;
   height: 943px;
   position: absolute;
-  top: 0;
+  top: -18px;
   left: 0;
 }
   .module-expanded .module-fixed-width {
     position: relative;
+    height: 100%;
+    padding-bottom: -11px;
   }
   /* TODO: Make more flexible for CMS */
   .module-expanded.herman-cain {
@@ -653,8 +660,10 @@
   }
     .expanded-background .default {
       position: absolute;
+      /*
       top: -11px;
-      left: -1px;
+      */
+      left: -2px;
     }
   .play-button {
     width: 408px;
@@ -681,6 +690,10 @@
   cursor: pointer;
   background-position: 0 -1230px;
 }
+.module-row .module-expanded .close-button {
+  right: 6px;
+  top: 0px;
+}
 
 /* Module Navigation */
 .module-navigation {
@@ -689,7 +702,7 @@
   height: 152px;
   position: relative;
   z-index: 1;
-  background: url(images/sprite_background_modules.png) 50% 0 no-repeat;
+  background: url(images/background_modules_top.png) 50% 0 no-repeat;
 }
 .module-navigation:before,
 .module-navigation:after {

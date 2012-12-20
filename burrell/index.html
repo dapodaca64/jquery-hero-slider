@@ -499,16 +499,21 @@
       </section>
 
         <!-- ROW 1 -->
-        <div class="module-row clearfix page-navigation" data-row-index="1">
-          <nav class="module-navigation">
-            <ul class="nav-list">
-            <li><a class="arrow-right go-top" href="#">TOP</a></li>
-            <li><a class="tab go-hero logo-bco" href="#">
-              BURRELL <br />
-              &amp; CO
-            </a></li>
-            <li><a class="arrow-left go-top" href="#">TOP</a></li>
-          </ul>
+        <div class="module-row clearfix">
+          <nav class="module-navigation page-navigation" data-row-index="1">
+            <ul class="nav-list clearfix">
+              <li><a class="arrow-right go-top" href="#">TOP</a></li>
+              <li><div class="tab story-module">
+                <p class="module-background logo-bco default">
+                  BURRELL <br />
+                  &amp; CO
+                </p>
+                <p class="module-background logo-bco active" style="display:none">
+                  BURRELL <br />
+                  &amp; CO
+                </p>
+              </div></li>
+              <li><a class="arrow-left go-back" href="#">BACK</a></li>
           </nav>
           <div class="module-group main-left"><div class="module-fixed-width clearfix">
             <div class="main-module module-case-study module-blue story-module">
@@ -542,9 +547,14 @@
                 <p class="expanded-background">
                 <img src="images/module_background/module_background_cain_expanded.jpg" width="1024" height="2289" alt="" class="default" />
                 </p>
+                <div class="module-supplement position-bottom story-module">
+                  <img src="images/supplement/supplement_direct_mail.jpg" width="405" height="405" alt="" />
+                  <img src="images/supplement/supplement_direct_mail_active.jpg" width="405" height="405" alt="" class="active" style="display:none" />
+                </div>
+                <p class="close-button" style="display:none">Close</p>
               </div>
             </div>
-            <div class="module-supplement position-bottom story-module">
+            <div class="module-supplement story-module fade-module-expanded">
               <img src="images/supplement/supplement_direct_mail.jpg" width="405" height="405" alt="" />
               <img src="images/supplement/supplement_direct_mail_active.jpg" width="405" height="405" alt="" class="active" style="display:none" />
             </div>

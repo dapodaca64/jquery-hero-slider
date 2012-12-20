@@ -44,7 +44,7 @@ body {
     content: "";
     background: none;
   }
-#footer {
+#footer > div {
   display: none;
 }
 .clear {
