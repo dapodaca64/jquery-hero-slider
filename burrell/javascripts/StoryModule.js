@@ -251,6 +251,15 @@ StoryModule.prototype.setExpandedHeight = function() {
   });
 };
 
+StoryModule.prototype.scrollToModule = function() {
+
+  $.smoothScroll({
+    scrollTarget: this.$el,
+    offset: -90
+  });
+
+};
+
 StoryModule.prototype.doExpansion = function(ev) {
 
   //console.log("collapsedBackground %o, expandedState %o, this.closeButton %o", this.collapsedBackground, this.expandedState, this.closeButton);
@@ -275,6 +284,8 @@ StoryModule.prototype.doExpansion = function(ev) {
     doFadeChanges();
 
     var wait = setTimeout(function(){
+
+      this.scrollToModule();
 
       doHeightChanges();
 
