@@ -29,12 +29,14 @@ body {
   width: 100%;
   height: 1014px;
   margin-top: -2px;
-  background: url(images/BurrellCo_ModuleGrid_R1_Open_V2_poc.png) 50% 0 repeat;
 }
   .footer-modules .module-navigation {
     background: none;
-    height: 175px;
+    height: 180px;
+    height: 205px;
+    margin-bottom: -25px;
     padding-top: 42px;
+    background: url(images/background_footer_top.png) 50% 0 repeat;
   }
   .footer-modules .module-navigation .tab {
     height: 88px;
@@ -44,8 +46,190 @@ body {
     content: "";
     background: none;
   }
-#footer > div {
+#footer {
+  min-height: 791px;
+  min-width: 1200px;
+  background: rgb(81, 76, 72) url(images/background_footer.jpg) 50% 0 no-repeat;
+}
+#footer > .fixed-width {
+  min-width: 1024px;
+  min-width: 1200px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+#footer .hidden {
   display: none;
+}
+#footer .footer-col {
+/* for active footer development
+  display: none;
+  */
+  float: right;
+  width: 28%;
+  position: relative;
+}
+#footer .footer-col-3 {
+  width: 27.7%;
+}
+#footer .footer-col-2 {
+  width: 22.3%;
+}
+#footer .footer-col-1 {
+  width: 36.6%;
+}
+#footer .summary-group {
+  color: #897c74;
+}
+#footer .large-list {
+  padding-left: 44px;
+  margin: 0;
+}
+#footer .large-list.alpha {
+  margin-top: 48px;
+}
+#footer .summary-group.people-group {
+  margin: 22px 0 0;
+  padding: 0 0 0 11px;
+  position: relative;
+  background: url(images/sprite_background.png) 100% -1355px no-repeat;
+}
+#footer .summary-group.people-group .background.active {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: url(images/sprite_background.png) 100% -1415px no-repeat;
+  display: none;
+}
+/*
+#footer .summary-group.people-group:hover {
+  cursor: pointer;
+  background-position: 100% -1415px;
+}
+*/
+#footer .summary-group.people-group.alpha {
+  margin: 0;
+}
+#footer h5,
+#footer .summary-group dt {
+  font-family: "deming_epregular", serif;
+  color: #897c74;
+}
+#footer h5 {
+  font-size: 18px;
+  padding: 0 9px;
+}
+#footer .summary-group dt {
+  font-size: 14px;
+}
+#footer .large-list dt {
+  margin-top: 40px;
+  letter-spacing: -0.08em;
+}
+#footer .summary-group.people-group dt {
+  font-size: 12px;
+  float: left;
+  clear: left;
+  margin: 0 6px 0 0;
+  padding: 8px 0 0;
+}
+#footer .summary-group dd {
+  padding: 0;
+  margin: 0;
+}
+#footer .summary-group a {
+  color: #897c74;
+}
+/* CSS3 Transition: Change Text Color on Hover */
+#footer .summary-group a,
+#footer .large-list dt,
+#footer .large-list dd,
+#footer .summary-group.people-group .phone,
+#footer .summary-group.people-group dt {
+  -webkit-transition: color 0.3s;
+  -moz-transition: color 0.3s;
+  -o-transition: color 0.3s;
+  transition: color 0.3s;
+}
+#footer .summary-group.people-group:hover a,
+#footer .summary-group.people-group:hover .phone,
+#footer .summary-group a:hover,
+#footer .large-list:hover dt,
+#footer .large-list:hover dd,
+#footer .summary-group.people-group:hover dt {
+  color: #4fa487;
+}
+#footer .summary-group.people-group dd {
+  font-size: 14px;
+}
+#footer .large-list dd {
+  margin-top: 4px;
+}
+#footer .summary-group.people-group .phone {
+  padding: 19px 0 0;
+}
+#footer .summary-group.people-group .email {
+  clear: left;
+  width: 97.5%;
+  margin: 4px 0 0;
+  padding-top: 4px;
+  border-top: solid 1px #6B605A;
+}
+#footer .map-module {
+  position: relative;
+  padding-top: 20px;
+}
+#footer .map-module h5 {
+  margin-top: 0;
+  z-index: 1;
+  position: relative;
+}
+#footer .location-map {
+  height: 312px;
+}
+#footer .location-map img {
+  width: 388px;
+  height: 290px;
+}
+#footer .location-map img {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+#footer .location-address {
+  position: absolute;
+  top: 290px;
+  left: 0;
+  height: 69px;
+  padding: 11px 8px !important;
+  background-color: rgba(38, 17, 26, 0.2);
+  color: #4a4340;
+  font-family: LeagueGothicRegular, sans-serif;
+  font-size: 24px;
+  line-height: 23px;
+  -webkit-font-smoothing: antialiased;
+}
+#footer .location-address.active {
+  color: #4fa487;
+}
+#footer .email {
+}
+#footer .email-general a {
+  display: block;
+  width: 146px;
+  height: 80px;
+  padding-top: 95px;
+  padding-left: 9px;
+  font-family: LeagueGothicRegular, sans-serif;
+  font-size: 24px;
+  line-height: 26px;
+  color: #26111a;
+  text-decoration: none;
+  cursor: default;
+}
+#footer .email-general a:hover {
+  color: #26111a;
 }
 .clear {
   width: 0;

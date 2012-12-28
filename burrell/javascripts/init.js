@@ -144,6 +144,27 @@ $(function(){
     //$(this).data("storyModule", module);
   });
 
+  $(".map-module").each(function(){
+    var moduleOptions = {
+      el: this,
+      animatedElementSelectors: [
+        { fadeIn: ".active" }
+      ]
+    };
+    createStoryModule(moduleOptions, this);
+  });
+
+  $(".summary-group.people-group").each(function(){
+    var moduleOptions = {
+      el: this,
+      animatedElementSelectors: [
+        { fadeIn: ".background.active" }
+      ],
+      animationDuration: 400
+    };
+    createStoryModule(moduleOptions, this);
+  });
+
   //Clients Panel
   app.clientsPanel = new ClientsPanel({
     el: $(".clients-module")
@@ -154,6 +175,13 @@ $(function(){
   // therefore include AFTER Story Modules
   // have been created
   app.pageNavigation = new PageNavigation();
+
+  //Linked Box
+  app.linkedBoxes = [ ];
+  $(".linked-box").each(function(){
+    var box = new LinkedBox({ el: this });
+    app.linkedBoxes.push(box);
+  });
 
   //Do this last!
   //
