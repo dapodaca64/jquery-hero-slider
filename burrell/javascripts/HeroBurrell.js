@@ -183,7 +183,7 @@ SlidePresenterBurrellSummary.prototype.init = function() {
 SlidePresenterBurrellSummary.prototype.events = {
   "click .summary-navigation-left-right a.go-next": "nextStoryClickHandler",
   "click .summary-navigation-left-right a.go-previous": "previousStoryClickHandler",
-  "click .slider-summary a.go-detail": "detailClickHandler"
+  "click .slider-summary .go-detail": "detailClickHandler"
 };
 
 // DOM event handlers
@@ -202,8 +202,11 @@ SlidePresenterBurrellSummary.prototype.previousStoryClickHandler = function(ev){
 };
 
 SlidePresenterBurrellSummary.prototype.detailClickHandler = function(ev){
+  console.log("detailClickHandler %o", ev);
   ev.preventDefault();
-  var detailIndex = parseInt($(ev.target).attr("data-storyindex"));
+  var detailLink = $(ev.target).parents(".story").find(".go-detail");
+  var detailIndex = parseInt($(detailLink).attr("data-storyindex"));
+  console.log("detailClickHandler with index %o", detailIndex);
   this.goToDetail(detailIndex)
 };
 
@@ -251,16 +254,17 @@ SlidePresenterBurrellSummary.prototype.goToSlide = function(slideIndex){
 
 SlidePresenterBurrellSummary.prototype.goToDetail = function(slideIndex){
   this.controller.stopAutoRotation();
-  //console.log("SlidePresenterBurrellSummary.goToDetail %o", slideIndex);
+  console.log("SlidePresenterBurrellSummary.goToDetail %o", slideIndex);
   //set the detail story state
   if (typeof slideIndex === "number") {
     //via the Controller, The Detail Presenter sets this
+    console.log(this.controller.detailPresenter);
     this.controller.detailPresenter.snapToStory(slideIndex);
   }
 
-  this.hideDetailSlides();
+  this.showDetailSlides();
 
-  this.showSummarySlides();
+  this.hideSummarySlides();
 
   this.hideSummaryNav();
 
@@ -291,6 +295,7 @@ SlidePresenterBurrellSummary.prototype.hideDetailSlides = function(){
 
 SlidePresenterBurrellSummary.prototype.showDetailNav = function(){
   var detailNavAnimation = this.controller.getAnimatedElement("detailNav");
+  console.log("detailNav %o", detailNavAnimation);
   Animator.fadeIn(detailNavAnimation.options.el, detailNavAnimation.options.duration);
 };
 
@@ -350,6 +355,11 @@ SlidePresenterBurrellSummary.prototype.setupAnimatedElements = function(){
     animateDuration: 1000
   });
 
+  this.controller.newAnimatedElement("detailSlide", {
+    el: this.$el.find(".slider-fullsize.slider-detail .story"),
+    animateDuration: 1000
+  });
+
   this.controller.newAnimatedElement("summaryNav", {
     el: this.$el.find(".summary-navigation-left-right"),
     animateDuration: 400
@@ -400,10 +410,18 @@ SlidePresenterBurrellSummary.prototype.setupAnimatedElements = function(){
 
 SlidePresenterBurrellSummary.prototype.storySlideChangeHandler = function(storySlide){
   //console.log("SlidePresenterBurrellSummary.storySlideChangeHandler with %o", storySlide);
-  var background = this.controller.getAnimatedElement("storySlide");
-  Animator.resizeBox(background.$el, {
-    width: storySlide.get("width")
-  }, 0);
+  var slideTypes = [
+    this.controller.getAnimatedElement("storySlide"),
+    this.controller.getAnimatedElement("detailSlide")
+  ];
+
+  for (var i=0, j=slideTypes.length; i<j; i++) {
+
+    Animator.resizeBox(slideTypes[i].$el, {
+      width: storySlide.get("width")
+    }, 0);
+
+  }
 
 };
 
@@ -487,6 +505,7 @@ SlidePresenterBurrellSummary.prototype.resizeBackgrounds = function(vp){
 /* Presenter: Detail Slides */
 var SlidePresenterBurrellDetail = function(options){
   SlidePresenter.call(this, options); //call super constructor
+  this.$el = this.controller.$el;
   this.init();
 };
 SlidePresenterBurrellDetail.prototype = Object.create(SlidePresenter.prototype);
@@ -561,10 +580,12 @@ SlidePresenterBurrellDetail.prototype.bindDataEvents = function(){
 };
 
 SlidePresenterBurrellDetail.prototype.snapToStory = function(slideIndex){
-  //console.log("SlidePresenterBurrellDetail.snapToStory slideIndex %o", slideIndex);
+  console.log("SlidePresenterBurrellDetail.snapToStory slideIndex %o", slideIndex);
   var newSlidePos = this.getSlideOffsetFromZero(slideIndex);
+  console.log("newSlidePos %o", newSlidePos);
   var storyAnimation = this.controller.getAnimatedElement("storyDetail");
-  storyEl = storyAnimation.options.el;
+  var storyEl = storyAnimation.options.el;
+  console.log("newSlidePos %o, storyAnimation %o, storyEl %o", newSlidePos, storyAnimation, storyEl[0]);
 
   //set the slide visually
   $(storyEl).css("left", -newSlidePos+"px");
@@ -585,9 +606,10 @@ SlidePresenterBurrellDetail.prototype.getSlideOffsetFromZero = function(slideInd
   return slideOffsetFromZero;
 };
 
-SlidePresenterBurrellDetail.prototype.getSliderOffset = function(slideIndex){
-  var sliderOffset = this.$el.find(".slider-fullsize.slider-detail").css("left");
-  return -( sliderOffset.substring(0, sliderOffset.length-2) );
+SlidePresenterBurrellDetail.prototype.getSliderOffset = function(){
+  var sliderCSSLeft = this.$el.find(".slider-fullsize.slider-detail").css("left");
+  var offset = (sliderCSSLeft) ? -( sliderCSSLeft.substring(0, sliderCSSLeft.length-2) ) : 0;
+  return offset;
 };
 
 SlidePresenterBurrellDetail.prototype.getSlideMoveOffset = function(slideIndex){
