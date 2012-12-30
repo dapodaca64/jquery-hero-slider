@@ -32,7 +32,7 @@
   height: 100%;
   width: 1500px;
   */
-  height: 721px;
+  height: 524px;
   margin: 0;
   padding: 0;
 }
@@ -125,7 +125,7 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 360px;
+    height: 524px;
     z-index: 2;
     background-color: rgba(130, 130, 130, 0.6);
   }
@@ -215,6 +215,7 @@
 }
 .teaser .navigation {
   top: 45%;
+  height: 0;
 }
   .navigation .nav-col {
     width: 84px;
@@ -294,7 +295,7 @@
   background: rgba(130, 130, 130, 0.8);
 }
 #hero-slider .item-navigation {
-  width: 260px !important;
+  width: 330px !important;
   padding: 0 245px;
 }
 #hero-slider .item-navigation .nav-item {
