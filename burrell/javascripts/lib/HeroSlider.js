@@ -437,16 +437,30 @@ SlidePresenter.prototype.delegateEvent = function(ev, delegates) {
   //console.log("ev.currentTarget %o, ev.target %o", ev.currentTarget, ev.target);
   for (delegate in delegates) {
     // Is the event target in the elements that match the selector?
-    //console.log("SlidePresenter.delegateEvent ev %o", ev);
+
+    // Determine if the event element matches the delegate selector
     var inCollection = this.isElementInCollection(ev.target, delegates[delegate].selector);
+
+    // Catch case of event bubbling
+    // Determine if any of the ancestors up to the scope element match
+    var ancestors = $(ev.target).parentsUntil(this.$el);
+    var self = this;
+    $(ancestors).each(function(){
+      var ancestorInCollection = false;
+      ancestorInCollection = self.isElementInCollection(this, delegates[delegate].selector);
+      if (ancestorInCollection) {
+        inCollection = true;
+      }
+    });
+
     //console.log("inCollection? %o", inCollection);
     if (inCollection) {
       // Fire the event handler
-      try {
+      //try {
         this[delegates[delegate].handler].call(this, ev);
-      } catch(e) {
-        console.log("SlidePresenter Error in event delegation: Cannot call function %o", this[delegates[delegate].handler]);
-      }
+      //} catch(e) {
+      //  console.log("SlidePresenter Error in event delegation: Cannot call function %o", this[delegates[delegate].handler]);
+      //}
     }
   }
 };
