@@ -1,7 +1,7 @@
 /* Hero Slider */
 .hero-slider {
   width: 100%;
-  min-height: 600px;
+  min-height: 528px;
   margin: 0;
   position: relative;
   overflow: hidden;
@@ -9,16 +9,25 @@
   background-color: red;
   */
   background-color: #ccc;
+  z-index: 15;
 }
 .slider-fullsize {
   position: absolute;
   top: 0;
   left: 0;
-  width: 9999px;
-  height: 360px;
+  /* Need enough for total number of
+     slides * widest supported viewport
+     Since each slide is 100% width
+     2500 * 10 = 25000 */
+  width: 25000px;
+  height: 100%;
 }
 .hero-slider ul {
-  width: 9999px;
+  /* Need enough for total number of
+     slides * widest supported viewport
+     Since each slide is 100% width
+     2500 * 10 = 25000 */
+  width: 25000px;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -29,17 +38,35 @@
   float: left;
   display: block;
   /*
-  height: 100%;
   width: 1500px;
+  height: 100%;
   */
   height: 524px;
   margin: 0;
   padding: 0;
 }
+.slider-summary .story {
+  height: 100%;
+  position: relative;
+}
+.story > ul {
+  height: 100%;
+}
+.slider-summary > ul {
+  height: 100%;
+}
+.slider-detail > ul {
+  height: 100%;
+}
+.slider-detail .story {
+  height: 100%;
+  position: relative;
+}
   .story .relative-frame {
     position: relative;
     width: 100%;
     height: 100%;
+    overflow: hidden;
   }
   .story .background {
     position: absolute;
@@ -47,13 +74,18 @@
     left: 0;
     z-index: 1;
   }
+    .story .background.active {
+      display: none;
+    }
   .story .teaser {
     position: absolute;
-    top: 257px;
+    top: 50%;
+    margin-top: -120px;
     left: 0;
     width: 100%;
     height: 238px;
     z-index: 3;
+    cursor: pointer;
   }
     .story .teaser .story-detail {
       display: block;
@@ -87,7 +119,11 @@
         margin-top: -116px;
       }
     .story .teaser .teaser-text-left,
-    .story .teaser .teaser-text-right {
+    .story .teaser .teaser-text-right,
+    .story .detail .quote-left,
+    .story .detail .quote-right,
+    .story .detail-navigation .nav-col-left,
+    .story .detail-navigation .nav-col-right {
       position: absolute;
       left: 50%;
       top: 42%;
@@ -96,28 +132,60 @@
       background-color: rgba(200, 200, 0, 0.3);
       */
     }
-    .story .teaser .teaser-text-left {
+    .story .detail-navigation .nav-col-left,
+    .story .detail-navigation .nav-col-right {
+      top: 32%;
+    }
+    .story .teaser .teaser-text-left,
+    .story .detail .quote-left,
+    .story .detail-navigation .nav-col-left {
       right: 50%;
       left: auto;
     }
     .story .teaser .teaser-text-right {
+      margin-left: 110px;
+    }
+    .story .detail .quote-right {
       margin-left: 90px;
     }
-      .story .teaser .teaser-text {
+    .story .detail-navigation .nav-col-right {
+      margin-left: 66px;
+    }
+      .story .teaser .teaser-text,
+      .story .detail .quote,
+      .story .detail-navigation .character-name {
         font-family: "silverfakeregular", Times, serif;
         font-size: 22px;
         line-height: 26px;
         color: rgb(175, 173, 158);
-        /*
-        background-color: rgba(0, 0, 200, 0.3);
-        */
       }
-      .story .teaser .teaser-text-left .teaser-text {
+      .story .detail-navigation .go-previous:hover .character-name,
+      .story .detail-navigation .go-next:hover .character-name
+      {
+        color: rgb(207, 130, 96);
+      }
+      .story .teaser .teaser-text-left .teaser-text,
+      .story .detail .quote-left .floating-text-block,
+      .story .detail-navigation .nav-col-left .floating-text-block {
         float: right;
         margin-right: 90px;
       }
-      .story .teaser .teaser-text-right .teaser-text {
+      .story .detail-navigation .nav-col-left .floating-text-block {
+        margin-right: 35px;
+      }
+      .story .teaser .teaser-text-right .teaser-text,
+      .story .teaser .quote-right .floating-text-block,
+      .story .detail-navigation .nav-col-right .floating-text-block {
         float: left;
+      }
+      .story .teaser .teaser-text {
+        -webkit-transition: color 0.3s;
+        -moz-transition: color 0.3s;
+        -o-transition: color 0.3s;
+        -transition: color 0.3s;
+      }
+      .story .teaser:hover .teaser-text {
+        color: rgb(215, 140, 104);
       }
   .story .detail {
     display: none;
@@ -125,9 +193,8 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 524px;
+    height: 100%;
     z-index: 2;
-    background-color: rgba(130, 130, 130, 0.6);
   }
     .detail .banner {
       position: absolute;
@@ -136,36 +203,68 @@
     }
     .detail .main-text {
       position: absolute;
-      top: 210px;
-      left: 0;
+      top: 50%;
+      left: 50%;
       z-index: 1;
-      width: 100%;
-      padding: 60px 20px 20px 70px;
-      background-color: rgba(0, 0, 0, 0.9);
+      width: 370px; /*476 incl padding*/
+      margin-left: -235px;
+      height: 298px; /* 365 incl padding */
+      margin-top: -183px;
+      padding: 27px 78px 40px 28px;
+      font-family: "League Gothic", sans-serif;
+      color: rgb(204, 190, 174);
+      background: url(images/background_hero_detail_main_text.png) 0 0 no-repeat;
     }
     .main-text .title {
-      color: #fff;
+      width: 380px;
       font-size: 18px;
       line-height: 22px;
-      margin: 5px 0;
+      font-weight: normal;
+      margin: 0;
     }
+      .main-text .title .name {
+        display: block;
+        font-size: 82px;
+        font-family: "League Gothic Condensed";
+        line-height: 82px;
+      }
+      .main-text .title .role {
+        display: block;
+        font-size: 36px;
+        line-height: 33px;
+      }
     .main-text .description {
-      color: #f1f1f1;
       font-size: 14px;
       line-height: 18px;
-      margin: 5px 0;
+      margin: 9px 0;
+      font-size: 18px;
+      line-height: 25px;
+      font-family: Arial, sans-serif;
     }
     .detail .quote {
       position: absolute;
-      top: 220px;
-      left: 65px;
-      width: 615px;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 81px;
       color: #ccc;
       font-size: 20px;
       z-index: 3;
       margin: 0;
       padding: 0;
+      background: url(images/hero_detail_trim.png) 50% 0 no-repeat;
     }
+    .story .detail .quote-left,
+    .story .detail .quote-right {
+      top: 21%;
+    }
+    .story .detail .quote-right {
+      margin-left: 126px;
+    }
+    .story .detail .quote-left {
+      margin-right: 12px;
+    }
+    /*Literal Quote Marks
     .detail .quote:before {
       content: "\201C";
       font-size: 28px;
@@ -181,7 +280,7 @@
       position: relative;
       top: 2px;
       left: 2px;
-    }
+    }*/
 
 .actionable-box {
   display: block;
@@ -217,28 +316,85 @@
   top: 45%;
   height: 0;
 }
-  .navigation .nav-col {
+  .teaser .navigation .nav-col {
     width: 84px;
     text-align: center;
   }
-  .navigation .nav-col .actionable-box {
+  .teaser .navigation .nav-col .actionable-box {
     padding: 10px;
   }
-  .navigation .action {
+  .teaser .navigation .action {
     padding: 6px;
   }
 .detail-navigation {
   display: none;
+  width: 100%;
+  bottom: 0;
+  top: auto;
+  height: 82px;
+  background: url(images/hero_detail_trim.png) 50% 100% no-repeat;
 }
+  .detail-navigation .go-previous,
+  .detail-navigation .go-next {
+    text-decoration: none;
+    line-height: 30px;
+  }
+  .detail-navigation .go-previous .arrow,
+  .detail-navigation .go-next .arrow {
+    display: inline-block;
+    width: 98px;
+    height: 20px;
+    text-align: left;
+    text-indent: -9000px;
+    overflow: hidden;
+    vertical-align: middle;
+    background: url(images/sprite_background) 0 0 no-repeat;
+  }
+  .detail-navigation .go-previous .arrow {
+    background-position: 0 0;
+    margin-right: 2px;
+  }
+  .detail-navigation .go-previous:hover .arrow {
+    background-position: 0 -30px;
+  }
+  .detail-navigation .go-next .arrow {
+    background-position: 0 -91px;
+    margin-left: 8px;
+  }
+  .detail-navigation .go-next:hover .arrow {
+    background-position: 0 -121px;
+  }
 .item-navigation {
   display: none;
-  top: 210px;
-  width: 50px !important;
+  top: 50%;
+  left: 50%;
+  margin-left: 181px !important;
+  margin-top: -183px !important;
+  width: 60px !important;
+  z-index: 20;
 }
   .item-navigation .story-detail-nav {
     display: block;
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
+  }
+
+  .item-navigation .nav-item {
+    float: left;
+    width: 60px;
+    height: 60px;
+    margin-bottom: 1px;
+  }
+  .item-navigation .nav-item a {
+    opacity: 0.5;
+  }
+  .item-navigation .nav-item a.active,
+  .item-navigation .nav-item a:hover {
+    opacity: 1;
+  }
+  .item-navigation .nav-item a:active,
+  .item-navigation .nav-item a:focus {
+    box-shadow: 0 0 22px #FFF;
   }
 .mode-navigation {
   position: absolute;
@@ -256,6 +412,9 @@
 }
   .slider-detail .story .detail {
     display: block;
+  }
+  .slider-detail .story .background-detail {
+    top: 81px;
   }
 
 .detail-navigation {
@@ -291,37 +450,4 @@
   .summary-navigation-left-right .go-next:active {
     background-position: 4px -146px;
   }
-#hero-slider .story .detail {
-  background: rgba(130, 130, 130, 0.8);
-}
-#hero-slider .item-navigation {
-  width: 330px !important;
-  padding: 0 245px;
-}
-#hero-slider .item-navigation .nav-item {
-  float: left;
-  width: 50px;
-  height: 50px;
-  margin-left: 2px;
-}
-#hero-slider .item-navigation .nav-item a {
-  opacity: 0.5;
-}
-#hero-slider .item-navigation .nav-item a.active,
-#hero-slider .item-navigation .nav-item a:hover {
-  opacity: 1;
-}
-#hero-slider .item-navigation .nav-item a:active,
-#hero-slider .item-navigation .nav-item a:focus {
-  box-shadow: 0 0 22px #FFF;
-}
-#hero-slider .detail .quote {
-  top: -2px;
-  left: 10px;
-  font-size: 18px;
-}
-#hero-slider .detail .main-text {
-  width: 1460px;
-  height: 90px;
-  padding-left: 20px;
-}
+
