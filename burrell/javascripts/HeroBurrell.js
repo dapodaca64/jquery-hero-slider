@@ -44,7 +44,6 @@ HeroSliderBurrell.prototype.init = function(){
   // Assure we have DOM before creating Presenters
   if (this.$el.length) {
 
-    this.setupViewport();
 
     this.summaryPresenter = new SlidePresenterBurrellSummary({
 
@@ -73,6 +72,8 @@ HeroSliderBurrell.prototype.init = function(){
       circular: this.options.circular
 
     });
+
+    this.setupViewport();
 
     if (this.autoRotate) {
       //console.log("HeroSliderBurrell going to auto-rotate!");
@@ -148,7 +149,9 @@ HeroSliderBurrell.prototype.viewportChangeHandler = function(viewport){
 };
 
 HeroSliderBurrell.prototype.resizeHero = function(vp){
-  //console.log("resizeHero with this.$el %o", this.$el);
+  //console.log("resizeHero with this %o, this.$el %o", this, this.$el[0]);
+  //console.log("detail el %o", this.detailPresenter.$el[0]);
+  //console.log("summary el %o", this.summaryPresenter.$el[0]);
   //console.log("HeroSliderBurrell resize hero based on %o", vp);
   Animator.resizeBox(this.$el, {
     width: vp.width,
@@ -447,7 +450,7 @@ SlidePresenterBurrellSummary.prototype.setupAnimatedElements = function(){
 };
 
 SlidePresenterBurrellSummary.prototype.storySlideChangeHandler = function(storySlide){
-  //console.log("SlidePresenterBurrellSummary.storySlideChangeHandler with %o", storySlide);
+  console.log("SlidePresenterBurrellSummary.storySlideChangeHandler with %o", storySlide);
   var slideTypes = [
     this.controller.getAnimatedElement("storySlide"),
     this.controller.getAnimatedElement("detailSlide")
@@ -455,11 +458,27 @@ SlidePresenterBurrellSummary.prototype.storySlideChangeHandler = function(storyS
 
   for (var i=0, j=slideTypes.length; i<j; i++) {
 
+    //Update slide widths
     Animator.resizeBox(slideTypes[i].$el, {
       width: storySlide.get("width")
     }, 0);
 
   }
+
+  //Move the slider position
+  //this.goToSlide(this.controller.storyDetail.get("storyIndex"));
+  var slideIndex = this.controller.storyDetail.get("storyIndex");
+  console.log("move slider to slideIndex %o", slideIndex);
+  var storyAnimation = this.controller.getAnimatedElement("storyDetail");
+  console.log(this.controller.detailPresenter);
+  /* TODO: Create method at the controller layer to do this for both Presenters
+  var totalSlide = this.controller.detailPresenter.getSlideMoveOffset(slideIndex);
+  var totalSlide = 0;
+  console.log("totalSlide %o", totalSlide);
+  storyAnimation.options.animateProperties.left = "-="+totalSlide;
+  storyAnimation.options.animateCallback = function(){ };
+  storyAnimation.startAnimation();
+  */
 
 };
 
