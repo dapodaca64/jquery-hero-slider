@@ -44,10 +44,15 @@ HeroSliderBurrell.prototype.init = function(){
   // Assure we have DOM before creating Presenters
   if (this.$el.length) {
 
+    this.setupViewport();
+
     this.summaryPresenter = new SlidePresenterBurrellSummary({
 
       // Reference the controller/creator
       controller: this,
+
+      // Specific DOM Scope
+      el: this.$el.find(".slider-summary"),
 
       //pass on the presentational behavior configurations
       autoRotate: this.options.autoRotate,
@@ -60,13 +65,14 @@ HeroSliderBurrell.prototype.init = function(){
       // Reference the controller/creator
       controller: this,
 
+      // Specific DOM Scope
+      el: this.$el.find(".slider-detail"),
+
       //pass on the presentational behavior configurations
       autoRotate: this.options.autoRotate,
       circular: this.options.circular
 
     });
-
-    this.setupViewport();
 
     if (this.autoRotate) {
       //console.log("HeroSliderBurrell going to auto-rotate!");
@@ -143,10 +149,12 @@ HeroSliderBurrell.prototype.viewportChangeHandler = function(viewport){
 
 HeroSliderBurrell.prototype.resizeHero = function(vp){
   //console.log("resizeHero with this.$el %o", this.$el);
+  //console.log("HeroSliderBurrell resize hero based on %o", vp);
   Animator.resizeBox(this.$el, {
     width: vp.width,
     //leave room for some content to 'peek' above the fold
-    height: vp.height-100
+    //include a proportional reduction of 20%
+    height: (vp.height-100)*0.84
   }, 0);
 };
 
@@ -155,7 +163,8 @@ HeroSliderBurrell.prototype.resizeHero = function(vp){
 
 var SlidePresenterBurrellSummary = function(options){
   SlidePresenter.call(this, options); //call super constructor
-  this.$el = this.controller.$el;
+  //this.$el = this.controller.$el;
+  this.$el = $(options.el);
   this.init();
 };
 SlidePresenterBurrellSummary.prototype = Object.create(SlidePresenter.prototype);
@@ -165,9 +174,8 @@ SlidePresenterBurrellSummary.prototype.init = function() {
   this.parent.init.call(this);
 
   var storyCount;
-  //console.log("SlidePresenterBurrellSummary.init with this.$el %o", this.$el);
   if (this.$el) {
-    storyCount = this.controller.$el.find(".slider-summary .story").length;
+    storyCount = this.$el.find(".story").length;
     if (storyCount) {
       //update story count on the Model
       this.controller.storySummary.set("storyCount", storyCount);
@@ -183,7 +191,9 @@ SlidePresenterBurrellSummary.prototype.init = function() {
 SlidePresenterBurrellSummary.prototype.events = {
   "click .summary-navigation-left-right a.go-next": "nextStoryClickHandler",
   "click .summary-navigation-left-right a.go-previous": "previousStoryClickHandler",
-  "click .slider-summary .go-detail": "detailClickHandler"
+  "click .slider-summary .go-detail": "detailClickHandler",
+  "mouseenter .teaser": "teaserMouseEnterHandler",
+  "mouseleave .teaser": "teaserMouseLeaveHandler"
 };
 
 // DOM event handlers
@@ -202,12 +212,20 @@ SlidePresenterBurrellSummary.prototype.previousStoryClickHandler = function(ev){
 };
 
 SlidePresenterBurrellSummary.prototype.detailClickHandler = function(ev){
-  console.log("detailClickHandler %o", ev);
+  //console.log("detailClickHandler %o", ev);
   ev.preventDefault();
   var detailLink = $(ev.target).parents(".story").find(".go-detail");
   var detailIndex = parseInt($(detailLink).attr("data-storyindex"));
-  console.log("detailClickHandler with index %o", detailIndex);
+  //console.log("detailClickHandler with index %o", detailIndex);
   this.goToDetail(detailIndex)
+};
+
+SlidePresenterBurrellSummary.prototype.teaserMouseEnterHandler = function(ev){
+  this.showTeaserBackgroundActive();
+};
+
+SlidePresenterBurrellSummary.prototype.teaserMouseLeaveHandler = function(ev){
+  this.hideTeaserBackgroundActive();
 };
 
 // Data event handlers
@@ -226,9 +244,9 @@ SlidePresenterBurrellSummary.prototype.storyIndexChangeHandler = function(story)
 SlidePresenterBurrellSummary.prototype.goToSlide = function(slideIndex){
   //console.log("SlidePresenterBurrellSummary.goToSlide slideIndex %o", slideIndex);
   var slideOffsetFromZero = 0;
-  var sliderOffset = this.$el.find(".slider-fullsize.slider-summary").css("left");
+  var sliderOffset = this.$el.css("left");
   sliderOffset = -(sliderOffset.substring(0, sliderOffset.length-2));
-  this.$el.find(".slider-summary .story").each(function(idx) {
+  this.$el.find(".story").each(function(idx) {
     if (idx+1 <= slideIndex) {
       slideOffsetFromZero += $(this).width();
     }
@@ -254,11 +272,10 @@ SlidePresenterBurrellSummary.prototype.goToSlide = function(slideIndex){
 
 SlidePresenterBurrellSummary.prototype.goToDetail = function(slideIndex){
   this.controller.stopAutoRotation();
-  console.log("SlidePresenterBurrellSummary.goToDetail %o", slideIndex);
+  //console.log("SlidePresenterBurrellSummary.goToDetail %o", slideIndex);
   //set the detail story state
   if (typeof slideIndex === "number") {
     //via the Controller, The Detail Presenter sets this
-    console.log(this.controller.detailPresenter);
     this.controller.detailPresenter.snapToStory(slideIndex);
   }
 
@@ -295,7 +312,6 @@ SlidePresenterBurrellSummary.prototype.hideDetailSlides = function(){
 
 SlidePresenterBurrellSummary.prototype.showDetailNav = function(){
   var detailNavAnimation = this.controller.getAnimatedElement("detailNav");
-  console.log("detailNav %o", detailNavAnimation);
   Animator.fadeIn(detailNavAnimation.options.el, detailNavAnimation.options.duration);
 };
 
@@ -318,50 +334,71 @@ SlidePresenterBurrellSummary.prototype.showSummaryNav = function(){
   var summaryNavAnimation = this.controller.getAnimatedElement("summaryNav");
   Animator.fadeIn(summaryNavAnimation.options.el, summaryNavAnimation.options.duration);
 };
+
 SlidePresenterBurrellSummary.prototype.hideSummaryNav = function(){
   var summaryNavAnimation = this.controller.getAnimatedElement("summaryNav");
   Animator.fadeOut(summaryNavAnimation.options.el, summaryNavAnimation.options.duration);
 };
 
+SlidePresenterBurrellSummary.prototype.showTeaserBackgroundActive = function(){
+  var teaserBackActive = this.controller.getAnimatedElement("teaserBackgroundActive");
+  Animator.fadeIn(teaserBackActive.options.el, teaserBackActive.options.duration);
+};
+
+SlidePresenterBurrellSummary.prototype.hideTeaserBackgroundActive = function(){
+  var teaserBackActive = this.controller.getAnimatedElement("teaserBackgroundActive");
+  Animator.fadeOut(teaserBackActive.options.el, teaserBackActive.options.duration);
+};
+
 SlidePresenterBurrellSummary.prototype.setupAnimatedElements = function(){
 
   this.controller.newAnimatedElement("summaryBackground", {
-    el: this.$el.find(".slider-fullsize.slider-summary .background.summary"),
+    el: this.controller.$el.find(".slider-fullsize.slider-summary .background.summary"),
+    animateDuration: 1000
+  });
+
+  this.controller.newAnimatedElement("detailBackground", {
+    el: this.controller.$el.find(".slider-fullsize.slider-detail .background.background-detail"),
     animateDuration: 1000
   });
 
   this.controller.newAnimatedElement("teaser", {
-    el: this.$el.find(".slider-fullsize.slider-summary .teaser"),
+    el: this.controller.$el.find(".slider-fullsize.slider-summary .teaser"),
     animateDuration: 1000
   });
 
   this.controller.newAnimatedElement("teaserBackground", {
-    el: this.$el.find(".slider-fullsize.slider-summary .background.teaser-background"),
+    el: this.controller.$el.find(".slider-fullsize.slider-summary .background.teaser-background.default"),
+    animateDuration: 1000
+  });
+
+  this.controller.newAnimatedElement("teaserBackgroundActive", {
+    el: this.controller.$el.find(".slider-fullsize.slider-summary .background.teaser-background.active"),
     animateDuration: 1000
   });
 
   this.controller.newAnimatedElement("storySummary", {
-    el: this.$el.find(".slider-fullsize.slider-summary"),
+    el: this.controller.$el.find(".slider-fullsize.slider-summary"),
     animateDuration: 1000
   });
 
   this.controller.newAnimatedElement("storyDetail", {
-    el: this.$el.find(".slider-fullsize.slider-detail"),
+    el: this.controller.$el.find(".slider-fullsize.slider-detail"),
     animateDuration: 1000
   });
 
   this.controller.newAnimatedElement("storySlide", {
-    el: this.$el.find(".slider-fullsize.slider-summary .story"),
+    el: this.controller.$el.find(".slider-fullsize.slider-summary .story"),
     animateDuration: 1000
   });
 
   this.controller.newAnimatedElement("detailSlide", {
-    el: this.$el.find(".slider-fullsize.slider-detail .story"),
+    el: this.controller.$el.find(".slider-fullsize.slider-detail .story"),
     animateDuration: 1000
   });
 
   this.controller.newAnimatedElement("summaryNav", {
-    el: this.$el.find(".summary-navigation-left-right"),
+    el: this.controller.$el.find(".summary-navigation-left-right"),
     animateDuration: 400
   });
 
@@ -385,6 +422,7 @@ SlidePresenterBurrellSummary.prototype.setupAnimatedElements = function(){
     height: height
   });
   this.summaryBackground.on("change", this.summaryBackgroundChangeHandler.bind(this));
+  this.summaryBackground.on("change", this.detailBackgroundChangeHandler.bind(this));
 
   //Teaser background
   var teaserWidth = $(this.controller.getAnimatedElement("teaserBackground").$el).width();
@@ -425,8 +463,21 @@ SlidePresenterBurrellSummary.prototype.storySlideChangeHandler = function(storyS
 
 };
 
+SlidePresenterBurrellSummary.prototype.centerHorizontally = function(background, model){
+  var viewportDims = Animator.getBoxDimensions(".everything");
+  var widthDiff = model.get("width") - viewportDims.width;
+  var marginToCenterIt = - (widthDiff / 2) + "px";
+  //console.log("viewportDims %o, model %o, widthDiff %o", viewportDims, model, widthDiff);
+
+  background.$el.css("margin-left", marginToCenterIt);
+
+};
+
 SlidePresenterBurrellSummary.prototype.summaryBackgroundChangeHandler = function(summaryBackground){
   var background = this.controller.getAnimatedElement("summaryBackground");
+
+  this.centerHorizontally(background, summaryBackground);
+
   Animator.resizeBox(background.$el, {
     width: summaryBackground.get("width"),
     height: summaryBackground.get("height")
@@ -434,24 +485,47 @@ SlidePresenterBurrellSummary.prototype.summaryBackgroundChangeHandler = function
 
 };
 
+SlidePresenterBurrellSummary.prototype.detailBackgroundChangeHandler = function(summaryBackground){
+  var background = this.controller.getAnimatedElement("detailBackground");
+  var newHeight = this.controller.$el.height() - 162; //162 offset for the detail trim top+bottom
+
+  this.centerHorizontally(background, summaryBackground);
+
+  Animator.resizeBox(background.$el, {
+    width: summaryBackground.get("width"),
+    height: newHeight
+  }, 0);
+
+};
+
 SlidePresenterBurrellSummary.prototype.teaserSizeChangeHandler = function(teaserBackground){
   //console.log("SlidePresenterBurrellSummary.teaserBackgroundChangeHandler with %o", teaserBackground);
+  //Teaser background image - default state
   var teaser = this.controller.getAnimatedElement("teaserBackground");
+  //Teaser background image - active state
+  var teaserActive = this.controller.getAnimatedElement("teaserBackgroundActive");
+  //Teaser box
+  var teaserBox = this.controller.getAnimatedElement("teaser");
+
   Animator.resizeBox(teaser.$el, {
     width: teaserBackground.get("width"),
     height: teaserBackground.get("height")
   }, 0);
 
-  //Teaser box
-  var teaserBox = this.controller.getAnimatedElement("teaser");
+  Animator.resizeBox(teaserActive.$el, {
+    width: teaserBackground.get("width"),
+    height: teaserBackground.get("height")
+  }, 0);
+
   Animator.resizeBox(teaserBox.$el, {
     width: teaserBackground.get("width"),
     height: teaserBackground.get("height")
   }, 0);
 
-}
+};
 
 SlidePresenterBurrellSummary.prototype.getProportionalFit = function(b, a, prop1, prop2){
+  //TODO: Use it or lose it
   // b is projected proportionally on a,
   // where b[prop1] / b[prop2] ratio is maintained
 
@@ -483,7 +557,6 @@ SlidePresenterBurrellSummary.prototype.resizeBackgrounds = function(vp){
     } else {
       fitChoice = fitByHeight;
     }
-    fitChoice = fitByHeight;
   //square viewport: either fit types will fill it
   } else {
     //console.log("square viewport.");
@@ -491,7 +564,7 @@ SlidePresenterBurrellSummary.prototype.resizeBackgrounds = function(vp){
   }
 
 
-  //set story width
+  //set story width using actual viewport width
   this.storySlide.set({ width: vp.width });
 
   //set proportional fit
@@ -505,7 +578,8 @@ SlidePresenterBurrellSummary.prototype.resizeBackgrounds = function(vp){
 /* Presenter: Detail Slides */
 var SlidePresenterBurrellDetail = function(options){
   SlidePresenter.call(this, options); //call super constructor
-  this.$el = this.controller.$el;
+  //this.$el = this.controller.$el;
+  this.$el = $(options.el);
   this.init();
 };
 SlidePresenterBurrellDetail.prototype = Object.create(SlidePresenter.prototype);
@@ -517,14 +591,14 @@ SlidePresenterBurrellDetail.prototype.init = function() {
   var storyCount;
 
   if (this.$el) {
-    storyCount = this.$el.find(".slider-detail .story").length;
+    storyCount = this.$el.find(".story").length;
     if (storyCount) {
       //update story count on the Model
       this.controller.storyDetail.set("storyCount", storyCount);
 
       //register animated elements
       this.controller.newAnimatedElement("storyDetail", {
-        el: this.$el.find(".slider-fullsize.slider-detail"),
+        el: this.$el,
         animateDuration: 1000
       });
 
@@ -533,17 +607,39 @@ SlidePresenterBurrellDetail.prototype.init = function() {
         animateDuration: 200
       });
 
-      this.controller.newAnimatedElement("itemNav", {
-        el: this.$el.find(".item-navigation"),
+      this.controller.newAnimatedElement("detailNavLinks", {
+        el: this.$el.find(".detail-navigation .go-previous, .detail-navigation .go-next"),
         animateDuration: 200
       });
+
+      this.controller.newAnimatedElement("detailMain", {
+        el: this.$el.find(".main-text"),
+        animateDuration: 500
+      });
+
+      this.controller.newAnimatedElement("itemNav", {
+        el: this.controller.$el.find(".item-navigation"),
+        animateDuration: 500
+      });
+
+      this.controller.newAnimatedElement("detailQuote", {
+        el: this.$el.find(".quote-left, .quote-right"),
+        animateDuration: 500
+      });
+
+      this.bindItemNavClick();
+
     }
   }
 };
 SlidePresenterBurrellDetail.prototype.events = {
   "click .detail-navigation .go-next": "nextStoryClickHandler",
-  "click .detail-navigation .go-previous": "previousStoryClickHandler",
-  "click .item-navigation .go-to-story": "goToClickHandler"
+  "click .detail-navigation .go-previous": "previousStoryClickHandler"
+  //"click .item-navigation .go-to-story": "goToClickHandler"
+};
+
+SlidePresenterBurrellDetail.prototype.bindItemNavClick = function(){
+  this.controller.$el.find(".item-navigation .go-to-story").on("click", this.goToClickHandler.bind(this));
 };
 
 // DOM event handlers
@@ -568,8 +664,9 @@ SlidePresenterBurrellDetail.prototype.previousStoryClickHandler = function(ev){
 // Data event handlers
 SlidePresenterBurrellDetail.prototype.storyIndexChangeHandler = function(story) {
   //console.log("SlidePresenterBurrellDetail.storyIndexChangeHandler for model %o", story);
+  //TODO: Find a way to stop animation only on the Summary components
   //console.log("Calling stopAnimations %o", this.controller);
-  this.controller.stopAnimations();
+  //this.controller.stopAnimations();
   this.goToSlide(story.get("storyIndex"));
   this.updateActiveStateItemNav(story.get("storyIndex"));
 };
@@ -580,12 +677,12 @@ SlidePresenterBurrellDetail.prototype.bindDataEvents = function(){
 };
 
 SlidePresenterBurrellDetail.prototype.snapToStory = function(slideIndex){
-  console.log("SlidePresenterBurrellDetail.snapToStory slideIndex %o", slideIndex);
+  //console.log("SlidePresenterBurrellDetail.snapToStory slideIndex %o", slideIndex);
   var newSlidePos = this.getSlideOffsetFromZero(slideIndex);
-  console.log("newSlidePos %o", newSlidePos);
+  //console.log("newSlidePos %o", newSlidePos);
   var storyAnimation = this.controller.getAnimatedElement("storyDetail");
   var storyEl = storyAnimation.options.el;
-  console.log("newSlidePos %o, storyAnimation %o, storyEl %o", newSlidePos, storyAnimation, storyEl[0]);
+  //console.log("newSlidePos %o, storyAnimation %o, storyEl %o", newSlidePos, storyAnimation, storyEl[0]);
 
   //set the slide visually
   $(storyEl).css("left", -newSlidePos+"px");
@@ -593,12 +690,13 @@ SlidePresenterBurrellDetail.prototype.snapToStory = function(slideIndex){
   //set the model property
   var model = this.controller.storyDetail;
   this.controller.storyDetail.set("storyIndex", slideIndex);
+  this.controller.storyDetail.trigger("change:storyIndex");
 };
 
 SlidePresenterBurrellDetail.prototype.getSlideOffsetFromZero = function(slideIndex){
   var slideOffsetFromZero = 0;
   var sliderOffset = this.getSliderOffset();
-  this.$el.find(".slider-detail .story").each(function(idx) {
+  this.$el.find(".story").each(function(idx) {
     if (idx+1 <= slideIndex) {
       slideOffsetFromZero += $(this).width();
     };
@@ -607,7 +705,7 @@ SlidePresenterBurrellDetail.prototype.getSlideOffsetFromZero = function(slideInd
 };
 
 SlidePresenterBurrellDetail.prototype.getSliderOffset = function(){
-  var sliderCSSLeft = this.$el.find(".slider-fullsize.slider-detail").css("left");
+  var sliderCSSLeft = this.$el.css("left");
   var offset = (sliderCSSLeft) ? -( sliderCSSLeft.substring(0, sliderCSSLeft.length-2) ) : 0;
   return offset;
 };
@@ -621,21 +719,37 @@ SlidePresenterBurrellDetail.prototype.getSlideMoveOffset = function(slideIndex){
 
 SlidePresenterBurrellDetail.prototype.goToSlide = function(slideIndex){
   //console.log("SlidePresenterBurrellDetail.goToSlide slideIndex %o", slideIndex);
-
-  var navAnimation = this.controller.getAnimatedElement("detailNav");
-  navAnimation.options.animateProperties = { opacity: 0 };
-  navAnimation.startAnimation();
-
+  var quickDuration = 120;
+  var navAnimation = this.controller.getAnimatedElement("detailNavLinks");
+  var mainTextAnimation = this.controller.getAnimatedElement("detailMain");
+  var itemNavAnimation = this.controller.getAnimatedElement("itemNav");
+  var quoteAnimation = this.controller.getAnimatedElement("detailQuote");
   var storyAnimation = this.controller.getAnimatedElement("storyDetail");
   var totalSlide = this.getSlideMoveOffset(slideIndex);
-  //console.log("totalSlide %o", totalSlide);
+
   if (totalSlide != 0) {
-    storyAnimation.options.animateProperties.left = "-="+totalSlide;
-    storyAnimation.options.animateCallback = function(){
-      navAnimation.options.animateProperties = { opacity: 1 };
-      navAnimation.startAnimation();
-    };
-    storyAnimation.startAnimation();
+    Animator.fadeOut(navAnimation.options.el, quickDuration);
+    Animator.fadeOut(mainTextAnimation.options.el, quickDuration);
+    Animator.fadeOut(itemNavAnimation.options.el, quickDuration);
+    Animator.fadeOut(quoteAnimation.options.el, quickDuration);
+
+    var waitForFades = setTimeout(function(){
+
+      storyAnimation.options.animateProperties.left = "-="+totalSlide;
+
+      storyAnimation.options.animateCallback = function(){
+
+        Animator.fadeIn(navAnimation.options.el, navAnimation.options.duration);
+        Animator.fadeIn(mainTextAnimation.options.el, mainTextAnimation.options.duration);
+        Animator.fadeIn(itemNavAnimation.options.el, itemNavAnimation.options.duration);
+        Animator.fadeIn(quoteAnimation.options.el, quoteAnimation.options.duration);
+
+      };
+
+      storyAnimation.startAnimation();
+
+    }.bind(this), quickDuration+10);
+
   }
 
 };
@@ -643,5 +757,5 @@ SlidePresenterBurrellDetail.prototype.goToSlide = function(slideIndex){
 
 SlidePresenterBurrellDetail.prototype.updateActiveStateItemNav = function(slideIndex){
   //console.log("SlidePresenterBurrellDetail.updateActiveStateItemNav slideIndex %o", slideIndex);
-  this.$el.find(".item-navigation .nav-item a").removeClass("active").eq(slideIndex).addClass("active");
+  this.controller.$el.find(".item-navigation .nav-item a").removeClass("active").eq(slideIndex).addClass("active");
 };
