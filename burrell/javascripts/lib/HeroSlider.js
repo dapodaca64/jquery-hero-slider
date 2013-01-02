@@ -156,7 +156,7 @@ var AnimatedElement = function(options){
     animateDuration: 5000,
     animateEasing: 'swing',
     animateCallback: function() {
-      console.log("animation for element complete.");
+      //console.log("animation for element complete.");
     },
   };
 
@@ -242,12 +242,12 @@ HeroSlider.prototype.run = function(){
 };
 
 HeroSlider.prototype.goToStory = function(model, storyIndex){
-  console.log("HeroSlider.goToStory: %o", storyIndex);
+  //console.log("HeroSlider.goToStory: %o", storyIndex);
   model.set("storyIndex", +(storyIndex));
 };
 
 HeroSlider.prototype.nextStory = function(model){
-  console.log("HeroSlider.nextStory: storyIndex %o storyCount %o", model.get("storyIndex"), model.get("storyCount"));
+  //console.log("HeroSlider.nextStory: storyIndex %o storyCount %o", model.get("storyIndex"), model.get("storyCount"));
   var storyIndex = model.get("storyIndex");
   if (storyIndex + 1 == model.get("storyCount")) {
     model.set("storyIndex", 0);
@@ -269,7 +269,7 @@ HeroSlider.prototype.previousStory = function(model){
 };
 
 HeroSlider.prototype.layoutModeToggle = function(){
-  console.log("HeroSlider.layoutModeToggle");
+  //console.log("HeroSlider.layoutModeToggle");
   var layoutMode = (this.story.get("layoutMode") === "default") ? "detail" : "default";
   //update the model
   this.story.set("layoutMode", layoutMode);
@@ -395,7 +395,8 @@ SlidePresenter.prototype.parseEvents = function(){
       //into category collection
       eventTypes[eType].push({
         selector: eSelector,
-        handler: eHandler
+        handler: eHandler,
+        type: eType
       });
 
     }
@@ -412,11 +413,53 @@ SlidePresenter.prototype.bindDOMEvents = function(){
   // Get events categorized by event type
   var eventsByType = this.parseEvents();
 
-  var self = this;
   for (var eventType in eventsByType) {
-    this.$el.on(eventType, function(ev){
-      self.delegateEvent(ev, eventsByType[eventType]);
-    });
+    //console.log("eventType %o, for collection %o", eventType, eventsByType[eventType]);
+
+    //Safe to delegate events with click events
+    if (eventType === "click") {
+
+      var self = this;
+
+      //console.log("bind click events to %o", this.$el[0]);
+      //console.log("inspecting controller %o", this.controller);
+      this.$el.on(eventType, function(eventConfigs){
+        return function(ev){
+
+          self.delegateEvent(ev, eventConfigs);
+
+        }
+        //self.delegateEvent(ev, eventsByType[eventType]);
+
+      }(eventsByType[eventType]));
+
+    //Bind directly for other events, like mouseenter/mouseleave
+    } else {
+
+      this.bindDOMEventsDirectly(eventType, eventsByType[eventType]);
+
+    }
+
+  }
+
+};
+
+SlidePresenter.prototype.bindDOMEventsDirectly = function(eventType, eventConfigs) {
+
+  for (var i=0, j=eventConfigs.length; i<j; i++) {
+
+    var self = this;
+
+    this.$el.find(eventConfigs[i].selector).on(eventType, function(handler){
+
+      return function(ev){
+
+        self[handler].call(self, ev);
+
+      }
+
+    }(eventConfigs[i].handler));
+
   }
 
 };
@@ -434,8 +477,9 @@ SlidePresenter.prototype.isElementInCollection = function(el, selector) {
 };
 
 SlidePresenter.prototype.delegateEvent = function(ev, delegates) {
-  //console.log("ev.currentTarget %o, ev.target %o", ev.currentTarget, ev.target);
+  //console.log("ev.type %o ev.currentTarget %o, ev.target %o", ev.type, ev.currentTarget, ev.target);
   for (delegate in delegates) {
+    //console.log("delegate %o, content %o", delegate, delegates[delegate]);
     // Is the event target in the elements that match the selector?
 
     // Determine if the event element matches the delegate selector
@@ -454,13 +498,20 @@ SlidePresenter.prototype.delegateEvent = function(ev, delegates) {
     });
 
     //console.log("inCollection? %o", inCollection);
-    if (inCollection) {
+    if (inCollection && delegates[delegate].type === ev.type) {
       // Fire the event handler
       //try {
+        //console.log("call handler %o", this[delegates[delegate].handler]);
         this[delegates[delegate].handler].call(this, ev);
       //} catch(e) {
       //  console.log("SlidePresenter Error in event delegation: Cannot call function %o", this[delegates[delegate].handler]);
       //}
+    }
+    if (!inCollection) {
+      //console.log("element is not in collection, avoid firing handler because it would not be relevant.");
+    }
+    if (delegates[delegate].type != ev.type) {
+      //console.log("event types don't match.");
     }
   }
 };
