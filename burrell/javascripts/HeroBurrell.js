@@ -41,6 +41,11 @@ HeroSliderBurrell.prototype.init = function(){
     storyCount: 0
   });
 
+  //Model for Story slide width
+  this.storySlide = new BasicModel({
+    width: 1000
+  });
+
   // Assure we have DOM before creating Presenters
   if (this.$el.length) {
 
@@ -105,11 +110,22 @@ HeroSliderBurrell.prototype.setupViewport = function(){
 
     this.viewport.set(viewportDims);
 
-    this.summaryPresenter.resizeBackgrounds(viewportDims);
+    var heroHeight = this.$el.height();
+
+    this.summaryPresenter.resizeBackgrounds({
+      width: viewportDims.width,
+      height: heroHeight
+    });
 
   }.bind(this));
   //$(window).trigger("resize");
   this.viewport.trigger("change");
+
+  this.storySlide.on("change", this.summaryPresenter.storySlideChangeHandler.bind(this.summaryPresenter));
+  this.storySlide.on("change", this.detailPresenter.storySlideChangeHandler.bind(this.detailPresenter));
+  this.storySlide.set("width", $(".everything").width());
+  this.storySlide.trigger("change");
+
 
 };
 
@@ -120,6 +136,46 @@ HeroSliderBurrell.prototype.getViewportDims = function(){
     width: frameDims.width,
     height: windowDims.height
   };
+};
+
+HeroSliderBurrell.prototype.getSlideOffsetFromZero = function(slideIndex, el){
+  var slideOffsetFromZero = 0;
+  $(el).find(".story").each(function(idx) {
+    //console.log("slideIndex %o, idx %o", slideIndex, idx);
+    if (idx+1 <= slideIndex) {
+      slideOffsetFromZero += $(this).width();
+    };
+  });
+  return slideOffsetFromZero;
+};
+
+HeroSliderBurrell.prototype.getSliderOffset = function($el){
+  var sliderCSSLeft = $el.css("left");
+  var offset = (sliderCSSLeft) ? -( sliderCSSLeft.substring(0, sliderCSSLeft.length-2) ) : 0;
+  return offset;
+};
+
+HeroSliderBurrell.prototype.getSlideMoveOffset = function(slideIndex, $el){
+  var sliderOffset = this.getSliderOffset($el);
+  var slideOffsetFromZero = this.getSlideOffsetFromZero(slideIndex, $el);
+  var totalSlide = slideOffsetFromZero - sliderOffset;
+  return totalSlide;
+};
+
+HeroSliderBurrell.prototype.adjustForSlideWidthChange = function(model, slideIndex, slideAnimation, slideContentAnimation, $el) {
+
+  //this.controller.adjustForSlideWidthChange(storySlide, slideIndex,
+    //this.controller.getAnimatedElement("storySlide"), this.controller.getAnimatedElement("storySummary"));
+
+  //Update slide widths
+  Animator.resizeBox(slideAnimation.$el, {
+    width: model.get("width")
+  }, 0);
+
+  //Move the slider position
+  var newLeft = this.getSlideOffsetFromZero(slideIndex, $el);
+  slideContentAnimation.$el.css("left", -newLeft+"px");
+
 };
 
 HeroSliderBurrell.prototype.startAutoRotation = function(){
@@ -154,10 +210,12 @@ HeroSliderBurrell.prototype.resizeHero = function(vp){
   //console.log("summary el %o", this.summaryPresenter.$el[0]);
   //console.log("HeroSliderBurrell resize hero based on %o", vp);
   Animator.resizeBox(this.$el, {
-    width: vp.width,
+    width: vp.width
+    //DISABLED: Dynamic height to fill the viewport
+    //NOW: static px height via CSS
     //leave room for some content to 'peek' above the fold
     //include a proportional reduction of 20%
-    height: (vp.height-100)*0.84
+    //height: (vp.height-100)*0.84
   }, 0);
 };
 
@@ -240,8 +298,6 @@ SlidePresenterBurrellSummary.prototype.storyIndexChangeHandler = function(story)
  SlidePresenterBurrellSummary.prototype.bindDataEvents = function(){
     //Subscribe to the change event on the model via the controller
   this.controller.storySummary.on("change:storyIndex", this.storyIndexChangeHandler.bind(this));
-  //subscribe for all resize events instead of viewport change, since a min-width keeps the change from firing
-  //this.controller.viewport.on("change", this.resizeBackgrounds.bind(this));
 };
 
 SlidePresenterBurrellSummary.prototype.goToSlide = function(slideIndex){
@@ -407,13 +463,6 @@ SlidePresenterBurrellSummary.prototype.setupAnimatedElements = function(){
 
   //Setup resizables
 
-  //Story slide
-  this.storySlide = new BasicModel({
-    width: 1000
-  });
-  this.storySlide.on("change", this.storySlideChangeHandler.bind(this));
-  this.storySlide.set("width", $(".everything").width());
-
   //Story background
   var width = $(this.controller.getAnimatedElement("summaryBackground").$el).width();
   var height = $(this.controller.getAnimatedElement("summaryBackground").$el).height();
@@ -450,7 +499,15 @@ SlidePresenterBurrellSummary.prototype.setupAnimatedElements = function(){
 };
 
 SlidePresenterBurrellSummary.prototype.storySlideChangeHandler = function(storySlide){
-  console.log("SlidePresenterBurrellSummary.storySlideChangeHandler with %o", storySlide);
+  //console.log("SlidePresenterBurrellSummary.storySlideChangeHandler with %o", storySlide);
+  //HeroSliderBurrell.prototype.adjustForSlideWidthChange = function(model, slideIndex, slideAnimation, slideContentAnimation) {
+  //console.log(this.controller.storySummary);
+  //console.log(this.controller);
+  var slideIndex = this.controller.storySummary.get("storyIndex");
+  this.controller.adjustForSlideWidthChange(storySlide, slideIndex,
+    this.controller.getAnimatedElement("storySlide"), this.controller.getAnimatedElement("storySummary"), this.$el);
+
+/*
   var slideTypes = [
     this.controller.getAnimatedElement("storySlide"),
     this.controller.getAnimatedElement("detailSlide")
@@ -466,18 +523,17 @@ SlidePresenterBurrellSummary.prototype.storySlideChangeHandler = function(storyS
   }
 
   //Move the slider position
-  //this.goToSlide(this.controller.storyDetail.get("storyIndex"));
+  var slideIndex = this.controller.storySummary.get("storyIndex");
+  var storyAnimation = this.controller.getAnimatedElement("storySummary");
+  var newLeft = this.controller.getSlideOffsetFromZero(slideIndex, this.$el);
+  storyAnimation.$el.css("left", -newLeft+"px");
+
+  //Move the slider position
   var slideIndex = this.controller.storyDetail.get("storyIndex");
-  console.log("move slider to slideIndex %o", slideIndex);
   var storyAnimation = this.controller.getAnimatedElement("storyDetail");
-  console.log(this.controller.detailPresenter);
-  /* TODO: Create method at the controller layer to do this for both Presenters
-  var totalSlide = this.controller.detailPresenter.getSlideMoveOffset(slideIndex);
-  var totalSlide = 0;
-  console.log("totalSlide %o", totalSlide);
-  storyAnimation.options.animateProperties.left = "-="+totalSlide;
-  storyAnimation.options.animateCallback = function(){ };
-  storyAnimation.startAnimation();
+  console.log("this.controller.detailPresenter %o", this.controller.detailPresenter);
+  //var newLeft = this.controller.getSlideOffsetFromZero(slideIndex, this.controller.detailPresenter.$el);
+  //storyAnimation.$el.css("left", -newLeft+"px");
   */
 
 };
@@ -583,8 +639,8 @@ SlidePresenterBurrellSummary.prototype.resizeBackgrounds = function(vp){
   }
 
 
-  //set story width using actual viewport width
-  this.storySlide.set({ width: vp.width });
+  //set model width using actual viewport width
+  this.controller.storySlide.set({ width: vp.width });
 
   //set proportional fit
   this.summaryBackground.set(fitChoice);
@@ -695,9 +751,15 @@ SlidePresenterBurrellDetail.prototype.bindDataEvents = function(){
   this.controller.storyDetail.on("change:storyIndex", this.storyIndexChangeHandler.bind(this));
 };
 
+SlidePresenterBurrellDetail.prototype.storySlideChangeHandler = function(storySlide){
+  var slideIndex = this.controller.storyDetail.get("storyIndex");
+  this.controller.adjustForSlideWidthChange(storySlide, slideIndex,
+    this.controller.getAnimatedElement("detailSlide"), this.controller.getAnimatedElement("storyDetail"), this.$el);
+};
+
 SlidePresenterBurrellDetail.prototype.snapToStory = function(slideIndex){
   //console.log("SlidePresenterBurrellDetail.snapToStory slideIndex %o", slideIndex);
-  var newSlidePos = this.getSlideOffsetFromZero(slideIndex);
+  var newSlidePos = this.controller.getSlideOffsetFromZero(slideIndex, this.$el);
   //console.log("newSlidePos %o", newSlidePos);
   var storyAnimation = this.controller.getAnimatedElement("storyDetail");
   var storyEl = storyAnimation.options.el;
@@ -712,6 +774,7 @@ SlidePresenterBurrellDetail.prototype.snapToStory = function(slideIndex){
   this.controller.storyDetail.trigger("change:storyIndex");
 };
 
+/*
 SlidePresenterBurrellDetail.prototype.getSlideOffsetFromZero = function(slideIndex){
   var slideOffsetFromZero = 0;
   var sliderOffset = this.getSliderOffset();
@@ -735,6 +798,7 @@ SlidePresenterBurrellDetail.prototype.getSlideMoveOffset = function(slideIndex){
   var totalSlide = slideOffsetFromZero - sliderOffset;
   return totalSlide;
 };
+*/
 
 SlidePresenterBurrellDetail.prototype.goToSlide = function(slideIndex){
   //console.log("SlidePresenterBurrellDetail.goToSlide slideIndex %o", slideIndex);
@@ -744,7 +808,7 @@ SlidePresenterBurrellDetail.prototype.goToSlide = function(slideIndex){
   var itemNavAnimation = this.controller.getAnimatedElement("itemNav");
   var quoteAnimation = this.controller.getAnimatedElement("detailQuote");
   var storyAnimation = this.controller.getAnimatedElement("storyDetail");
-  var totalSlide = this.getSlideMoveOffset(slideIndex);
+  var totalSlide = this.controller.getSlideMoveOffset(slideIndex, this.$el);
 
   if (totalSlide != 0) {
     Animator.fadeOut(navAnimation.options.el, quickDuration);

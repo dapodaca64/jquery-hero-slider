@@ -32,8 +32,8 @@ LinkedBox.prototype.linkedBoxClickHandler = function(ev){
 
   ev.preventDefault();
 
-  console.log("LinkedBox.linkedBoxClickHandler ev %o", ev);
-  console.log("target %o", this.targetLocation);
+  //console.log("LinkedBox.linkedBoxClickHandler ev %o", ev);
+  //console.log("target %o", this.targetLocation);
 
   this.goTo(this.targetLocation, this.targetWindow);
 

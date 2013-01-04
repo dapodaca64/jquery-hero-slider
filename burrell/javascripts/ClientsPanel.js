@@ -180,7 +180,7 @@ ClientsPanel.prototype.doExpand = function(){
 };
 
 ClientsPanel.prototype.scrollToFooter = function(){
-  console.log("scroll to footer!");
+  //console.log("scroll to footer!");
 
   var $target = $("#footer");
 

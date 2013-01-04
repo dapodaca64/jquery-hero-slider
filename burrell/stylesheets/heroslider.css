@@ -1,13 +1,13 @@
 /* Hero Slider */
 .hero-slider {
   width: 100%;
+  /*
   min-height: 528px;
+  */
+  height: 528px;
   margin: 0;
   position: relative;
   overflow: hidden;
-  /*
-  background-color: red;
-  */
   background-color: #ccc;
   z-index: 15;
 }
