@@ -206,11 +206,11 @@
       top: 50%;
       left: 50%;
       z-index: 1;
-      width: 370px; /*476 incl padding*/
-      margin-left: -235px;
+      width: 368px; /*476 incl padding*/
+      margin-left: -238px;
       height: 298px; /* 365 incl padding */
       margin-top: -183px;
-      padding: 27px 78px 40px 28px;
+      padding: 27px 78px 40px 30px;
       font-family: "League Gothic", sans-serif;
       color: rgb(204, 190, 174);
       background: url(images/background_hero_detail_main_text.png) 0 0 no-repeat;
@@ -220,25 +220,23 @@
       font-size: 18px;
       line-height: 22px;
       font-weight: normal;
-      margin: 0;
+      margin: 39px 0 0;
     }
       .main-text .title .name {
         display: block;
-        font-size: 82px;
-        font-family: "League Gothic Condensed";
-        line-height: 82px;
+        font-size: 56px;
+        font-family: "League Gothic";
+        line-height: 60px;
       }
       .main-text .title .role {
         display: block;
-        font-size: 36px;
-        line-height: 33px;
+        font-size: 22px;
+        line-height: 17px;
       }
     .main-text .description {
-      font-size: 14px;
-      line-height: 18px;
-      margin: 9px 0;
-      font-size: 18px;
-      line-height: 25px;
+      margin: 11px 0;
+      font-size: 17px;
+      line-height: 21px;
       font-family: Arial, sans-serif;
     }
     .detail .quote {
@@ -256,10 +254,13 @@
     }
     .story .detail .quote-left,
     .story .detail .quote-right {
-      top: 21%;
+      /* 2 lines of text
+      top: 21%; */
+      /* 1 line of text */
+      top: 38%;
     }
     .story .detail .quote-right {
-      margin-left: 126px;
+      margin-left: 111px;
     }
     .story .detail .quote-left {
       margin-right: 12px;
@@ -367,7 +368,7 @@
   display: none;
   top: 50%;
   left: 50%;
-  margin-left: 181px !important;
+  margin-left: 178px !important;
   margin-top: -183px !important;
   width: 60px !important;
   z-index: 20;
