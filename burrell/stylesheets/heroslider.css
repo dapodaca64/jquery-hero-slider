@@ -157,7 +157,7 @@
         font-family: "silverfakeregular", Times, serif;
         font-size: 22px;
         line-height: 26px;
-        color: rgb(175, 173, 158);
+        color: rgb(177, 174, 159);
       }
       .story .detail-navigation .go-previous:hover .character-name,
       .story .detail-navigation .go-next:hover .character-name
@@ -339,8 +339,7 @@
     text-decoration: none;
     line-height: 30px;
   }
-  .detail-navigation .go-previous .arrow,
-  .detail-navigation .go-next .arrow {
+  .detail-navigation .arrow {
     display: inline-block;
     width: 98px;
     height: 20px;
@@ -350,18 +349,18 @@
     vertical-align: middle;
     background: url(images/sprite_background) 0 0 no-repeat;
   }
-  .detail-navigation .go-previous .arrow {
+  .detail-navigation .go-previous.arrow {
     background-position: 0 0;
     margin-right: 2px;
   }
-  .detail-navigation .go-previous:hover .arrow {
+  .detail-navigation .go-previous.arrow:hover {
     background-position: 0 -30px;
   }
-  .detail-navigation .go-next .arrow {
+  .detail-navigation .go-next.arrow {
     background-position: 0 -91px;
     margin-left: 8px;
   }
-  .detail-navigation .go-next:hover .arrow {
+  .detail-navigation .go-next.arrow:hover {
     background-position: 0 -121px;
   }
 .item-navigation {
