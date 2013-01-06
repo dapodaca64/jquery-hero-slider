@@ -201,19 +201,24 @@
       top: 82px;
       left: 0;
     }
+.main-text {
+  width: 368px;
+  padding: 27px 18px 40px 30px;
+  color: rgb(204, 190, 174);
+  font-family: "League Gothic", sans-serif;
+}
     .detail .main-text {
+      display: none;
       position: absolute;
       top: 50%;
       left: 50%;
       z-index: 1;
-      width: 368px; /*476 incl padding*/
       margin-left: -238px;
-      height: 298px; /* 365 incl padding */
+      height: 298px;
       margin-top: -183px;
-      padding: 27px 78px 40px 30px;
-      font-family: "League Gothic", sans-serif;
-      color: rgb(204, 190, 174);
+      /*
       background: url(images/background_hero_detail_main_text.png) 0 0 no-repeat;
+      */
     }
     .main-text .title {
       width: 380px;
@@ -364,14 +369,32 @@
   .detail-navigation .go-next.arrow:hover {
     background-position: 0 -121px;
   }
-.item-navigation {
+.fixed-detail {
   display: none;
+  position: absolute;
   top: 50%;
   left: 50%;
-  margin-left: 178px !important;
+  margin-left: -238px !important;
   margin-top: -183px !important;
+  width: 476px !important;
+  height: 365px;
+  background: url(images/background_hero_detail_main_text.png) 0 0 no-repeat;
+  z-index: 2;
+}
+.item-navigation {
   width: 60px !important;
-  z-index: 20;
+  top: 0;
+  right: 0;
+  left: auto;
+  /*
+  display: none;
+  margin-left: -238px !important;
+  margin-top: -183px !important;
+  height: 365px;
+  padding-left: 416px !important;
+  background: url(images/background_hero_detail_main_text.png) 0 0 no-repeat;
+  z-index: 1;
+  */
 }
   .item-navigation .story-detail-nav {
     display: block;
@@ -398,13 +421,23 @@
   }
 .mode-navigation {
   position: absolute;
-  top: 210px;
-  left: 710px;
-  display: none;
+  top: 0;
+  left: 0;
 }
   .mode-navigation .story-toggle-mode {
     color: #ccc;
     text-decoration: none;
+    display: block;
+    width: 70px;
+    height: 70px;
+    margin: 11px 0 0;
+    float: right;
+    text-align: left;
+    text-indent: -9000px;
+    background: url(images/sprite_background.png) 0 -1480px no-repeat;
+  }
+  .mode-navigation .story-toggle-mode:hover {
+    background-position: 0 -1600px;
   }
 
 .slider-detail {
