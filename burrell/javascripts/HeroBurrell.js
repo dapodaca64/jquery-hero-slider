@@ -219,6 +219,9 @@ HeroSliderBurrell.prototype.resizeHero = function(vp){
   }, 0);
 };
 
+HeroSliderBurrell.prototype.isTouch = function(){
+  return $("html").hasClass("touch");
+};
 
 /* Presenter: Summary Slides */
 
@@ -289,6 +292,18 @@ SlidePresenterBurrellSummary.prototype.teaserMouseLeaveHandler = function(ev){
   this.hideTeaserBackgroundActive();
 };
 
+SlidePresenterBurrellSummary.prototype.heroMouseLeaveHandler = function(ev){
+  this.switchModeTimeout = setTimeout(function(){
+    this.goToSummary();
+  }.bind(this), 1000);
+};
+
+SlidePresenterBurrellSummary.prototype.detailMouseEnterHandler = function(ev){
+  if (this.switchModeTimeout) {
+  clearTimeout(this.switchModeTimeout);
+  }
+};
+
 // Data event handlers
 SlidePresenterBurrellSummary.prototype.storyIndexChangeHandler = function(story) {
   //console.log("SlidePresenterBurrellSummary.storyIndexChangeHandler for model %o", story);
@@ -298,6 +313,17 @@ SlidePresenterBurrellSummary.prototype.storyIndexChangeHandler = function(story)
  SlidePresenterBurrellSummary.prototype.bindDataEvents = function(){
     //Subscribe to the change event on the model via the controller
   this.controller.storySummary.on("change:storyIndex", this.storyIndexChangeHandler.bind(this));
+};
+
+// Conditional event binding
+SlidePresenterBurrellSummary.prototype.bindMouseLeaveDetail = function(){
+  $(".filter-modules-navigation").on("mouseenter", this.heroMouseLeaveHandler.bind(this));
+  this.controller.$el.on("mouseenter", this.detailMouseEnterHandler.bind(this));
+};
+
+SlidePresenterBurrellSummary.prototype.unBindMouseLeaveDetail = function(){
+  $(".filter-modules-navigation").off("mouseenter");
+  this.controller.$el.off("mouseenter");
 };
 
 SlidePresenterBurrellSummary.prototype.goToSlide = function(slideIndex){
@@ -348,7 +374,13 @@ SlidePresenterBurrellSummary.prototype.goToDetail = function(slideIndex){
 
   this.showFixedDetail();
 
+  if (this.controller.isTouch()) {
+    this.showDetailClose();
+  } else {
+    this.bindMouseLeaveDetail();
+  }
   //this.showItemNav();
+
 };
 
 SlidePresenterBurrellSummary.prototype.goToSummary = function(){
@@ -364,104 +396,134 @@ SlidePresenterBurrellSummary.prototype.goToSummary = function(){
 
   this.hideFixedDetail();
 
+  if (this.controller.isTouch()) {
+    this.hideDetailClose();
+  } else {
+    this.unBindMouseLeaveDetail();
+  }
   //this.hideItemNav();
 };
 
 SlidePresenterBurrellSummary.prototype.showSummarySlides = function(){
   var summaryAnimation = this.controller.getAnimatedElement("storySummary");
-  Animator.fadeIn(summaryAnimation.options.el, summaryAnimation.options.duration);
+  Animator.fadeIn(summaryAnimation.options.el, summaryAnimation.options.animateDuration);
 };
 
 SlidePresenterBurrellSummary.prototype.hideSummarySlides = function(){
   var summaryAnimation = this.controller.getAnimatedElement("storySummary");
-  Animator.fadeOut(summaryAnimation.options.el, summaryAnimation.options.duration);
+  Animator.fadeOut(summaryAnimation.options.el, summaryAnimation.options.animateDuration);
 };
 
 SlidePresenterBurrellSummary.prototype.showDetailSlides = function(){
   var detailAnimation = this.controller.getAnimatedElement("storyDetail");
-  Animator.fadeIn(detailAnimation.options.el, detailAnimation.options.duration);
+  Animator.fadeIn(detailAnimation.options.el, detailAnimation.options.animateDuration);
 };
 
 SlidePresenterBurrellSummary.prototype.hideDetailSlides = function(){
   var detailAnimation = this.controller.getAnimatedElement("storyDetail");
-  Animator.fadeOut(detailAnimation.options.el, detailAnimation.options.duration);
+  Animator.fadeOut(detailAnimation.options.el, detailAnimation.options.animateDuration);
 };
 
 SlidePresenterBurrellSummary.prototype.showDetailNav = function(){
   var detailNavAnimation = this.controller.getAnimatedElement("detailNav");
-  Animator.fadeIn(detailNavAnimation.options.el, detailNavAnimation.options.duration);
+  Animator.fadeIn(detailNavAnimation.options.el, detailNavAnimation.options.animateDuration);
 };
 
 SlidePresenterBurrellSummary.prototype.hideDetailNav = function(){
   var detailNavAnimation = this.controller.getAnimatedElement("detailNav");
-  Animator.fadeOut(detailNavAnimation.options.el, detailNavAnimation.options.duration);
+  Animator.fadeOut(detailNavAnimation.options.el, detailNavAnimation.options.animateDuration);
 };
 
 SlidePresenterBurrellSummary.prototype.showFixedDetail = function(){
   var fixedDetailAnimation = this.controller.getAnimatedElement("fixedDetail");
-  Animator.fadeIn(fixedDetailAnimation.options.el, fixedDetailAnimation.options.duration);
+  Animator.fadeIn(fixedDetailAnimation.options.el, fixedDetailAnimation.options.animateDuration);
 };
 
 SlidePresenterBurrellSummary.prototype.hideFixedDetail = function(){
   var fixedDetailAnimation = this.controller.getAnimatedElement("fixedDetail");
-  Animator.fadeOut(fixedDetailAnimation.options.el, fixedDetailAnimation.options.duration);
+  Animator.fadeOut(fixedDetailAnimation.options.el, fixedDetailAnimation.options.animateDuration);
 };
 
 SlidePresenterBurrellSummary.prototype.showItemNav = function(){
   var itemNavAnimation = this.controller.getAnimatedElement("itemNav");
-  Animator.fadeIn(itemNavAnimation.options.el, itemNavAnimation.options.duration);
+  Animator.fadeIn(itemNavAnimation.options.el, itemNavAnimation.options.animateDuration);
 };
 
 SlidePresenterBurrellSummary.prototype.hideItemNav = function(){
   var itemNavAnimation = this.controller.getAnimatedElement("itemNav");
-  Animator.fadeOut(itemNavAnimation.options.el, itemNavAnimation.options.duration);
+  Animator.fadeOut(itemNavAnimation.options.el, itemNavAnimation.options.animateDuration);
 };
 
 SlidePresenterBurrellSummary.prototype.showSummaryNav = function(){
   var summaryNavAnimation = this.controller.getAnimatedElement("summaryNav");
-  Animator.fadeIn(summaryNavAnimation.options.el, summaryNavAnimation.options.duration);
+  Animator.fadeIn(summaryNavAnimation.options.el, summaryNavAnimation.options.animateDuration);
 };
 
 SlidePresenterBurrellSummary.prototype.hideSummaryNav = function(){
   var summaryNavAnimation = this.controller.getAnimatedElement("summaryNav");
-  Animator.fadeOut(summaryNavAnimation.options.el, summaryNavAnimation.options.duration);
+  Animator.fadeOut(summaryNavAnimation.options.el, summaryNavAnimation.options.animateDuration);
 };
 
 SlidePresenterBurrellSummary.prototype.showTeaserBackgroundActive = function(){
   var teaserBackActive = this.controller.getAnimatedElement("teaserBackgroundActive");
-  Animator.fadeIn(teaserBackActive.options.el, teaserBackActive.options.duration);
+  var $target = $(teaserBackActive.options.el).parents(".teaser")
+
+  $('<div class="teaser-hover-canvas"></div>').insertBefore($target);
+
+  Animator.fadeIn($(".teaser-hover-canvas"), teaserBackActive.options.animateDuration);
+
+  Animator.fadeIn(teaserBackActive.options.el, teaserBackActive.options.animateDuration);
+
 };
 
 SlidePresenterBurrellSummary.prototype.hideTeaserBackgroundActive = function(){
   var teaserBackActive = this.controller.getAnimatedElement("teaserBackgroundActive");
-  Animator.fadeOut(teaserBackActive.options.el, teaserBackActive.options.duration);
+  $(teaserBackActive.options.el).stop();
+
+  Animator.fadeOut($(".teaser-hover-canvas"), teaserBackActive.options.animateDuration);
+  var wait = setTimeout(function(){
+    $(".teaser-hover-canvas").remove();
+  }, teaserBackActive.options.animateDuration);
+
+  Animator.fadeOut(teaserBackActive.options.el, teaserBackActive.options.animateDuration);
+
+};
+
+SlidePresenterBurrellSummary.prototype.showDetailClose = function(){
+  var detailCloseAnimation = this.controller.getAnimatedElement("detailClose");
+  Animator.fadeIn(detailCloseAnimation.options.el, detailCloseAnimation.options.animateDuration);
+};
+
+SlidePresenterBurrellSummary.prototype.hideDetailClose = function(){
+  var detailCloseAnimation = this.controller.getAnimatedElement("detailClose");
+  Animator.fadeOut(detailCloseAnimation.options.el, detailCloseAnimation.options.animateDuration);
 };
 
 SlidePresenterBurrellSummary.prototype.setupAnimatedElements = function(){
 
   this.controller.newAnimatedElement("summaryBackground", {
     el: this.controller.$el.find(".slider-fullsize.slider-summary .background.summary"),
-    animateDuration: 1000
+    animateDuration: 500
   });
 
   this.controller.newAnimatedElement("detailBackground", {
     el: this.controller.$el.find(".slider-fullsize.slider-detail .background.background-detail"),
-    animateDuration: 1000
+    animateDuration: 500
   });
 
   this.controller.newAnimatedElement("teaser", {
     el: this.controller.$el.find(".slider-fullsize.slider-summary .teaser"),
-    animateDuration: 1000
+    animateDuration: 500
   });
 
   this.controller.newAnimatedElement("teaserBackground", {
     el: this.controller.$el.find(".slider-fullsize.slider-summary .background.teaser-background.default"),
-    animateDuration: 1000
+    animateDuration: 500
   });
 
   this.controller.newAnimatedElement("teaserBackgroundActive", {
     el: this.controller.$el.find(".slider-fullsize.slider-summary .background.teaser-background.active"),
-    animateDuration: 1000
+    animateDuration: 500
   });
 
   this.controller.newAnimatedElement("storySummary", {
@@ -471,17 +533,17 @@ SlidePresenterBurrellSummary.prototype.setupAnimatedElements = function(){
 
   this.controller.newAnimatedElement("storyDetail", {
     el: this.controller.$el.find(".slider-fullsize.slider-detail"),
-    animateDuration: 1000
+    animateDuration: 500
   });
 
   this.controller.newAnimatedElement("storySlide", {
     el: this.controller.$el.find(".slider-fullsize.slider-summary .story"),
-    animateDuration: 1000
+    animateDuration: 500
   });
 
   this.controller.newAnimatedElement("detailSlide", {
     el: this.controller.$el.find(".slider-fullsize.slider-detail .story"),
-    animateDuration: 1000
+    animateDuration: 500
   });
 
   this.controller.newAnimatedElement("summaryNav", {
@@ -866,7 +928,9 @@ SlidePresenterBurrellDetail.prototype.goToSlide = function(slideIndex){
     //Animator.fadeOut(itemNavAnimation.options.el, quickDuration);
     //Animator.fadeOut(fixedDetailAnimation.options.el, quickDuration);
     Animator.fadeOut(quoteAnimation.options.el, quickDuration);
-    Animator.fadeOut(closeButtonAnimation.options.el, quickDuration);
+    if (this.controller.isTouch()) {
+      Animator.fadeOut(closeButtonAnimation.options.el, quickDuration);
+    }
 
     var waitForFades = setTimeout(function(){
 
@@ -883,7 +947,9 @@ SlidePresenterBurrellDetail.prototype.goToSlide = function(slideIndex){
         //Animator.fadeIn(itemNavAnimation.options.el, itemNavAnimation.options.duration);
         //Animator.fadeIn(fixedDetailAnimation.options.el, fixedDetailAnimation.options.duration);
         Animator.fadeIn(quoteAnimation.options.el, quoteAnimation.options.duration);
-        Animator.fadeIn(closeButtonAnimation.options.el, closeButtonAnimation.options.duration);
+        if (self.controller.isTouch()) {
+          Animator.fadeIn(closeButtonAnimation.options.el, closeButtonAnimation.options.duration);
+        }
 
 
       };
