@@ -44,6 +44,8 @@ ClientsPanel.prototype.bindEvents = function(){
 
   this.bindPanelClick();
 
+  this.bindPanelHover();
+
   this.$closeButton.on("click", this.closeButtonClickHandler.bind(this));
 
 };
@@ -52,7 +54,7 @@ ClientsPanel.prototype.bindPanelClick = function(){
 
   this.addCursor();
 
-  this.unBindContactEvents();
+  //this.unBindContactEvents();
 
   this.$el.on("click", this.clientsClickHandler.bind(this));
 
@@ -62,9 +64,37 @@ ClientsPanel.prototype.unBindPanelClick = function(){
 
   this.removeCursor();
 
-  this.bindContactEvents();
+  //this.bindContactEvents();
 
   this.$el.off("click");
+
+};
+
+ClientsPanel.prototype.bindPanelHover = function(){
+
+  this.$el.on("mouseenter", this.panelHoverHandler.bind(this));
+
+  this.$el.on("mouseleave", this.panelHoverOutHandler.bind(this));
+
+};
+
+ClientsPanel.prototype.panelHoverHandler = function(ev){
+
+  this.$el.addClass("hover");
+
+};
+
+ClientsPanel.prototype.panelHoverOutHandler = function(ev){
+
+  this.$el.removeClass("hover");
+
+};
+
+ClientsPanel.prototype.unBindPanelHover = function(){
+
+  this.$el.off("mouseenter");
+
+  this.$el.off("mouseleave");
 
 };
 
@@ -108,6 +138,8 @@ ClientsPanel.prototype.stopContactHoverAnimation = function(ev){
 
 ClientsPanel.prototype.contactButtonHoverHandler = function(ev){
 
+  //ev.stopPropagation();
+
   this.stopContactHoverAnimation();
 
   this.$contactButton.find(".module-background .active").fadeIn(this.hoverSpeed);
@@ -115,6 +147,8 @@ ClientsPanel.prototype.contactButtonHoverHandler = function(ev){
 };
 
 ClientsPanel.prototype.contactButtonHoverOutHandler = function(ev){
+
+  //ev.stopPropagation();
 
   this.stopContactHoverAnimation();
 
@@ -135,7 +169,10 @@ ClientsPanel.prototype.clientsClickHandler = function(ev){
 
   //console.log("clientsClickHandler...");
 
+  this.unBindPanelHover();
+
   this.doExpand();
+
 
 };
 

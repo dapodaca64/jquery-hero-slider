@@ -154,6 +154,9 @@
 .clients-module.collapsed {
   background: url(images/background_clients_collapsed.png) 0 100% no-repeat;
 }
+.clients-module.hover {
+  background: url(images/background_clients.png) 0 0 no-repeat !important;
+}
 .clients-header {
   color: #c44c1a;
   font-family: "LeagueGothicRegular", sans-serif;
@@ -165,6 +168,9 @@
 .collapsed .clients-header {
   color: rgb(138, 133, 131);
   opacity: 0.7;
+}
+.hover .clients-header {
+  color: #c44c1a;
 }
 .client-list {
   position: relative;
